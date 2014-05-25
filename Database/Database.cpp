@@ -2,10 +2,12 @@
 //
 
 #include "stdafx.h"
+#include "database.h"
 
-
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char * argv[])
 {
+	DATABASE * db = new DATABASE;
+	delete db;
 	return 0; 
 }
 
