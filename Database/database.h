@@ -1,32 +1,42 @@
-#include <iostream>
+#include "stdafx.h"
+#include <vector>
 
-//class ITEM {
+//class ITEM {};
 
-
-//};
-
-class PERSON {
-friend class DATABASE;
+struct PERSON {
+	friend class DATABASE;
 private:
-	std::string name;
-	std::string surname;
-	//ITEM * items; // TODO Another singly linked list; this time with items
+	string name;
+	string surname;
+	int pid;
 	PERSON * next;
-
-	PERSON* pNext();
-	void setData(std::string name, std::string surname);
-	void setNext(PERSON * inputNext);
+	//ITEM * items; // TODO Another singly linked list; this time with items
+public:
 	PERSON();
+	string getData(int i);
+	PERSON* getNext();
 	void display();
+
+	void setData(string name, string surname);
+	void setPid(int gid);
+	void setNext(PERSON * inputNext);
 };
 
 class DATABASE {
 private:
 	PERSON * people;
+	int gid;
+	vector<int> __find(string input);
 public:
+
+	//template <typename TYPE>
 	DATABASE();
 	~DATABASE();
 	void print();
-	void add(std::string name, std::string surname);
-	void remove();//TODO Remove by narrowing down people to one record, or by id. Currently employed: Delete last
+	void print(int id);
+	void print(string input);
+	void add(string name, string surname);
+	void remove();//Delete last
+	void remove(int id);//Delete by id
+	void find(string input);
 };
