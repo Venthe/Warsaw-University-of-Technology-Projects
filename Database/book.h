@@ -1,12 +1,22 @@
-class BOOK{
-private:
-	//author
-	string author_name;
-	string author_surname;
-	int author_id;
+#include <string>
+using namespace std;
+namespace vth {
+	class BOOK{
+	private:
+		int id;
 
-	// Book
-	string title;
-	string abstract;
-	char ISBN[13];
-};
+		//author
+		string author_name;
+		string author_surname;
+
+		// Book
+		string title;
+		string abstract;
+		char ISBN[13];
+
+		BOOK * next;
+	public:
+		BOOK() : next(NULL){}
+		BOOK * getNext(){ return next; }
+	};
+}

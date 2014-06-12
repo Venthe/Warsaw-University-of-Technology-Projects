@@ -82,7 +82,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="author.h" />
     <ClInclude Include="book.h" />
     <ClInclude Include="database.h" />
     <ClInclude Include="general.h" />
@@ -98,6 +97,7 @@
     <ClCompile Include="list.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="person.cpp" />
+    <ClCompile Include="reader.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
