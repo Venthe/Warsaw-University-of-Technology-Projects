@@ -9,33 +9,22 @@ namespace vth {
 		cout << "Database destroyed!\n";
 	}
 
-	bool DATABASE::find(int selection, int id){
-		try{
-			if (selection == READERS){
-				return readers->find(id);
-			}
-			else if (selection == BOOKS){
-				return books->find(id);
-			}
-		}
-		catch (...){
-			cout << "Unexpected ERROR.\n";
-		}
-		return 1;
+	void DATABASE::find(int selection, int id){
+		cout << "Record: ";
+		DATABASE::print(selection, id);
 	}
-	bool DATABASE::find(int selection, string input){
+	void DATABASE::find(int selection, string input){
 		try{
 			if (selection == READERS){
-				return readers->find(input);
+				readers->find(input);
 			}
 			else if (selection == BOOKS){
-				return books->find(input);
+				books->find(input);
 			}
 		}
 		catch (...){
 			cout << "Unexpected ERROR.\n";
 		}
-		return 1;
 	}
 	void DATABASE::pop(int selection, int id)//print database
 	{

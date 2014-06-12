@@ -8,8 +8,8 @@ namespace vth {
 	public:
 		DATABASE();
 		~DATABASE();
-		bool find(int selection, int id);
-		bool find(int selection, string input);
+		void find(int selection, int id);
+		void find(int selection, string input);
 		void pop(int selection, int id = WRONGID); //Pop via ID
 		void pop(int selection, string input); //Pop via string database
 		void print(int selection, int id = WRONGID); //print database

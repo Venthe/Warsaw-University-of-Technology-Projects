@@ -18,8 +18,7 @@ namespace vth {
 		void print(int delid = WRONGID);
 		void pop(int delid = WRONGID);
 		void pop(string input); // TODO: Delete via string, not only via id or pop
-		bool find(int delid);
-		bool find(string input);
+		void find(string input); // Find via input
 	};
 	
 	template <class c_type>

@@ -1,13 +1,41 @@
 #include "list.h"
-
+#include <regex>
 namespace vth {
-	void LIST<BOOK>::add(string authorName, string authorSurname, string bookTitle, string bookAbstract, string ISBN){};
+	void LIST<BOOK>::add(string authorName, string authorSurname, string bookTitle, string bookAbstract, string ISBN){}; //If ISBN 13, then skip first three
 	void __LIST<BOOK>::print(int){};
 	void __LIST<BOOK>::pop(int){};
 	void __LIST<BOOK>::pop(string){} // TODO: Delete via string, not only via id or pop
-	bool __LIST<BOOK>::find(int){ return 1; };
-	bool __LIST<BOOK>::find(string){ return 1; }
+	void __LIST<BOOK>::find(string input){
+		if (root == NULL){
+			throw THROWABLE(EMPTYDATABASE);
+		}
+		else {
+			BOOK * temp = root;
+			regex self_regex(input, regex_constants::ECMAScript | regex_constants::icase);
+			while (temp != NULL){
+				if (regex_search(temp->getAuthorName()+temp->getAbstract()+temp->getAuthorSurname()+temp->getISBN()+temp->getTitle(), self_regex)) {
+					temp->display();
+				}
+				temp = temp->getNext();
+			}
+		}
+	}
 
+	void __LIST<READER>::find(string input){
+		if (root == NULL){
+			throw THROWABLE(EMPTYDATABASE);
+		}
+		else {
+			READER * temp = root;
+			regex self_regex(input, regex_constants::ECMAScript | regex_constants::icase);
+			while (temp != NULL){
+				if (regex_search(temp->getName()+temp->getPesel()+temp->getSurname(), self_regex)){
+					temp->display();
+				}
+				temp = temp->getNext();
+			}
+		}
+	}
 	bool LIST<READER>::__compare(READER* first, READER* second){
 		if (first->getSurname() == second->getSurname()){
 			return compare(first->getName(), second->getName());
@@ -68,28 +96,6 @@ namespace vth {
 		}
 		id++;
 	}
-	bool __LIST<READER>::find(int delid){
-		if (root == NULL){
-			return 1;
-		}
-		else if (root->getNext() == NULL) {
-			if (delid == root->getId()){
-				return 0;
-			}
-			return 1;
-		}
-		else {
-			READER * temp = root;
-			while (temp != NULL) {
-				if (delid == temp->getId()){
-					return 0;
-				}
-				temp = temp->getNext();
-			}
-		}
-		return 1;
-	}
-	bool __LIST<READER>::find(string input){ return 1; }
 	void __LIST<READER>::print(int delid){
 		if (root == NULL){
 			throw EMPTYDATABASE;
