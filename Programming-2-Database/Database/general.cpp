@@ -1,5 +1,5 @@
 #include "general.h"
-
+#include <iostream>
 namespace vth {
 	//todo Throw, try, catch empty imput
 	bool compare(string first, string second){
@@ -28,5 +28,43 @@ namespace vth {
 			}
 		}
 		return input;
+	}
+
+	//WRONGID = -1,
+	//EMPTYDATABASE,
+	//WRONGPESEL,
+	//DATABASECLEARED,
+	//IDNOTFOUND,
+	//DUPLICATERECORD,
+	//WRONGISBNCOUNTRY,
+	//WRONGISBNLENGTH,
+	//RECORDNOTFOUND,
+	//TOOMANYRECORDS
+	void ERROR(int val){
+		if (val == UNEXPECTED)
+			cout << "Unexpected error";
+		else if (val == WRONGID)
+			cout << "Wrong id";
+		else if (val == EMPTYDATABASE)
+			cout << "Empty database";
+		else if (val == WRONGPESEL)
+			cout << "PESEL has wrong legth";
+		else if (val == DATABASECLEARED)
+			cout << "Database is cleared";
+		else if (val == IDNOTFOUND)
+			cout << "ID not found";
+		else if (val == DUPLICATERECORD)
+			cout << "Record is a duplicate";
+		else if (val == WRONGISBNLENGTH)
+			cout << "ISBN has wrong legth";
+		else if (val == WRONGISBNCOUNTRY)
+			cout << "Book cannot be registered in Poland";
+		else if (val == RECORDNOTFOUND)
+			cout << "Record not found";
+		else if (val == TOOMANYRECORDS)
+			cout << "More than one record found";
+		else
+			cout << "Unknown error " << val;
+		cout << ".\n";
 	}
 }

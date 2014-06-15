@@ -8,6 +8,7 @@ namespace vth {
 	protected:
 		c_type * root;
 		int id;
+		int __find(string input); // Return ID
 	public:
 		__LIST() : root(NULL), id(0){}
 		~__LIST(){
@@ -20,12 +21,13 @@ namespace vth {
 		void pop(string input); // TODO: Delete via string, not only via id or pop
 		void find(string input); // Find via input
 	};
-	
+
 	template <class c_type>
 	class LIST{};
 
 	template<>
 	class LIST<BOOK> : public __LIST<BOOK>{
+		bool __compare(BOOK* first, BOOK* second);
 	public:
 		void add(string authorName, string authorSurname, string bookTitle, string bookAbstract, string ISBN);
 	};
@@ -33,6 +35,7 @@ namespace vth {
 	template<>
 	class LIST<READER> : public __LIST<READER>{
 		bool __compare(READER* first, READER* second);
+
 	public:
 		void add(string readerName, string readerSurname, string readerPesel);
 	};

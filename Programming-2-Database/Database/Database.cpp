@@ -23,7 +23,7 @@ namespace vth {
 			}
 		}
 		catch (...){
-			cout << "Unexpected ERROR.\n";
+			ERROR(UNEXPECTED);
 		}
 	}
 	void DATABASE::pop(int selection, int id)//print database
@@ -37,21 +37,10 @@ namespace vth {
 			}
 		}
 		catch (const THROWABLE &e){
-			if (e.val == EMPTYDATABASE){
-				cout << "Database is empty.\n";
-			}
-			else if (e.val == WRONGID){
-				cout << "Wrong id!\n";
-			}
-			else if (e.val == DATABASECLEARED){
-				cout << "Database is clear.\n";
-			}
-			else if (e.val == IDNOTFOUND){
-				cout << "Record not found.\n";
-			}
+			ERROR(e.val);
 		}
 		catch (...){
-			cout << "Unexpected ERROR.\n";
+			ERROR(UNEXPECTED);
 		}
 	}
 	void DATABASE::pop(int selection, string input)
@@ -65,43 +54,29 @@ namespace vth {
 			}
 		}
 		catch (const THROWABLE &e){
-			if (e.val == EMPTYDATABASE){
-				cout << "Database is empty.\n";
-			}
-			else if (e.val == WRONGID){
-				cout << "Wrong id!\n";
-			}
-			else if (e.val == DATABASECLEARED){
-				cout << "Database is clear.\n";
-			}
-			else if (e.val == IDNOTFOUND){
-				cout << "Record not found.\n";
-			}
+			ERROR(e.val);
 		}
 		catch (...){
-			cout << "Unexpected ERROR.\n";
+			ERROR(UNEXPECTED);
 		}
 	}
 	void DATABASE::print(int selection, int id)//print database
 	{
 		try {
 			if (selection == READERS){
+				// cout << "Printing READERS...\n";
 				readers->print(id);
 			}
 			else if (selection == BOOKS){
-				books->pop(id);
+				// cout << "Printing BOOKS...\n";
+				books->print(id);
 			}
 		}
 		catch (const THROWABLE &e){
-			if (e.val == EMPTYDATABASE){
-				cout << "Database is empty.\n";
-			}
-			else if (e.val == IDNOTFOUND){
-				cout << "Record not found.\n";
-			}
+			ERROR(e.val);
 		}
 		catch (...){
-			cout << "Unexpected ERROR.\n";
+			ERROR(UNEXPECTED);
 		}
 	}
 	void DATABASE::add(string readerName, string readerSurname, string readerPESEL){
@@ -109,15 +84,10 @@ namespace vth {
 			readers->add(readerName, readerSurname, readerPESEL);
 		}
 		catch (const THROWABLE &e){
-			if (e.val == WRONGPESEL){
-				cout << "Pesel was wrong.\n";
-			}
-			else if (e.val == DUPLICATERECORD){
-				cout << "Duplicate record.\n";
-			}
+			ERROR(e.val);
 		}
 		catch (...){
-			cout << "Unexpected ERROR.\n";
+			ERROR(UNEXPECTED);
 		}
 	}
 	void DATABASE::add(string authorName, string authorSurname, string bookTitle, string bookAbstract, string ISBN){
@@ -125,15 +95,25 @@ namespace vth {
 			books->add(authorName, authorSurname, bookTitle, bookAbstract, ISBN);
 		}
 		catch (const THROWABLE &e){
-			if (e.val == WRONGPESEL){
-				cout << "Pesel was wrong.\n";
+			ERROR(e.val);
+		}
+		catch (...){
+			ERROR(UNEXPECTED);
+		}
+	}
+	void DATABASE::clear(int selection){
+		try{
+			if (selection == BOOKS){
+				delete books;
+				books = new LIST<vth::BOOK>;
 			}
-			else if (e.val == DUPLICATERECORD){
-				cout << "Duplicate record.\n";
+			else if (selection == READERS){
+				delete readers;
+				readers = new LIST<vth::READER>;
 			}
 		}
 		catch (...){
-			cout << "Unexpected ERROR.\n";
+			ERROR(UNEXPECTED);
 		}
 	}
 }

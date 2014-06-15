@@ -92,6 +92,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="book.cpp" />
     <ClCompile Include="database.cpp" />
     <ClCompile Include="general.cpp" />
     <ClCompile Include="list.cpp" />
