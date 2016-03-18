@@ -4,7 +4,6 @@ struct _SETTINGS {
 	int bufferSizeY;
 	int intBytesize;
 	void * backbuffer;
-	bool isRunning;
 };
 extern _SETTINGS settings;
 
