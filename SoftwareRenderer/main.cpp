@@ -73,7 +73,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		if (bRet == -1)
 		{
-			// handle the error and possibly exit
+			return EXIT_FAILURE;
 		}
 		else
 		{

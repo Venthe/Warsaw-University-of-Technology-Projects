@@ -97,7 +97,6 @@ void DrawLine(int x, int y, int tx, int ty, unsigned char r, unsigned char g, un
 		return;
 	}
 
-	//TODO: Bersenham's algorithm is broken past this point
 	double error = 0.0f; //	real error : = 0
 	double deltaerr = (double) deltay / (double) deltax; //	real deltaerr : = abs(deltay / deltax)
 	if (deltaerr < 0.0) deltaerr *= -1.0;
