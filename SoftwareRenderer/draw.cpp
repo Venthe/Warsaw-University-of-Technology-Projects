@@ -99,11 +99,11 @@ void DrawLine(int x, int y, int tx, int ty, unsigned char r, unsigned char g, un
 
 	//TODO: Bersenham's algorithm is broken past this point
 	double error = 0.0f; //	real error : = 0
-	double deltaerr = (double) deltax / (double) deltay; //	real deltaerr : = abs(deltay / deltax)
+	double deltaerr = (double) deltay / (double) deltax; //	real deltaerr : = abs(deltay / deltax)
 	if (deltaerr < 0.0) deltaerr *= -1.0;
 
 	int cury = y; //	int y : = y0
-	//unsigned char* buffer = (unsigned char*)settings.backbuffer;
+
 	for (int curx = x; curx != tx;) { // for x from x0 to x1
 		_PutPixel(curx, cury,r,g,b); // plot(x, y)
 		error += deltaerr; // error : = error + deltaerr
@@ -121,11 +121,11 @@ void DrawCircle(int x, int y, int radius,double step, unsigned char r, unsigned 
 {
 	const double pi = 3.14159265358979323846;
 	for (double angle = 0.0; angle < 360.0;angle += step)
-		_PutPixel(x+radius*sin(angle), y+radius*cos(angle), r, g, b);
+		_PutPixel(x+radius*sin((angle / 360.0)*2*pi), y+radius*cos((angle / 360.0) * 2 *pi), r, g, b);
 }
 void DrawFan(int x, int y, int radius, double step, unsigned char r, unsigned char g, unsigned char b)
 {
 	const double pi = 3.14159265358979323846;
 	for (double angle = 0.0; angle < 360.0; angle += step)
-		DrawLine(x, y, x + radius*sin(angle), y + radius*cos(angle), r, g, b);
+		DrawLine(x, y, x + radius*sin((angle/360.0)*2*pi), y + radius*cos((angle / 360.0)*2*pi), r, g, b);
 }
