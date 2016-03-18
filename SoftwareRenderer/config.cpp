@@ -8,5 +8,4 @@ void SetSettings(int x, int y) {
 	settings.bufferSizeY = y;
 	settings.intBytesize = sizeof(int);
 	settings.backbuffer = malloc(x * y * settings.intBytesize);
-	settings.isRunning = true;
 }
