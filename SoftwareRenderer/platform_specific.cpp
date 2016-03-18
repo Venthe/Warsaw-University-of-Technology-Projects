@@ -14,12 +14,13 @@ void Draw(HWND hwndMain) {
 		);
 	DeleteDC(dc);
 }
-void TypeText(HWND hwndMain, char * text)
+void TypeText(HWND hwndMain, std::string text)
 {
+	LPSTR txt = const_cast<char *>(text.c_str());
 	HDC hdc = GetDC(hwndMain);
 	RECT rect;
 	GetClientRect(hwndMain, &rect);
-	DrawTextEx(hdc, text, strlen(text), &rect, 0,0);
+	DrawTextEx(hdc, txt, text.length(), &rect, 0,0);
 	DeleteDC(hdc);
 }
 void PlatformSpecificInitialization() {
