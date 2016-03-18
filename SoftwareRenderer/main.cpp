@@ -1,6 +1,7 @@
 #include "config.h"
 #include "platform_specific.h"
 #include "draw.h"
+#include "file_handler.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -12,6 +13,9 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(WM_QUIT);
+		break;
+	case WM_CLOSE:
+		DestroyWindow(hWnd);
 		break;
 	default:
 		return DefWindowProc(hWnd, Msg, wParam, lParam);
@@ -56,7 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		WS_BORDER | WS_CAPTION | WS_SYSMENU,   // overlapped window                   
 		CW_USEDEFAULT,          // default horizontal position  
 		CW_USEDEFAULT,          // default vertical position    
-		drawing_area_rect.right- drawing_area_rect.left,          // default width                
+		drawing_area_rect.right - drawing_area_rect.left,          // default width                
 		drawing_area_rect.bottom - drawing_area_rect.top,          // default height               
 		(HWND)NULL,             // no parent or owner window    
 		(HMENU)NULL,            // class menu used              
@@ -67,31 +71,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return GetLastError();
 	ShowWindow(hwndMain, SW_SHOW);
 	UpdateWindow(hwndMain);
-	while (settings.isRunning)
+
+	//load file
+	ObjModel obj;
+	bool modelLoaded = false;
+	obj.ReadObj("model.obj");
+	obj.Scale = 80.0;
+	obj.Origin(320.0, 240.0, 0.0);
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		bRet = GetMessage(&msg, NULL, 0, 0);
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 
-		if (bRet == -1)
-		{
-			return EXIT_FAILURE;
-		}
-		else
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		FillRect(0xff, 0xff, 0xff);
-		FillRect(1, 1, settings.bufferSizeX-1, settings.bufferSizeY - 1, 0, 0, 0);
-		for (int i = 0; i < 24; i++) {
-			DrawLine(i * 32, 0, i * 32, 480, 32, 32, 32);
-			DrawLine(0, i * 32, 640, i * 32, 32, 32, 32);
-		}
-		DrawCircle(320, 240, 200, 0.1);
-		DrawFan(320, 240, 150, 5.0, 0, 0xff, 0);
+		FillRect();
+		DrawGrid();
+		////DrawCircle(320, 240, 200, 0.1);
+		//DrawFan(320, 240, 150, 5.0, 0, 0xff, 0);
+		DrawObj(obj,ThreeTuple<double>(0.0,100.0,0.0));
 		Draw(hwndMain);
-		
-		TypeText(hwndMain,"Ortographic");
+		std::string str = "Ortographic";
+		TypeText(hwndMain, str);
 	}
 	return EXIT_SUCCESS;
 }
