@@ -2,10 +2,13 @@
 #include "config.h"
 
 _SETTINGS settings;
-void SetSettings(int x, int y) {
+
+void SetSettings(int x, int y)
+{
 	srand(time_t(NULL));
-	settings.bufferSizeX = x;
-	settings.bufferSizeY = y;
+	settings.bufferSize[0] = x;
+	settings.bufferSize[1] = y;
 	settings.intBytesize = sizeof(int);
 	settings.backbuffer = malloc(x * y * settings.intBytesize);
 }
+

@@ -11,3 +11,4 @@ void PlatformSpecificInitialization();
 
 extern BITMAPINFO bmi;
 #endif
+

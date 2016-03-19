@@ -4,29 +4,34 @@
 #ifdef _WIN32
 BITMAPINFO bmi;
 #include <Windows.h>
-void Draw(HWND hwndMain) {
+
+void Draw(HWND hwndMain)
+{
 	HDC dc = GetDC(hwndMain);
 	StretchDIBits(dc,
-		0, 0, settings.bufferSizeX, settings.bufferSizeY,
-		0, 0, settings.bufferSizeX, settings.bufferSizeY,
-		settings.backbuffer, &bmi,
-		DIB_RGB_COLORS, SRCCOPY
-		);
+	              0, 0, settings.bufferSize[0], settings.bufferSize[1],
+	              0, 0, settings.bufferSize[0], settings.bufferSize[1],
+	              settings.backbuffer, &bmi,
+	              DIB_RGB_COLORS, SRCCOPY
+	);
 	DeleteDC(dc);
 }
+
 void TypeText(HWND hwndMain, std::string text)
 {
 	LPSTR txt = const_cast<char *>(text.c_str());
 	HDC hdc = GetDC(hwndMain);
 	RECT rect;
 	GetClientRect(hwndMain, &rect);
-	DrawTextEx(hdc, txt, text.length(), &rect, 0,0);
+	DrawTextEx(hdc, txt, text.length(), &rect, 0, nullptr);
 	DeleteDC(hdc);
 }
-void PlatformSpecificInitialization() {
+
+void PlatformSpecificInitialization()
+{
 	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER); // The number of i.mbytesb required by the structure.
-	bmi.bmiHeader.biWidth = settings.bufferSizeX; // The width of the bitmap, in i.mbpixels.
-	bmi.bmiHeader.biHeight = -settings.bufferSizeY; // The height of the bitmap, i.ni mbpixels
+	bmi.bmiHeader.biWidth = settings.bufferSize[0]; // The width of the bitmap, in i.mbpixels.
+	bmi.bmiHeader.biHeight = -settings.bufferSize[1]; // The height of the bitmap, i.ni mbpixels
 	bmi.bmiHeader.biPlanes = 1; //The number of planes for the target i.mbdevice. This value must be set to 1.
 	bmi.bmiHeader.biBitCount = 32; // The number of bits-per-pixel
 	bmi.bmiHeader.biCompression = BI_RGB; // The type of compression for .iam bcompressed bottom-up bitmap 
@@ -38,3 +43,5 @@ void PlatformSpecificInitialization() {
 }
 
 #endif // _WIN32
+
+

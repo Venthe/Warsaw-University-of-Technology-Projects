@@ -3,25 +3,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "types.h"
 
 using namespace std;
 
-ThreeTuple<double> ParseDoubleFromObj(string line) {
-	ThreeTuple<double> result;
-	string buffer[3];
-	int pos;
-	for (int i = 0; i < 3;i++)
-	{
-		pos = line.find(' ');
-		buffer[i] = line.substr(0, pos);
-		line = line.substr(pos+1, line.length());
-	}
-
-	return ThreeTuple<double>(stod(buffer[0]),stod(buffer[1]),stod(buffer[2]));
-}
-
-ThreeTuple<int> ParseIntFromObj(string line) {
-	ThreeTuple<int> result;
+Vector3<double> ParseDoubleFromObj(string line)
+{
 	string buffer[3];
 	int pos;
 	for (int i = 0; i < 3; i++)
@@ -31,32 +18,36 @@ ThreeTuple<int> ParseIntFromObj(string line) {
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return ThreeTuple<int>(atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()));
+	return Vector3<double>(stod(buffer[0]), stod(buffer[1]), stod(buffer[2]));
 }
 
-ObjModel::ObjModel()
+Vector3<int> ParseIntFromObj(string line)
 {
-	
-}
+	string buffer[3];
+	int pos;
+	for (int i = 0; i < 3; i++)
+	{
+		pos = line.find(' ');
+		buffer[i] = line.substr(0, pos);
+		line = line.substr(pos + 1, line.length());
+	}
 
-
-ObjModel::ObjModel(char*path)
-{
-	this->ReadObj(path);
+	return Vector3<int>(atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()));
 }
 
 int ObjModel::ReadObj(char* path)
 {
 	ifstream myfile;
 	myfile.open(path);
-	if (!myfile.is_open()) {
+	if (!myfile.is_open())
+	{
 		cout << "Problem opening file " << path << endl;
 		return 1;
 	}
 	string line;
-	while(getline(myfile,line))
+	while (getline(myfile, line))
 	{
-		if(line[0] == 'v'|| line[0] == 'V')
+		if (line[0] == 'v' || line[0] == 'V')
 		{
 			Vertex.push_back(ParseDoubleFromObj(line.substr(2, line.length())));
 		}
@@ -68,3 +59,4 @@ int ObjModel::ReadObj(char* path)
 	myfile.close();
 	return 0;
 }
+

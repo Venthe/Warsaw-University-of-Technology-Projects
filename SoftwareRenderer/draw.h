@@ -1,16 +1,18 @@
 #pragma once
 #include "file_handler.h"
-/// Fill set part of buffer with color
-void FillRect(int x, int y, int maxX, int maxY, unsigned char red, unsigned char green, unsigned char blue);
-/// Fill whole buffer with random color
-void FillRect(bool random);
-/// Fill whole buffer with set color
-void FillRect(unsigned char red, unsigned char green, unsigned char blue);
-/// Fill whole buffer with black
-void FillRect();
-/// Draws line, Bresenham's line algorithm
-void DrawLine(int x, int y, int tx, int ty,unsigned char r=0xff, unsigned char g=0xff, unsigned char b=0xff);
-void DrawCircle(int x, int y, int radius, double step, unsigned char r = 0xff, unsigned char g = 0xff, unsigned char b = 0xff);
-void DrawFan(int x, int y, int radius, double step, unsigned char r = 0xff, unsigned char g = 0xff, unsigned char b = 0xff);
-void DrawObj(ObjModel model, ThreeTuple<double> ShiftOrigin = ThreeTuple<double>(0.0,0.0,0.0));
-void DrawGrid(int density=32, unsigned char r=32, unsigned char g=32, unsigned char b=32);
+
+void FillRect(bool random); // Fills drawing area with noise
+void FillRect(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color);
+void FillRect(Vector3<unsigned char> color = Vector3<unsigned char>(0, 0, 0)); // Fills whole drawing area with a certain color
+
+void DrawObj(ObjModel model, Vector3<double> ShiftOrigin = Vector3<double>(0.0, 0.0, 0.0));
+void DrawPolygon(Vector3<int> a, Vector3<int> b, Vector3<int> c, Vector3<unsigned char> color = Vector3<unsigned char>(0xff, 0xff, 0xff));
+void DrawLine(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color = Vector3<unsigned char>(0xff, 0xff, 0xff)); // Draws line, Bresenham's line algorithm
+void DrawGrid(int density = 32, Vector3<unsigned char> color = Vector3<unsigned char>(32, 32, 32));
+
+
+// TEST: Test code for Bersenham's validity
+//void DrawCircle(Vector2<int> a, int radius, double step, Vector3<unsigned char> color = Vector3<unsigned char>(0xff, 0xff, 0xff));
+//void DrawFan(Vector2<int> a, int radius, double step, Vector3<unsigned char> color = Vector3<unsigned char>(0xff, 0xff, 0xff));
+
+
