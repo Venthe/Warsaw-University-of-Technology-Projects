@@ -73,7 +73,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//load file
 	//TODO: Model name from command line?
-	ObjModel obj("C:\\Users\\Jacek\\Desktop\\model.obj");
+	ObjModel obj("C:\\Users\\Jacek\\Documents\\Visual Studio 2015\\Projects\\SoftwareRenderer\\model.obj");
 	obj.Scale = 100;
 	obj.Origin(320.0, 240.0, 0.0);
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -83,7 +83,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		FillRect();
 		DrawGrid();
-		DrawObj(obj, Vector3<double>(0.0, 200.0, 0.0));
+		//TestDrawFan(Vector2<int>(settings.bufferSize[0]/2,settings.bufferSize[1] / 2),100,5.0);
+		//TestDrawCircle(Vector2<int>(settings.bufferSize[0]/2, settings.bufferSize[1]/2), 150, 5.0);
+		TestDrawFilledPolygons(); // TODO: Marked pixels not filled!
+		//DrawObj(obj, Vector3<double>(0.0, 200.0, 0.0),true);
 
 		Draw(hwndMain);
 		std::string str = "Ortographic";
