@@ -85,8 +85,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DrawGrid();
 		//TestDrawFan(Vector2<int>(settings.bufferSize[0]/2,settings.bufferSize[1] / 2),100,5.0);
 		//TestDrawCircle(Vector2<int>(settings.bufferSize[0]/2, settings.bufferSize[1]/2), 150, 5.0);
-		TestDrawFilledPolygons(); // TODO: Marked pixels not filled!
-		//DrawObj(obj, Vector3<double>(0.0, 200.0, 0.0),true);
+		//TestDrawFilledPolygons(); // TODO: Marked pixels not filled!
+		DrawModel(obj, Vector3<double>(0.0, 200.0, 0.0),false);
 
 		Draw(hwndMain);
 		std::string str = "Ortographic";
