@@ -1,11 +1,12 @@
 #include "config.h"
 #include "platform_specific.h"
 #include "draw.h"
-#include "file_handler.h"
+#include "object_handler.h"
 
 #ifdef _WIN32
 #include <windows.h>
 
+Camera camera;
 
 LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
@@ -16,14 +17,26 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CLOSE:
 		DestroyWindow(hWnd);
+		break;   
+	case WM_KEYUP:
+		switch (wParam)
+		{
+		case 'Z': camera.ShiftFocalLength(0.01); break;
+		case 'X': camera.ShiftFocalLength(-0.01); break;
+		case 'A': camera.ShiftLocation(Vector3<double>(-0.25,0,0)); break;
+		case 'D': camera.ShiftLocation(Vector3<double>(0.25,0,0)); break;
+		case 'W': camera.ShiftLocation(Vector3<double>(0,0.25,0)); break;
+		case 'S': camera.ShiftLocation(Vector3<double>(0,-0.25,0)); break;
+		case 'Q': camera.ShiftLocation(Vector3<double>(0,0,0.25)); break;
+		case 'E': camera.ShiftLocation(Vector3<double>(0,0,-0.25)); break;
+		default: break;
+		}
 		break;
-	default:
-		return DefWindowProc(hWnd, Msg, wParam, lParam);
 	}
-	return 0;
+	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
 	SetSettings();
 	PlatformSpecificInitialization();
@@ -73,9 +86,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//load file
 	//TODO: Model name from command line?
-	ObjModel obj("C:\\Users\\Jacek\\Documents\\Visual Studio 2015\\Projects\\SoftwareRenderer\\model.obj");
-	obj.Scale = 100;
-	obj.Origin(320.0, 240.0, 0.0);
+	Model object("C:\\Users\\jacek\\Source\\Repos\\SoftwareRenderer\\Debug\\teapot.obj");
+	object.Scale = Vector3<double>(100, -100, 100);
+	object.Origin = Vector3<double>(320.0, 440.0, 0.0);
+
+	camera.Origin = Vector3<double>(0, 0, 0);
+	camera.FocalLength = -0.12;
+	double RotationAngle = 0.0;
+
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
@@ -83,14 +101,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		FillRect();
 		DrawGrid();
-		//TestDrawFan(Vector2<int>(settings.bufferSize[0]/2,settings.bufferSize[1] / 2),100,5.0);
-		//TestDrawCircle(Vector2<int>(settings.bufferSize[0]/2, settings.bufferSize[1]/2), 150, 5.0);
-		//TestDrawFilledPolygons(); // TODO: Marked pixels not filled!
-		DrawModel(obj, Vector3<double>(0.0, 200.0, 0.0),false);
+		DrawModel(object,camera,false);
 
 		Draw(hwndMain);
-		std::string str = "Ortographic";
+
+		if (RotationAngle >= 360.0) { RotationAngle = 0.0; }
+		else RotationAngle += 1.0;
+		object.Rotation = Vector3 <double>(RotationAngle, 0.0, 0.0);
+
+		std::string str = std::string("Ortographic\n\n") + "Model:\n" + "o:" + camera.Origin.ToString() + "\n" + "s:" + camera.Scale.ToString() + "\n" + "r:" + camera.Rotation.ToString() + "\n" + "Camera focal length: " + std::to_string(camera.FocalLength);
 		TypeText(hwndMain, str);
+		//InvalidateRect(hwndMain, nullptr, FALSE);
 	}
 	return EXIT_SUCCESS;
 }

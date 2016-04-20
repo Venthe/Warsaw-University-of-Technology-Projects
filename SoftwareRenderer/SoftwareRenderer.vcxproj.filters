@@ -21,13 +21,13 @@
     <ClCompile Include="platform_specific.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="file_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="object_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,10 +41,10 @@
     <ClInclude Include="platform_specific.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file_handler.h">
+    <ClInclude Include="types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="types.h">
+    <ClInclude Include="object_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
