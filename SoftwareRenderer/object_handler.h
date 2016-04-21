@@ -18,8 +18,7 @@ public:
 	double FocalLength;
 	void ShiftFocalLength(double change)
 	{
-		//if(FocalLength+change<-0.1 && FocalLength + change>-0.2)
-			FocalLength += change;
+		FocalLength += change;
 	}
 	void ShiftLocation(Vector3<double> shift)
 	{

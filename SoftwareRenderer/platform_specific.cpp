@@ -9,9 +9,9 @@ void Draw(HWND hwndMain)
 {
 	HDC dc = GetDC(hwndMain);
 	StretchDIBits(dc,
-	              0, 0, settings.bufferSize[0], settings.bufferSize[1],
-	              0, 0, settings.bufferSize[0], settings.bufferSize[1],
-	              settings.backbuffer, &bmi,
+	              0, 0, config.bufferSize[0], config.bufferSize[1],
+	              0, 0, config.bufferSize[0], config.bufferSize[1],
+	              config.backbuffer, &bmi,
 	              DIB_RGB_COLORS, SRCCOPY
 	);
 	DeleteDC(dc);
@@ -30,8 +30,8 @@ void TypeText(HWND hwndMain, std::string text)
 void PlatformSpecificInitialization()
 {
 	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER); // The number of i.mbytesb required by the structure.
-	bmi.bmiHeader.biWidth = settings.bufferSize[0]; // The width of the bitmap, in i.mbpixels.
-	bmi.bmiHeader.biHeight = -settings.bufferSize[1]; // The height of the bitmap, i.ni mbpixels
+	bmi.bmiHeader.biWidth = config.bufferSize[0]; // The width of the bitmap, in i.mbpixels.
+	bmi.bmiHeader.biHeight = -config.bufferSize[1]; // The height of the bitmap, i.ni mbpixels
 	bmi.bmiHeader.biPlanes = 1; //The number of planes for the target i.mbdevice. This value must be set to 1.
 	bmi.bmiHeader.biBitCount = 32; // The number of bits-per-pixel
 	bmi.bmiHeader.biCompression = BI_RGB; // The type of compression for .iam bcompressed bottom-up bitmap 

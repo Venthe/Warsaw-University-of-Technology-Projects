@@ -10,21 +10,42 @@ public:
 	Vector3();
 	Vector3(T a, T b, T c);
 
+	static Vector3<T> Up()
+	{
+		return Vector3<T>(0, 1, 0);
+	}
+
+	static Vector3<T> Down()
+	{
+		return Vector3<T>(0, -1, 0);
+	}
+
 	std::string ToString();
 
+	Vector3<T> Normalize()
+	{
+		double length = sqrt((t[0]*t[0]) + (t[1] * t[1]) + (t[2] * t[2]));
+		if (length < 0.0) length *= -1.0;
+		return Vector3<T>(t[0]/ length,t[1]/ length,t[2]/ length);
+	}
+	T Norm()
+	{
+		return std::sqrt(t[0]*t[0] + t[1] * t[1] + t[2] * t[2]);
+	}
+
 	void operator()(const T a, const T b, const T c);
-	T& operator+=(const Vector3<T>& rhs);
-	T& operator-=(const Vector3<T>& rhs);
+	Vector3<T>& operator+=(const Vector3<T>& rhs);
+	Vector3<T>& operator-=(const Vector3<T>& rhs);
 	void operator=(const T input);
 	T& operator[](int i);
 
-	friend T operator-(Vector3<T> lhs, const Vector3<T>& rhs)
+	friend Vector3<T> operator-(Vector3<T> lhs, const Vector3<T>& rhs)
 	{
 		lhs -= rhs;
 		return lhs;
 	}
 
-	friend T operator+(Vector3<T> lhs, const Vector3<T>& rhs)
+	friend Vector3<T> operator+(Vector3<T> lhs, const Vector3<T>& rhs)
 	{
 		lhs += rhs;
 		return lhs;
@@ -60,20 +81,22 @@ void Vector3<T>::operator()(const T a, const T b, const T c)
 }
 
 template <class T>
-T& Vector3<T>::operator+=(const Vector3<T>& rhs)
+Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& rhs)
 {
-	t[0] += rhs[0];
-	t[1] += rhs[1];
-	t[2] += rhs[2];
+
+	t[0] += rhs.t[0];
+	t[1] += rhs.t[1];
+	t[2] += rhs.t[2];
 	return *this;
 }
 
 template <class T>
-T& Vector3<T>::operator-=(const Vector3<T>& rhs)
+Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& rhs)
 {
-	t[0] -= rhs[0];
-	t[1] -= rhs[1];
-	t[2] -= rhs[2];
+
+	t[0] -= rhs.t[0];
+	t[1] -= rhs.t[1];
+	t[2] -= rhs.t[2];
 	return *this;
 }
 
@@ -105,17 +128,17 @@ public:
 
 	void operator()(const T a, const T b);
 	void operator=(const T input);
-	T& operator-=(const Vector2<T>& rhs);
-	T& operator+=(const Vector2<T>& rhs);
+	Vector2<T>& operator-=(const Vector2<T>& rhs);
+	Vector2<T>& operator+=(const Vector2<T>& rhs);
 	T& operator[](int i);
 
-	friend T operator+(Vector2<T> lhs, const Vector2<T>& rhs)
+	friend Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs)
 	{
 		lhs += rhs;
 		return lhs;
 	}
 
-	friend T operator-(Vector2<T> lhs, const Vector2<T>& rhs)
+	friend Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs)
 	{
 		lhs -= rhs;
 		return lhs;
@@ -150,18 +173,18 @@ void Vector2<T>::operator()(const T a, const T b)
 }
 
 template <class T>
-T& Vector2<T>::operator+=(const Vector2<T>& rhs)
+Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& rhs)
 {
-	t[0] += rhs[0];
-	t[1] += rhs[1];
+	t[0] += rhs.t[1];
+	t[1] += rhs.t[2];
 	return *this;
 }
 
 template <class T>
-T& Vector2<T>::operator-=(const Vector2<T>& rhs)
+Vector2<T>& Vector2<T>::operator-=(const Vector2<T>& rhs)
 {
-	t[0] -= rhs[0];
-	t[1] -= rhs[1];
+	t[0] -= rhs.t[1];
+	t[1] -= rhs.t[2];
 	return *this;
 }
 
@@ -179,4 +202,14 @@ std::string Vector2<T>::ToString()
 {
 	std::string str = std::string("(") + std::to_string(t[0]) + "," + std::to_string(t[1]) + ")";
 	return str;
+}
+
+template <class T>
+Vector3<T> CrossProduct(Vector3<T> a, Vector3<T>b)
+{
+	Vector3<T> temp;
+	temp[0] = a[1] * b[2] - a[2] * b[1];
+	temp[1] = a[2] * b[0] - a[0] * b[2];
+	temp[2] = a[0] * b[1] - a[1] * b[0];
+	return temp;
 }

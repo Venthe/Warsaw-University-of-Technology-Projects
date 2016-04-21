@@ -6,8 +6,6 @@
 #ifdef _WIN32
 #include <windows.h>
 
-Camera camera;
-
 LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (Msg)
@@ -21,14 +19,14 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		switch (wParam)
 		{
-		case 'Z': camera.ShiftFocalLength(0.01); break;
-		case 'X': camera.ShiftFocalLength(-0.01); break;
-		case 'A': camera.ShiftLocation(Vector3<double>(-0.25,0,0)); break;
-		case 'D': camera.ShiftLocation(Vector3<double>(0.25,0,0)); break;
-		case 'W': camera.ShiftLocation(Vector3<double>(0,0.25,0)); break;
-		case 'S': camera.ShiftLocation(Vector3<double>(0,-0.25,0)); break;
-		case 'Q': camera.ShiftLocation(Vector3<double>(0,0,0.25)); break;
-		case 'E': camera.ShiftLocation(Vector3<double>(0,0,-0.25)); break;
+		case 'Z': config.camera.ShiftFocalLength(0.01); break;
+		case 'X': config.camera.ShiftFocalLength(-0.01); break;
+		case 'A': config.camera.ShiftLocation(Vector3<double>(-5.0,0,0)); break;
+		case 'D': config.camera.ShiftLocation(Vector3<double>(5.0,0,0)); break;
+		case 'W': config.camera.ShiftLocation(Vector3<double>(0,5.0,0)); break;
+		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-5.0,0)); break;
+		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,5.0)); break;
+		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-5.0)); break;
 		default: break;
 		}
 		break;
@@ -38,7 +36,7 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
-	SetSettings();
+	SetSettings(1024,768);
 	PlatformSpecificInitialization();
 
 	LPSTR className = "MainClass";
@@ -62,8 +60,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 	RECT drawing_area_rect;
 	drawing_area_rect.left = 0;
 	drawing_area_rect.top = 0;
-	drawing_area_rect.right = settings.bufferSize[0];
-	drawing_area_rect.bottom = settings.bufferSize[1];
+	drawing_area_rect.right = config.bufferSize[0];
+	drawing_area_rect.bottom = config.bufferSize[1];
 	AdjustWindowRectEx(&drawing_area_rect, WS_BORDER | WS_CAPTION | WS_SYSMENU, false, 0);
 	HWND hwndMain = CreateWindowEx(
 		0, // no extended styles           
@@ -87,29 +85,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 	//load file
 	//TODO: Model name from command line?
 	Model object("C:\\Users\\jacek\\Source\\Repos\\SoftwareRenderer\\Debug\\teapot.obj");
-	object.Scale = Vector3<double>(100, -100, 100);
-	object.Origin = Vector3<double>(320.0, 440.0, 0.0);
-
-	camera.Origin = Vector3<double>(0, 0, 0);
-	camera.FocalLength = -0.12;
-	double RotationAngle = 0.0;
+	object.Origin(0,0, 0);
+	config.camera.Origin(45,75,100);
+	object.Scale = Vector3<double>(0.1, -0.1, 0.1);
 
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		FillRect();
+		FillRect(Vector3<unsigned char>(70,70,70));
 		DrawGrid();
-		DrawModel(object,camera,false);
+		Projection();
+		LookAt(Vector3<double>(0,0,0), Vector3<double>::Up());
+		Viewport(config.bufferSize[0], config.bufferSize[1], config.bufferSize[0], config.bufferSize[1]);
+		DrawModel(object);
 
 		Draw(hwndMain);
 
-		if (RotationAngle >= 360.0) { RotationAngle = 0.0; }
-		else RotationAngle += 1.0;
-		object.Rotation = Vector3 <double>(RotationAngle, 0.0, 0.0);
-
-		std::string str = std::string("Ortographic\n\n") + "Model:\n" + "o:" + camera.Origin.ToString() + "\n" + "s:" + camera.Scale.ToString() + "\n" + "r:" + camera.Rotation.ToString() + "\n" + "Camera focal length: " + std::to_string(camera.FocalLength);
+		std::string str = std::string("Ortographic\n\n") + "Model:\n" + "o:" + config.camera.Origin.ToString() + "\n" + "s:" + config.camera.Scale.ToString() + "\n" + "r:" + config.camera.Rotation.ToString() + "\n" + "Camera focal length: " + std::to_string(config.camera.FocalLength);
 		TypeText(hwndMain, str);
 		//InvalidateRect(hwndMain, nullptr, FALSE);
 	}
