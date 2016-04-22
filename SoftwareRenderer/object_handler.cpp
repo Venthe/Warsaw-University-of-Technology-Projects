@@ -40,26 +40,6 @@ Model::Model(char* path)
 	this->LoadObject(path);
 }
 
-void Model::MeshTranslate(Vector3<double> translate)
-{
-	MeshTransform(translate, Vector3<double>(0.0, 0.0, 0.0), Vector3<double>(1.0, 1.0, 1.0));
-}
-
-void Model::MeshRotate(Vector3<double> rotate)
-{
-	MeshTransform(Vector3<double>(0.0, 0.0, 0.0), rotate, Vector3<double>(1.0, 1.0, 1.0));
-}
-
-void Model::MeshScale(Vector3<double> scale)
-{
-	MeshTransform(Vector3<double>(0.0, 0.0, 0.0), Vector3<double>(0.0, 0.0, 0.0), scale);
-}
-
-void Model::MeshTransform(Vector3<double>, Vector3<double>, Vector3<double>) // Vector3<double> translate, Vector3<double> rotate, Vector3<double> scale
-{
-	//matrix operations on verticies
-}
-
 int Model::LoadObject(char* path)
 {
 	ifstream myfile;
@@ -72,13 +52,15 @@ int Model::LoadObject(char* path)
 	string line;
 	while (getline(myfile, line))
 	{
-		if (line[0] == 'v' || line[0] == 'V')
-		{
-			Vertex.push_back(ParseDoubleFromObj(line.substr(2, line.length())));
-		}
-		else if (line[0] == 'f' || line[0] == 'F')
-		{
-			Face.push_back(ParseIntFromObj(line.substr(2, line.length())));
+		if (line.length() > 2 && line[1] == ' ') {
+			if (line[0] == 'v' || line[0] == 'V')
+			{
+				Vertex.push_back(ParseDoubleFromObj(line.substr(2, line.length())));
+			}
+			else if (line[0] == 'f' || line[0] == 'F')
+			{
+				Face.push_back(ParseIntFromObj(line.substr(2, line.length())));
+			}
 		}
 	}
 	myfile.close();

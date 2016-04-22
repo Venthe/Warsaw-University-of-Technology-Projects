@@ -19,8 +19,8 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		switch (wParam)
 		{
-		case 'Z': config.camera.ShiftFocalLength(0.01); break;
-		case 'X': config.camera.ShiftFocalLength(-0.01); break;
+		case 'Z': config.camera.ShiftFocalLength(5.); break;
+		case 'X': config.camera.ShiftFocalLength(-5.); break;
 		case 'A': config.camera.ShiftLocation(Vector3<double>(-5.0,0,0)); break;
 		case 'D': config.camera.ShiftLocation(Vector3<double>(5.0,0,0)); break;
 		case 'W': config.camera.ShiftLocation(Vector3<double>(0,5.0,0)); break;
@@ -36,7 +36,7 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
-	SetSettings(1024,768);
+	SetSettings(800,600);
 	PlatformSpecificInitialization();
 
 	LPSTR className = "MainClass";
@@ -84,10 +84,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 	//load file
 	//TODO: Model name from command line?
-	Model object("C:\\Users\\jacek\\Source\\Repos\\SoftwareRenderer\\Debug\\teapot.obj");
-	object.Origin(0,0, 0);
-	config.camera.Origin(45,75,100);
-	object.Scale = Vector3<double>(0.1, -0.1, 0.1);
+	Model object("teapot.obj");
+	object.Origin (0,200, 0);
+	object.Rotation (0, 0, 0); // x y z
+	object.Scale (50, -50, 50);
+
+	config.camera.Origin(20,30,75);
 
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
@@ -96,14 +98,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 		FillRect(Vector3<unsigned char>(70,70,70));
 		DrawGrid();
+
+		LookAt(Vector3<double>(0, 0, 0), Vector3<double>::Up());
 		Projection();
-		LookAt(Vector3<double>(0,0,0), Vector3<double>::Up());
-		Viewport(config.bufferSize[0], config.bufferSize[1], config.bufferSize[0], config.bufferSize[1]);
+		//Viewport(config.bufferSize[0] / 8, config.bufferSize[1] / 8, config.bufferSize[0] * 3 / 4, config.bufferSize[1] * 3 / 4);
 		DrawModel(object);
 
 		Draw(hwndMain);
 
-		std::string str = std::string("Ortographic\n\n") + "Model:\n" + "o:" + config.camera.Origin.ToString() + "\n" + "s:" + config.camera.Scale.ToString() + "\n" + "r:" + config.camera.Rotation.ToString() + "\n" + "Camera focal length: " + std::to_string(config.camera.FocalLength);
+		std::string str = "Camera:\no:" + config.camera.Origin.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
 		TypeText(hwndMain, str);
 		//InvalidateRect(hwndMain, nullptr, FALSE);
 	}

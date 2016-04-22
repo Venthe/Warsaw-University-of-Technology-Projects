@@ -183,45 +183,61 @@ void DrawPolygon(Vector2<int> p[3], Vector3<unsigned char> color, bool fill_poly
 	}
 }
 
-void Projection(double c) {
-	std::array<double,16> t = IdentityMatrix<double, 4>();
-	t[14] = c;
-	config.Projection = t;
+void Projection(double fov, double aspectW, double aspectH, double clippingNear, double clippingFar)
+{
+	std::array<double,16> projectionMatrix = IdentityMatrix<double, 4>();
+	double aspectRatio =  aspectW / aspectH;
+
+	double D2R = M_PI / 180.0;
+	double yScale = 1.0 / tan(D2R * fov / 2);
+	double xScale = yScale / aspectRatio;
+	double clippingDistance = clippingNear - clippingFar;
+
+	projectionMatrix[0] = xScale;
+	projectionMatrix[5] = yScale;
+	projectionMatrix[10] = (clippingFar + clippingNear) / clippingDistance;
+	projectionMatrix[11] = -1;
+	projectionMatrix[14] = (2 * clippingFar * clippingNear) / clippingDistance;
+
+
+	config.Projection = projectionMatrix;
 }
 
 void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOrigin)
 {
+
 	Vector3<double> z = (cameraOrigin - lookat).Normalize();
 	Vector3<double> x = CrossProduct(up, z).Normalize();
-	Vector3<double> y = CrossProduct(z, x).Normalize();
-	auto Minv = IdentityMatrix<double,4>();
-	auto Tr = IdentityMatrix<double, 4>();
-	for (int i = 0; i<3; i++) {
-		Minv[0*4 + i] = x[i];
-		Minv[1*4 + i] = y[i];
-		Minv[2*4 + i] = z[i];
-		Tr[i*4 + 3] = -lookat[i];
-	}
-	config.ModelView = ArrayMultiplication(Minv,Tr);
-}
-void Viewport(int x, int y, int w, int h) {
-	config.Viewport = IdentityMatrix<double, 4>();
-	config.Viewport[0 * 4 + 3] = x + w / 2.f;
-	config.Viewport[1 * 4 + 3] = y + h / 2.f;
-	config.Viewport[2 * 4 + 3] = 1.f;
+	Vector3<double> y = CrossProduct(z, x);
 
-	config.Viewport[0 * 4 + 0] = w / 2.f;
-	config.Viewport[1 * 4 + 1] = h / 2.f;
-	config.Viewport[2 * 4 + 2] = 0;
+	auto Orientation = IdentityMatrix<double, 4>();
+	auto Translation = IdentityMatrix<double, 4>();
+
+	for (int i = 0; i<3; i++) {
+		Orientation[i] = x[i];
+		Orientation[4 + i] = y[i];
+		Orientation[8 + i] = z[i];
+		Translation[12 + i] = -lookat[i];
+	}
+
+	config.ViewMatrix = ArrayMultiplication(Orientation,Translation);
 }
+//void Viewport(int x, int y, int w, int h) {
+//	config.Viewport = IdentityMatrix<double, 4>();
+//	config.Viewport[0 * 4 + 3] = x + w / 2.f;
+//	config.Viewport[1 * 4 + 3] = y + h / 2.f;
+//	config.Viewport[2 * 4 + 3] = 1.f;
+//
+//	config.Viewport[0 * 4 + 0] = w / 2.f;
+//	config.Viewport[1 * 4 + 1] = h / 2.f;
+//	config.Viewport[2 * 4 + 2] = 0;
+//}
+
 
 void DrawModel(Model model, bool fill_polygon)
 {
-	// Viewport * Projection * ModelView * v.
-	config.TransformationMatrix = IdentityMatrix<double,4>();
-	config.TransformationMatrix = ArrayMultiplication(config.TransformationMatrix, config.Viewport);
-	config.TransformationMatrix = ArrayMultiplication(config.TransformationMatrix, config.Projection);
-	config.TransformationMatrix = ArrayMultiplication(config.TransformationMatrix, config.ModelView);
+	model.ModelMatrix();
+	//config.TransformationMatrix = IdentityMatrix<double,4>();
 	
 	Vector3<double> current_vertex[3];
 	for (unsigned int i = 0; i < model.Face.size(); i++)
@@ -230,14 +246,20 @@ void DrawModel(Model model, bool fill_polygon)
 
 		//View with perspective
 		for(int j = 0; j<3;j++){
-			transformVectorByArray(config.TransformationMatrix, current_vertex[j],true);
+			transformVectorByArray(config.ViewMatrix, current_vertex[j]);
+			transformVectorByArray(config.Projection, current_vertex[j], true);
+			transformVectorByArray(model.ScaleMatrix, current_vertex[j]);
+			transformVectorByArray(model.RotateXMatrix, current_vertex[j]);
+			transformVectorByArray(model.RotateYMatrix, current_vertex[j]);
+			transformVectorByArray(model.RotateZMatrix, current_vertex[j]);
+			transformVectorByArray(model.TranslateMatrix, current_vertex[j]);
 		}
 
 		//Scale the model and move it by it's origin point with respect to scene
 		Vector3<int> pixel_vertex[3];
 		for (int j = 0; j < 3; j++)
 		{
-			for (int k = 0; k < 3; k++) pixel_vertex[j][k] = static_cast<int>(model.Origin[k] + current_vertex[j][k]*model.Scale[k]);//
+			for (int k = 0; k < 3; k++) pixel_vertex[j][k] = static_cast<int>(current_vertex[j][k]);
 		}
 
 		// TODO: SHADING
@@ -245,9 +267,8 @@ void DrawModel(Model model, bool fill_polygon)
 		color = Vector3<unsigned char>(0, 0, 0);
 		//color = _RandomPixelColor(); // Temp Random color
 
-		// TODO: SquashDimensions
 		Vector2<int> triangle[3];
-		for (int j=0;j<3;j++) triangle[j] = Vector2<int>(pixel_vertex[j][0]+350 , pixel_vertex[j][1]+500);
+		for (int j=0;j<3;j++) triangle[j] = Vector2<int>(pixel_vertex[j][0]+config.bufferSize[0]/2, pixel_vertex[j][1]+config.bufferSize[1]/2);
 		
 		DrawPolygon(triangle, color, fill_polygon);
 	}

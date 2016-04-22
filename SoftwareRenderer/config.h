@@ -9,10 +9,9 @@ struct _CONFIG
 	int intBytesize;
 	void* backbuffer;
 	Camera camera;
-	std::array<double, 16> ModelView;
+	std::array<double, 16> ViewMatrix;
 	std::array<double, 16> Viewport;
 	std::array<double, 16> Projection;
-	std::array<double, 16> TransformationMatrix;
 } extern config;
 
 //extern _CONFIG config;

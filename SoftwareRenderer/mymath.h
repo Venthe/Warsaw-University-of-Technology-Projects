@@ -41,37 +41,3 @@ void transformVectorByArray(std::array<T, X> t, Vector3<T>& v, bool retroProject
 		else v[i] = result[i];
 	}
 }
-//std::array<double,9> calculateRotationMatrix(Camera camera)
-//{
-//	std::array<double, 9> rotationMatrix;
-//
-//	double rTemp[9];
-//	double rx[9] = {
-//		1,0,0,
-//		0,std::cos(camera.Rotation[0]),-std::sin(camera.Rotation[0]),
-//		0,std::sin(camera.Rotation[0]),std::cos(camera.Rotation[0])
-//	};
-//	double ry[9] = {
-//		std::cos(camera.Rotation[1]),0,std::sin(camera.Rotation[1]),
-//		0,1,0,
-//		-std::sin(camera.Rotation[1]),0,std::cos(camera.Rotation[1])
-//	};
-//	double rz[9] = {
-//		std::cos(camera.Rotation[2]),-std::sin(camera.Rotation[2]),0,
-//		std::sin(camera.Rotation[2]),std::cos(camera.Rotation[2]),0,
-//		0,0,1
-//	};
-//	for(int r = 0; r<3;r++)
-//	{
-//		for(int c=0;c<3;c++)
-//		{
-//			for(int inner = 0; inner<3;inner++)
-//			{
-//				rTemp[(r * 3) + c] += rx[(r*3) + inner] * ry[c+(inner*3)];
-//				rotationMatrix[(r * 3) + c] += rTemp[(r * 3) + inner] * rz[c + (inner * 3)];
-//			}
-//		}
-//	}
-//
-//	return rotationMatrix;
-//}
