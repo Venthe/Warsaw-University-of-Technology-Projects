@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1461368365 source:/root/osproj2/osproj2/main.cpp
+	<iostream>
+	<string>
+	<unistd.h>
+	<sys/ipc.h>
+	<sys/shm.h>
+	"sm_standard.h"
+
+1461368426 /root/osproj2/osproj2/sm_standard.h
+	<errno.h>
+	<libgen.h>
+
