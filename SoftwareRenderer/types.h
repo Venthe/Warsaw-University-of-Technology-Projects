@@ -25,10 +25,12 @@ public:
 	Vector3<T> Normalize()
 	{
 		double length = sqrt((t[0]*t[0]) + (t[1] * t[1]) + (t[2] * t[2]));
-		if (length < 0.0) length *= -1.0;
+		if (length == 0) return Vector3<T>(0, 0, 0);
+		else if (length < 0.0) length *= -1.0;
 		return Vector3<T>(t[0]/ length,t[1]/ length,t[2]/ length);
+		//return Vector3<T>(1/ length,1/ length,1/ length);
 	}
-	T Norm()
+	T Length()
 	{
 		return std::sqrt(t[0]*t[0] + t[1] * t[1] + t[2] * t[2]);
 	}
@@ -55,6 +57,7 @@ public:
 template <class T>
 Vector3<T>::Vector3()
 {
+	for (int i = 0; i < 3; i++) t[i] = 0;
 	return;
 }
 
@@ -212,4 +215,10 @@ Vector3<T> CrossProduct(Vector3<T> a, Vector3<T>b)
 	temp[1] = a[2] * b[0] - a[0] * b[2];
 	temp[2] = a[0] * b[1] - a[1] * b[0];
 	return temp;
+}
+
+template <typename T>
+T DotProduct(Vector3<T> a, Vector3<T>b)
+{
+	return a[0]*b[0] + a[1] * b[1] + a[2] * b[2];
 }

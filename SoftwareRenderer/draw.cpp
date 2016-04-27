@@ -151,7 +151,7 @@ void DrawPolygon(Vector2<int> p[3], Vector3<unsigned char> color, bool fill_poly
 		DrawLine(p[2], p[0], Vector3<unsigned char>(0xff, 0, 0));
 		return;
 	}
-	// Sort Polygons by Y
+	// Sort Polygons by y
 	if (p[0][1] > p[1][1]) std::swap(p[1], p[0]);
 	if (p[0][1] > p[2][1]) std::swap(p[2], p[0]);
 	if (p[1][1] > p[2][1]) std::swap(p[1], p[2]);
@@ -160,24 +160,24 @@ void DrawPolygon(Vector2<int> p[3], Vector3<unsigned char> color, bool fill_poly
 
 	for (int y = p[0][1]; y != p[2][1]; y++)
 	{
-		float CurrentLongX = static_cast<float>((y - p[0][1])) / TotalHeight;
+		float CurrentLongx = static_cast<float>((y - p[0][1])) / TotalHeight;
 		Vector2<int> a;
 		Vector2<int> b;
 		if (y < p[1][1])
 		{
 			int SegmentHeight = p[1][1] - p[0][1];
 			if (SegmentHeight == 0) SegmentHeight++;
-			float CurrentShortX = static_cast<float>((y - p[0][1])) / SegmentHeight;
-			a(p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortX), y);
-			b(p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongX), y);
+			float CurrentShortx = static_cast<float>((y - p[0][1])) / SegmentHeight;
+			a(p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y);
+			b(p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y);
 		}
 		else
 		{
 			int SegmentHeight = p[2][1] - p[1][1];
 			if (SegmentHeight == 0) SegmentHeight++;
-			float CurrentShortX = static_cast<float>((y - p[1][1])) / SegmentHeight;
-			a(p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortX), y);
-			b(p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongX), y);
+			float CurrentShortx = static_cast<float>((y - p[1][1])) / SegmentHeight;
+			a(p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y);
+			b(p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y);
 		}
 		DrawLine(a, b, color);
 	}
@@ -185,82 +185,71 @@ void DrawPolygon(Vector2<int> p[3], Vector3<unsigned char> color, bool fill_poly
 
 void Projection(double fov, double aspectW, double aspectH, double clippingNear, double clippingFar)
 {
-	std::array<double,16> projectionMatrix = IdentityMatrix<double, 4>();
-	double aspectRatio =  aspectW / aspectH;
+	config.ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
+	double aspectRatio = aspectW / aspectH;
 
-	double D2R = M_PI / 180.0;
-	double yScale = 1.0 / tan(D2R * fov / 2);
+	double yScale = 1.0 / tan(MyMath::AngleInDegrees(fov) / 2);
 	double xScale = yScale / aspectRatio;
 	double clippingDistance = clippingNear - clippingFar;
 
-	projectionMatrix[0] = xScale;
-	projectionMatrix[5] = yScale;
-	projectionMatrix[10] = (clippingFar + clippingNear) / clippingDistance;
-	projectionMatrix[11] = -1;
-	projectionMatrix[14] = (2 * clippingFar * clippingNear) / clippingDistance;
-
-
-	config.Projection = projectionMatrix;
+	config.ProjectionMatrix[0] = xScale;
+	config.ProjectionMatrix[5] = yScale;
+	config.ProjectionMatrix[10] = (clippingFar + clippingNear) / clippingDistance;
+	config.ProjectionMatrix[11] = -1;
+	config.ProjectionMatrix[14] = (2 * clippingFar * clippingNear) / clippingDistance;
 }
 
 void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOrigin)
 {
+	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
 
-	Vector3<double> z = (cameraOrigin - lookat).Normalize();
-	Vector3<double> x = CrossProduct(up, z).Normalize();
-	Vector3<double> y = CrossProduct(z, x);
-
-	auto Orientation = IdentityMatrix<double, 4>();
-	auto Translation = IdentityMatrix<double, 4>();
-
+	auto z = (cameraOrigin - lookat).Normalize();
+	auto x = CrossProduct(up, z).Normalize();
+	auto y = CrossProduct(z, x).Normalize();
+	auto M = MyMath::IdentityMatrix<double, 16>();
+	auto T = MyMath::IdentityMatrix<double, 16>();
 	for (int i = 0; i<3; i++) {
-		Orientation[i] = x[i];
-		Orientation[4 + i] = y[i];
-		Orientation[8 + i] = z[i];
-		Translation[12 + i] = -lookat[i];
+		M[0*4+i] = x[i];
+		M[1*4+i] = y[i];
+		M[2*4+i] = z[i];
+		T[i*4+3] = -lookat[i];
 	}
 
-	config.ViewMatrix = ArrayMultiplication(Orientation,Translation);
+	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
 }
-//void Viewport(int x, int y, int w, int h) {
-//	config.Viewport = IdentityMatrix<double, 4>();
-//	config.Viewport[0 * 4 + 3] = x + w / 2.f;
-//	config.Viewport[1 * 4 + 3] = y + h / 2.f;
-//	config.Viewport[2 * 4 + 3] = 1.f;
-//
-//	config.Viewport[0 * 4 + 0] = w / 2.f;
-//	config.Viewport[1 * 4 + 1] = h / 2.f;
-//	config.Viewport[2 * 4 + 2] = 0;
-//}
+void Viewport(int x, int y, int w, int h) {
+	config.ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
+	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.f;
+	config.ViewportMatrix[1 * 4 + 3] = y + h / 2.f;
+	config.ViewportMatrix[2 * 4 + 3] = 1.f;
+
+	config.ViewportMatrix[0 * 4 + 0] = w / 2.f;
+	config.ViewportMatrix[1 * 4 + 1] = h / 2.f;
+	config.ViewportMatrix[2 * 4 + 2] = 0;
+}
 
 
 void DrawModel(Model model, bool fill_polygon)
 {
-	model.ModelMatrix();
-	//config.TransformationMatrix = IdentityMatrix<double,4>();
-	
+	auto temp = config.ViewMatrix;
+	temp = MyMath::ArrayMultiplication(temp, MyMath::RotateMatrix<double, 16>(config.camera.Rotation));
+	temp = MyMath::ArrayMultiplication(temp, MyMath::TranslateMatrix<double, 16>(Vector3<double>(-config.camera.Origin[0], -config.camera.Origin[1], -config.camera.Origin[2])));
 	Vector3<double> current_vertex[3];
 	for (unsigned int i = 0; i < model.Face.size(); i++)
 	{
+		int doNotDraw = 0;
 		for (int j = 0; j<3; j++) current_vertex[j](model.Vertex.at(model.Face.at(i)[j] - 1)[0], model.Vertex.at(model.Face.at(i)[j] - 1)[1], model.Vertex.at(model.Face.at(i)[j] - 1)[2]);
 
 		//View with perspective
 		for(int j = 0; j<3;j++){
-			transformVectorByArray(config.ViewMatrix, current_vertex[j]);
-			transformVectorByArray(config.Projection, current_vertex[j], true);
-			transformVectorByArray(model.ScaleMatrix, current_vertex[j]);
-			transformVectorByArray(model.RotateXMatrix, current_vertex[j]);
-			transformVectorByArray(model.RotateYMatrix, current_vertex[j]);
-			transformVectorByArray(model.RotateZMatrix, current_vertex[j]);
-			transformVectorByArray(model.TranslateMatrix, current_vertex[j]);
+			MyMath::transformVectorByArray(MyMath::ArrayMultiplication(temp, model.GetModelMatrix()), current_vertex[j]);
+			//if (MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j],true) == 1) doNotDraw++;
+			MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j],true);
+			MyMath::transformVectorByArray(config.ViewportMatrix, current_vertex[j]);
+
 		}
 
-		//Scale the model and move it by it's origin point with respect to scene
-		Vector3<int> pixel_vertex[3];
-		for (int j = 0; j < 3; j++)
-		{
-			for (int k = 0; k < 3; k++) pixel_vertex[j][k] = static_cast<int>(current_vertex[j][k]);
-		}
+		if (doNotDraw == 3) continue;
 
 		// TODO: SHADING
 		Vector3<unsigned char> color;
@@ -268,7 +257,11 @@ void DrawModel(Model model, bool fill_polygon)
 		//color = _RandomPixelColor(); // Temp Random color
 
 		Vector2<int> triangle[3];
-		for (int j=0;j<3;j++) triangle[j] = Vector2<int>(pixel_vertex[j][0]+config.bufferSize[0]/2, pixel_vertex[j][1]+config.bufferSize[1]/2);
+		for (int j = 0; j < 3; j++)
+		{
+			triangle[j] = Vector2<int>(static_cast<int>(current_vertex[j][0]), static_cast<int>(current_vertex[j][1]));
+		}
+
 		
 		DrawPolygon(triangle, color, fill_polygon);
 	}

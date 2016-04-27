@@ -2,6 +2,7 @@
 #include <string>
 #ifdef _WIN32
 #include <Windows.h>
+#define DIRECTORY_LENGTH 256
 
 /// Draws the backbuffer onto window
 void Draw(HWND hwndMain);

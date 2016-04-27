@@ -19,14 +19,14 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		switch (wParam)
 		{
-		case 'Z': config.camera.ShiftFocalLength(5.); break;
-		case 'X': config.camera.ShiftFocalLength(-5.); break;
-		case 'A': config.camera.ShiftLocation(Vector3<double>(-5.0,0,0)); break;
-		case 'D': config.camera.ShiftLocation(Vector3<double>(5.0,0,0)); break;
-		case 'W': config.camera.ShiftLocation(Vector3<double>(0,5.0,0)); break;
-		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-5.0,0)); break;
-		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,5.0)); break;
-		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-5.0)); break;
+		case 'Z': config.camera.ShiftFocalLength(2.5); break;
+		case 'X': config.camera.ShiftFocalLength(-2.5); break;
+		case 'A': config.camera.ShiftLocation(Vector3<double>(-0.1,0,0)); break;
+		case 'D': config.camera.ShiftLocation(Vector3<double>(0.1,0,0)); break;
+		case 'W': config.camera.ShiftLocation(Vector3<double>(0,0.1,0)); break;
+		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-0.1,0)); break;
+		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,0.1)); break;
+		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-0.1)); break;
 		default: break;
 		}
 		break;
@@ -36,19 +36,19 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
-	SetSettings(800,600);
+	SetSettings(1024,768);
 	PlatformSpecificInitialization();
 
 	LPSTR className = "MainClass";
 	MSG msg;
 	WNDCLASSEX wc;
 
-	wc.cbSize = sizeof(WNDCLASSEX); // The size, in bytes, of this structure. Set this member to sizeof(WNDCLASSEX)
+	wc.cbSize = sizeof(WNDCLASSEX); // The size, in bytes, of this structure. Set this member to sizeof(WNDCLASSEx)
 	wc.cbClsExtra = 0; // The number of extra bytes to allocate following the window-class structure.
 	wc.cbWndExtra = 0; // The number of extra bytes to allocate following the window instance. 
 	wc.hInstance = hInstance; // A handle to the instance that contains the window procedure for the class. 
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_GLOBALCLASS; // The class style(s).
-	wc.lpfnWndProc = WndProcedure; // A pointer to the window procedure. You must use the CallWindowProc function to call the window procedure.
+	wc.lpfnWndProc = WndProcedure; // A pointer to the window procedure. you must use the CallWindowProc function to call the window procedure.
 	wc.hIcon = nullptr; // A handle to the class icon
 	wc.hCursor = nullptr; // A handle to the class cursor. 
 	wc.hbrBackground = nullptr; // A handle to the class background brush. 
@@ -84,13 +84,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 	//load file
 	//TODO: Model name from command line?
-	Model object("teapot.obj");
-	object.Origin (0,200, 0);
-	object.Rotation (0, 0, 0); // x y z
-	object.Scale (50, -50, 50);
+	Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(),Vector3<double>(-3, 2, 1.5), Vector3<double>(50, 0, 0), Vector3<double>(.1, -.1, .1));
+	Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(),Vector3<double>(),Vector3<double>(),Vector3<double>(.1,.1,.1));
 
-	config.camera.Origin(20,30,75);
-
+	Viewport();
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
@@ -98,11 +95,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 		FillRect(Vector3<unsigned char>(70,70,70));
 		DrawGrid();
-
-		LookAt(Vector3<double>(0, 0, 0), Vector3<double>::Up());
+		
 		Projection();
-		//Viewport(config.bufferSize[0] / 8, config.bufferSize[1] / 8, config.bufferSize[0] * 3 / 4, config.bufferSize[1] * 3 / 4);
+		LookAt();
 		DrawModel(object);
+
+		for(int i = 0; i <4 ; i++)
+		{
+			ball.Origin(4, 0, -i*5);
+			DrawModel(ball);
+			ball.Origin(-4, 0, -i*5);
+			DrawModel(ball);
+		}
 
 		Draw(hwndMain);
 

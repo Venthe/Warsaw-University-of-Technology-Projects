@@ -5,11 +5,9 @@
 #include <string>
 #include "types.h"
 
-using namespace std;
-
-Vector3<double> ParseDoubleFromObj(string line)
+Vector3<double> ParseDoubleFromObj(std::string line)
 {
-	string buffer[3];
+	std::string buffer[3];
 	int pos;
 	for (int i = 0; i < 3; i++)
 	{
@@ -21,9 +19,9 @@ Vector3<double> ParseDoubleFromObj(string line)
 	return Vector3<double>(stod(buffer[0]), stod(buffer[1]), stod(buffer[2]));
 }
 
-Vector3<int> ParseIntFromObj(string line)
+Vector3<int> ParseIntFromObj(std::string line)
 {
-	string buffer[3];
+	std::string buffer[3];
 	int pos;
 	for (int i = 0; i < 3; i++)
 	{
@@ -35,21 +33,16 @@ Vector3<int> ParseIntFromObj(string line)
 	return Vector3<int>(atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()));
 }
 
-Model::Model(char* path)
+int Model::LoadObject(std::string path)
 {
-	this->LoadObject(path);
-}
-
-int Model::LoadObject(char* path)
-{
-	ifstream myfile;
-	myfile.open(path);
+	std::ifstream myfile;
+	myfile.open(path.c_str());
 	if (!myfile.is_open())
 	{
-		cout << "Problem opening file " << path << endl;
+		std::cerr << "Problem opening file " << path << std::endl;
 		return 1;
 	}
-	string line;
+	std::string line;
 	while (getline(myfile, line))
 	{
 		if (line.length() > 2 && line[1] == ' ') {
@@ -67,3 +60,16 @@ int Model::LoadObject(char* path)
 	return 0;
 }
 
+std::array<double, 16> Model::GetModelMatrix()
+{
+	std::array<double, 16> ScaleM = MyMath::ScaleMatrix<double, 16>(Scale);
+	std::array<double, 16> TranslateM = MyMath::TranslateMatrix<double, 16>(Origin);
+	std::array<double, 16> Rotate = MyMath::RotateMatrix<double, 16>(Rotation);
+
+	ModelMatrix = MyMath::IdentityMatrix<double, 16>();
+	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, Rotate);
+	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, ScaleM);
+	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, TranslateM);
+
+	return ModelMatrix;
+}
