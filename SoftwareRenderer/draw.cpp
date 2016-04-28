@@ -188,7 +188,7 @@ void Projection(double fov, double aspectW, double aspectH, double clippingNear,
 	config.ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
 	double aspectRatio = aspectW / aspectH;
 
-	double yScale = 1.0 / tan(MyMath::AngleInDegrees(fov) / 2);
+	double yScale = 1.0 / tan(MyMath::DegreesToRadians(fov) / 2);
 	double xScale = yScale / aspectRatio;
 	double clippingDistance = clippingNear - clippingFar;
 
@@ -201,7 +201,6 @@ void Projection(double fov, double aspectW, double aspectH, double clippingNear,
 
 void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOrigin)
 {
-
 	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
 
 	auto z = (cameraOrigin - lookat).Normalize();
@@ -219,42 +218,40 @@ void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOr
 	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
 	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>((-1.)*config.camera.Origin));
 }
-void LookAtNothing(Vector3<double> up, Vector3<double> cameraOrigin)
+
+void LookAtNothing(Vector3<double>, Vector3<double>)
 {
 	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
-	//config.ViewMatrix = temp;
 
-	// Rotate lookAtVector around the right vector
-	// This is where we actually change pitch
-
-	Vector3<double> target(config.camera.Origin[0], config.camera.Origin[1], 0);
-
-	// Now update the upVector
-	LookAt(target, up, cameraOrigin);
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<double, 16>(config.camera.Rotation));
+	config.camera.Origin[0] *= -1.;
 	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(config.camera.Origin));
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<double, 16>((20.) * config.camera.Rotation));
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>((-1.)*config.camera.Origin));
+	config.camera.Origin[0] *= -1.;
 }
-
 
 void Viewport(int x, int y, int w, int h) {
 	config.ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
-	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.f;
-	config.ViewportMatrix[1 * 4 + 3] = y + h / 2.f;
-	config.ViewportMatrix[2 * 4 + 3] = 1.f;
+	//config.ViewportMatrix.fill(0);
+	double depth = 256.;
+	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.;
+	config.ViewportMatrix[1 * 4 + 3] = y + h / 2.;
+	if(!config.Perspective) config.ViewportMatrix[2 * 4 + 3] = depth / 2.;
+	else config.ViewportMatrix[2 * 4 + 3] = 1;
 
 	config.ViewportMatrix[0 * 4 + 0] = w / 2.f;
 	config.ViewportMatrix[1 * 4 + 1] = h / 2.f;
-	config.ViewportMatrix[2 * 4 + 2] = 0;
+	if (!config.Perspective) config.ViewportMatrix[2 * 4 + 3] = depth / 2.;
+	else config.ViewportMatrix[2 * 4 + 3] = 0;
 }
-
 
 void DrawModel(Model model, bool fill_polygon)
 {
 	Vector3<double> current_vertex[3];
-	for (unsigned int i = 0; i < model.Face.size(); i++)
+	int doNotDraw = 0;
+	Vector2<int> triangle[3];
+
+	for (unsigned int i = 0; i < model.Face.size(); i++, doNotDraw = 0)
 	{
-		int doNotDraw = 0;
 		for (int j = 0; j<3; j++) current_vertex[j](model.Vertex.at(model.Face.at(i)[j] - 1)[0], model.Vertex.at(model.Face.at(i)[j] - 1)[1], model.Vertex.at(model.Face.at(i)[j] - 1)[2]);
 
 		//View with perspective
@@ -262,28 +259,21 @@ void DrawModel(Model model, bool fill_polygon)
 			MyMath::transformVectorByArray(model.GetModelMatrix(), current_vertex[j]);
 			MyMath::transformVectorByArray(config.ViewMatrix, current_vertex[j]);
 			if (config.Perspective)
-			{
-				MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], true);
-			}
-
+				if (MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], true) == 1) doNotDraw++;
 			MyMath::transformVectorByArray(config.ViewportMatrix, current_vertex[j]);
 
 		}
 
-		if (doNotDraw == 3) continue;
+		if (doNotDraw == 3 && config.Perspective) continue;
 
-		// TODO: SHADING
-		Vector3<unsigned char> color;
-		color = Vector3<unsigned char>(0, 0, 0);
-		//color = _RandomPixelColor(); // Temp Random color
-
-		Vector2<int> triangle[3];
+		doNotDraw = 0;
 		for (int j = 0; j < 3; j++)
 		{
+			if (current_vertex[j][2] < config.camera.Origin[2]) doNotDraw++;
 			triangle[j] = Vector2<int>(static_cast<int>(current_vertex[j][0]), static_cast<int>(current_vertex[j][1]));
 		}
 
-		
-		DrawPolygon(triangle, color, fill_polygon);
+		if (doNotDraw == 3 && config.Perspective) continue;
+		DrawPolygon(triangle, Vector3<unsigned char>(), fill_polygon);
 	}
 }

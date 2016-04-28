@@ -11,7 +11,7 @@ struct _CONFIG
 	void* backbuffer;
 	Camera camera;
 	Camera defaultCamera;
-	bool LookAt = true;
+	bool LookAt = false;
 	bool Perspective = true;
 	std::array<double, 16> ViewMatrix      ;
 	std::array<double, 16> ViewportMatrix  ;

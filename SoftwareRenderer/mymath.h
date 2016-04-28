@@ -4,7 +4,7 @@
 namespace MyMath{
 	#define M_PI 3.14159
 
-	double AngleInDegrees(double d);
+	double DegreesToRadians(double d);
 
 	template <typename T, size_t x>
 	std::array <T, x> IdentityMatrix()
@@ -40,21 +40,6 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	int transformVectorByArray(std::array<T, x> t, Vector3<T>& v, bool retroProject = false)
-	{
-		T result[4];
-		for (int i = 0; i < sqrt(x); i++) result[i] = v[0] * t[i * 4] + v[1] * t[i * 4 + 1] + v[2] * t[i * 4 + 2] + 1 * t[i * 4 + 3];
-
-		for (int i = 0; i < 4 - 1; i++) {
-			if (retroProject) {
-				v[i] = result[i] / result[4 - 1];
-			}
-			else v[i] = result[i];
-		}
-		return 0;
-	}
-
-	template <typename T, size_t x>
 	std::array <T, x> ScaleMatrix(Vector3<T> Scale)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
@@ -68,43 +53,43 @@ namespace MyMath{
 	{
 		auto temp = IdentityMatrix<T, x>();
 
-		temp = ArrayMultiplication(temp, RotateMatrixx<T, x>(v[0]));
-		temp = ArrayMultiplication(temp, RotateMatrixy<T, x>(v[1]));
-		temp = ArrayMultiplication(temp, RotateMatrixz<T, x>(v[2]));
+		temp = ArrayMultiplication(temp, RotateMatrixX<T, x>(v[0]));
+		temp = ArrayMultiplication(temp, RotateMatrixY<T, x>(v[1]));
+		temp = ArrayMultiplication(temp, RotateMatrixZ<T, x>(v[2]));
 
 		return temp;
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrixz(double d)
+	std::array <T, x> RotateMatrixZ(double d)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
-		temp[5] = std::cos(AngleInDegrees(d));
-		temp[6] = -std::sin(AngleInDegrees(d));
-		temp[9] = std::sin(AngleInDegrees(d));
-		temp[10] = std::cos(AngleInDegrees(d));
+		temp[5] = std::cos(DegreesToRadians(d));
+		temp[6] = -std::sin(DegreesToRadians(d));
+		temp[9] = std::sin(DegreesToRadians(d));
+		temp[10] = std::cos(DegreesToRadians(d));
 		return temp;
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrixy(double d)
+	std::array <T, x> RotateMatrixY(double d)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
-		temp[0] = std::cos(AngleInDegrees(d));
-		temp[1] = -std::sin(AngleInDegrees(d));
-		temp[4] = std::sin(AngleInDegrees(d));
-		temp[5] = std::cos(AngleInDegrees(d));
+		temp[0] = std::cos(DegreesToRadians(d));
+		temp[1] = -std::sin(DegreesToRadians(d));
+		temp[4] = std::sin(DegreesToRadians(d));
+		temp[5] = std::cos(DegreesToRadians(d));
 		return temp;
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrixx(double d)
+	std::array <T, x> RotateMatrixX(double d)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
-		temp[0] = std::cos(AngleInDegrees(d));
-		temp[2] = std::sin(AngleInDegrees(d));
-		temp[8] = -std::sin(AngleInDegrees(d));
-		temp[10] = std::cos(AngleInDegrees(d));
+		temp[0] = std::cos(DegreesToRadians(d));
+		temp[2] = std::sin(DegreesToRadians(d));
+		temp[8] = -std::sin(DegreesToRadians(d));
+		temp[10] = std::cos(DegreesToRadians(d));
 		return temp;
 	}
 
@@ -116,5 +101,29 @@ namespace MyMath{
 		temp[7] = Origin[1];
 		temp[11] = Origin[2];
 		return temp;
+	}
+
+	template <typename T, size_t x>
+	int transformVectorByArray(std::array<T, x> t, Vector3<T>& v, bool retroProject = false)
+	{
+		//auto res2 = TranslateMatrix<T, x>(v);
+		T result[4];
+
+		for (int i = 0; i < sqrt(x); i++)
+		{
+			result[i] = v[0] * t[i * 4] + v[1] * t[i * 4 + 1] + v[2] * t[i * 4 + 2] + 1 * t[i * 4 + 3];
+		}
+
+
+		for (int i = 0; i < 4 - 1; i++) {
+			if (retroProject) {
+				v[i] = result[i] / result[4 - 1];
+			}
+			else v[i] = result[i];
+		}
+		if (v[0] < -result[3] || v[0]>result[3])
+			if (v[1] < -result[3] || v[1]>result[3])
+				if (v[2] < -result[3] || v[2]>result[3]) return 1;
+		return 0;
 	}
 }

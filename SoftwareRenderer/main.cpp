@@ -23,19 +23,19 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		case 'Z': config.camera.ShiftFocalLength(2.5); break;
 		case 'X': config.camera.ShiftFocalLength(-2.5); break;
 			//Translation
-		case 'A': config.camera.ShiftLocation(Vector3<double>(-0.1,0,0)); break;
-		case 'D': config.camera.ShiftLocation(Vector3<double>(0.1,0,0)); break;
-		case 'W': config.camera.ShiftLocation(Vector3<double>(0,0.1,0)); break;
-		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-0.1,0)); break;
-		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,0.1)); break;
-		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-0.1)); break;
-			//Rotation
-		case 'Y': config.camera.ShiftRotation(Vector3<double>(-5, 0, 0)); break;
-		case 'U': config.camera.ShiftRotation(Vector3<double>(5, 0, 0)); break;
-		case 'H': config.camera.ShiftRotation(Vector3<double>(0, 5, 0)); break;
-		case 'J': config.camera.ShiftRotation(Vector3<double>(0, -5, 0)); break;
-		case 'N': config.camera.ShiftRotation(Vector3<double>(0, 0, 5)); break;
-		case 'M': config.camera.ShiftRotation(Vector3<double>(0, 0, -5)); break;
+		case 'A': config.camera.ShiftLocation(Vector3<double>(-0.2,0,0)); break;
+		case 'D': config.camera.ShiftLocation(Vector3<double>(0.2,0,0)); break;
+		case 'W': config.camera.ShiftLocation(Vector3<double>(0,0.2,0)); break;
+		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-0.2,0)); break;
+		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,0.2)); break;
+		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-0.2)); break;
+			//Pitch, Yaw,Roll
+		case 'Y': config.camera.ShiftRotation(Vector3<double>(-2.5, 0, 0)); break;
+		case 'U': config.camera.ShiftRotation(Vector3<double>(2.5, 0, 0)); break;
+		case 'H': config.camera.ShiftRotation(Vector3<double>(0, 2.5, 0)); break;
+		case 'J': config.camera.ShiftRotation(Vector3<double>(0, -2.5, 0)); break;
+		case 'N': config.camera.ShiftRotation(Vector3<double>(0, 0, 2.5)); break;
+		case 'M': config.camera.ShiftRotation(Vector3<double>(0, 0, -2.5)); break;
 			//Misc
 		case 'F': //Perspective camera
 			if (config.Perspective == false) { config.Perspective = true; }
@@ -110,6 +110,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 	Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector3<double>(), Vector3<double>(), Vector3<double>(.1, .1, .1));
 
 	Viewport();
+	config.camera.Origin[2] = -1.5;
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
@@ -121,6 +122,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 		Projection();
 		if(config.LookAt) LookAt();
 		else LookAtNothing();
+
+
 		DrawModel(object);
 
 		for(int i = 0; i <4 ; i++)
@@ -142,6 +145,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 		Draw(hwndMain);
 
 		std::string str = "Camera:\no:" + config.camera.Origin.ToString()+"\nr:" + config.camera.Rotation.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
+		if (config.LookAt) str.append("\n").append("Looking at center");
+		else str.append("\n").append("Looking in front");
+		if (config.Perspective) str.append("\n").append("Perspective");
+		else str.append("\n").append("Ortho");
 		TypeText(hwndMain, str);
 		//InvalidateRect(hwndMain, nullptr, FALSE);
 	}

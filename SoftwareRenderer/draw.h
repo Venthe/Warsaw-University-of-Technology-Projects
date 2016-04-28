@@ -8,7 +8,7 @@ void FillRect(Vector3<unsigned char> color = Vector3<unsigned char>(0, 0, 0)); /
 void DrawModel(Model model, bool fill_polygons = false);
 void DrawGrid(int density = 32, Vector3<unsigned char> color = Vector3<unsigned char>(32, 32, 32));
 
-void Projection(double fov=config.camera.FocalLength, double aspectW=config.bufferSize[0], double aspectH = config.bufferSize[1], double clippingNear=0.25, double clippingFar=10.);
+void Projection(double fov=config.camera.FocalLength, double aspectW=config.bufferSize[0], double aspectH = config.bufferSize[1], double clippingNear=0.05, double clippingFar=50.);
 
 void LookAtNothing(Vector3<double> up = Vector3<double>::Up(), Vector3<double> cameraOrigin = config.camera.Origin);
 void LookAt(Vector3<double> lookat=Vector3<double>(), Vector3<double> up=Vector3<double>::Up(), Vector3<double> cameraOrigin = config.camera.Origin);

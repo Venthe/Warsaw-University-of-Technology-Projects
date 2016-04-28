@@ -33,9 +33,9 @@ public:
 	}
 	void ShiftRotation(Vector3<double> rotate)
 	{
-		Rotation[0] += rotate[0]*(M_PI/180.0);
-		Rotation[1] += rotate[1]*(M_PI/180.0);
-		Rotation[2] += rotate[2]*(M_PI/180.0);
+		Rotation[0] += rotate[0];
+		Rotation[1] += rotate[1];
+		Rotation[2] += rotate[2];
 	}
 };
 
@@ -46,7 +46,7 @@ class Model : public ObjectData, public Scalable
 public:
 	std::vector<Vector3<double>> Vertex;
 	std::vector<Vector3<int>> Face;
-	//explicit Model(std::string path);
+
 	Model(std::string path, Vector3<double> Loc = Vector3<double>(), Vector3<double> Rot = Vector3<double>(), Vector3<double> Sca = Vector3<double>(1,1,1))
 	{
 		Origin = Loc;
