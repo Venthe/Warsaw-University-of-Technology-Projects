@@ -48,7 +48,6 @@ namespace MyMath{
 		for (int i = 0; i < 4 - 1; i++) {
 			if (retroProject) {
 				v[i] = result[i] / result[4 - 1];
-				if (result[i]<-result[4 - 1] || result[i] > result[4 - 1]) return 1;
 			}
 			else v[i] = result[i];
 		}

@@ -12,6 +12,6 @@ void SetSettings(int x, int y, Vector3<double> Origin , Vector3<double> Rotation
 	config.camera.Origin = Origin;
 	config.camera.Rotation = Rotation;
 	config.camera.FocalLength = FocalLength;
-
+	config.defaultCamera = config.camera;
 	GetCurrentDirectory(DIRECTORY_LENGTH, config.CurrentDirectory);
 }

@@ -201,6 +201,7 @@ void Projection(double fov, double aspectW, double aspectH, double clippingNear,
 
 void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOrigin)
 {
+
 	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
 
 	auto z = (cameraOrigin - lookat).Normalize();
@@ -216,7 +217,26 @@ void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOr
 	}
 
 	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>((-1.)*config.camera.Origin));
 }
+void LookAtNothing(Vector3<double> up, Vector3<double> cameraOrigin)
+{
+	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+	//config.ViewMatrix = temp;
+
+	// Rotate lookAtVector around the right vector
+	// This is where we actually change pitch
+
+	Vector3<double> target(config.camera.Origin[0], config.camera.Origin[1], 0);
+
+	// Now update the upVector
+	LookAt(target, up, cameraOrigin);
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(config.camera.Origin));
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<double, 16>((20.) * config.camera.Rotation));
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>((-1.)*config.camera.Origin));
+}
+
+
 void Viewport(int x, int y, int w, int h) {
 	config.ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
 	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.f;
@@ -231,9 +251,6 @@ void Viewport(int x, int y, int w, int h) {
 
 void DrawModel(Model model, bool fill_polygon)
 {
-	auto temp = config.ViewMatrix;
-	temp = MyMath::ArrayMultiplication(temp, MyMath::RotateMatrix<double, 16>(config.camera.Rotation));
-	temp = MyMath::ArrayMultiplication(temp, MyMath::TranslateMatrix<double, 16>(Vector3<double>(-config.camera.Origin[0], -config.camera.Origin[1], -config.camera.Origin[2])));
 	Vector3<double> current_vertex[3];
 	for (unsigned int i = 0; i < model.Face.size(); i++)
 	{
@@ -242,9 +259,13 @@ void DrawModel(Model model, bool fill_polygon)
 
 		//View with perspective
 		for(int j = 0; j<3;j++){
-			MyMath::transformVectorByArray(MyMath::ArrayMultiplication(temp, model.GetModelMatrix()), current_vertex[j]);
-			//if (MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j],true) == 1) doNotDraw++;
-			MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j],true);
+			MyMath::transformVectorByArray(model.GetModelMatrix(), current_vertex[j]);
+			MyMath::transformVectorByArray(config.ViewMatrix, current_vertex[j]);
+			if (config.Perspective)
+			{
+				MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], true);
+			}
+
 			MyMath::transformVectorByArray(config.ViewportMatrix, current_vertex[j]);
 
 		}

@@ -28,7 +28,11 @@ public:
 		if (length == 0) return Vector3<T>(0, 0, 0);
 		else if (length < 0.0) length *= -1.0;
 		return Vector3<T>(t[0]/ length,t[1]/ length,t[2]/ length);
-		//return Vector3<T>(1/ length,1/ length,1/ length);
+	}
+
+	T DotProduct(Vector3<T> lhs, Vector3<T> rhs)
+	{
+		return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 	}
 	T Length()
 	{
@@ -38,6 +42,7 @@ public:
 	void operator()(const T a, const T b, const T c);
 	Vector3<T>& operator+=(const Vector3<T>& rhs);
 	Vector3<T>& operator-=(const Vector3<T>& rhs);
+	Vector3<T>& operator*=(const T& rhs);
 	void operator=(const T input);
 	T& operator[](int i);
 
@@ -50,6 +55,18 @@ public:
 	friend Vector3<T> operator+(Vector3<T> lhs, const Vector3<T>& rhs)
 	{
 		lhs += rhs;
+		return lhs;
+	}
+
+	friend Vector3<T> operator* (Vector3<T> lhs, const T& rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+	friend Vector3<T> operator* (const T& rhs, Vector3<T> lhs)
+	{
+		lhs *= rhs;
 		return lhs;
 	}
 };
@@ -100,6 +117,15 @@ Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& rhs)
 	t[0] -= rhs.t[0];
 	t[1] -= rhs.t[1];
 	t[2] -= rhs.t[2];
+	return *this;
+}
+
+template <class T>
+Vector3<T>& Vector3<T>::operator*=(const T& rhs)
+{
+	t[0] *= rhs;
+	t[1] *= rhs;
+	t[2] *= rhs;
 	return *this;
 }
 

@@ -19,14 +19,35 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		switch (wParam)
 		{
+			//Focal length
 		case 'Z': config.camera.ShiftFocalLength(2.5); break;
 		case 'X': config.camera.ShiftFocalLength(-2.5); break;
+			//Translation
 		case 'A': config.camera.ShiftLocation(Vector3<double>(-0.1,0,0)); break;
 		case 'D': config.camera.ShiftLocation(Vector3<double>(0.1,0,0)); break;
 		case 'W': config.camera.ShiftLocation(Vector3<double>(0,0.1,0)); break;
 		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-0.1,0)); break;
 		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,0.1)); break;
 		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-0.1)); break;
+			//Rotation
+		case 'Y': config.camera.ShiftRotation(Vector3<double>(-5, 0, 0)); break;
+		case 'U': config.camera.ShiftRotation(Vector3<double>(5, 0, 0)); break;
+		case 'H': config.camera.ShiftRotation(Vector3<double>(0, 5, 0)); break;
+		case 'J': config.camera.ShiftRotation(Vector3<double>(0, -5, 0)); break;
+		case 'N': config.camera.ShiftRotation(Vector3<double>(0, 0, 5)); break;
+		case 'M': config.camera.ShiftRotation(Vector3<double>(0, 0, -5)); break;
+			//Misc
+		case 'F': //Perspective camera
+			if (config.Perspective == false) { config.Perspective = true; }
+			else { config.Perspective = false; }
+			break;
+		case 'R': //Reset camera
+			config.camera = config.defaultCamera;
+			break;
+		case 'T': //change camera pointing method
+			if (config.LookAt == false) { config.LookAt = true; }
+			else { config.LookAt = false; }
+			break;
 		default: break;
 		}
 		break;
@@ -86,6 +107,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 	//TODO: Model name from command line?
 	Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(),Vector3<double>(-3, 2, 1.5), Vector3<double>(50, 0, 0), Vector3<double>(.1, -.1, .1));
 	Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(),Vector3<double>(),Vector3<double>(),Vector3<double>(.1,.1,.1));
+	Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector3<double>(), Vector3<double>(), Vector3<double>(.1, .1, .1));
 
 	Viewport();
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -95,9 +117,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 		FillRect(Vector3<unsigned char>(70,70,70));
 		DrawGrid();
-		
+
 		Projection();
-		LookAt();
+		if(config.LookAt) LookAt();
+		else LookAtNothing();
 		DrawModel(object);
 
 		for(int i = 0; i <4 ; i++)
@@ -107,10 +130,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 			ball.Origin(-4, 0, -i*5);
 			DrawModel(ball);
 		}
+		for(int j= 0,a=36,b=36;j<a;j++)
+		{
+			for (int k = 0; k < b; k++)
+			{
+				grid.Origin(-static_cast<int>(b / 2) +k, 0, -static_cast<int>(a/2) + j);
+				DrawModel(grid);
+			}
+		}
 
 		Draw(hwndMain);
 
-		std::string str = "Camera:\no:" + config.camera.Origin.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
+		std::string str = "Camera:\no:" + config.camera.Origin.ToString()+"\nr:" + config.camera.Rotation.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
 		TypeText(hwndMain, str);
 		//InvalidateRect(hwndMain, nullptr, FALSE);
 	}
