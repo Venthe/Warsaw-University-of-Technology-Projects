@@ -13,9 +13,9 @@ struct _CONFIG
 	Camera defaultCamera;
 	bool LookAt = true;
 	bool Perspective = true;
-	std::array<double, 16> ViewMatrix = MyMath::IdentityMatrix<double, 16>();
-	std::array<double, 16> ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
-	std::array<double, 16> ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<double, 16> ViewMatrix      ;
+	std::array<double, 16> ViewportMatrix  ;
+	std::array<double, 16> ProjectionMatrix;
 	char * CurrentDirectory = static_cast<char*>(std::malloc(sizeof(char)*DIRECTORY_LENGTH));
 };
 

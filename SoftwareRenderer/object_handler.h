@@ -42,7 +42,7 @@ public:
 class Model : public ObjectData, public Scalable
 {
 	int LoadObject(std::string path);
-	std::array<double, 16> ModelMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<double, 16> ModelMatrix;
 public:
 	std::vector<Vector3<double>> Vertex;
 	std::vector<Vector3<int>> Face;

@@ -23,7 +23,7 @@ void TypeText(HWND hwndMain, std::string text)
 	HDC hdc = GetDC(hwndMain);
 	RECT rect;
 	GetClientRect(hwndMain, &rect);
-	DrawTextEx(hdc, txt, text.length(), &rect, 0, nullptr);
+	DrawTextEx(hdc, txt, static_cast<int>(text.length()), &rect, 0, nullptr);
 	DeleteDC(hdc);
 }
 

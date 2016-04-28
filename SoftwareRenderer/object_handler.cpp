@@ -11,7 +11,7 @@ Vector3<double> ParseDoubleFromObj(std::string line)
 	int pos;
 	for (int i = 0; i < 3; i++)
 	{
-		pos = line.find(' ');
+		pos = static_cast<int>(line.find(' '));
 		buffer[i] = line.substr(0, pos);
 		line = line.substr(pos + 1, line.length());
 	}
@@ -25,7 +25,7 @@ Vector3<int> ParseIntFromObj(std::string line)
 	int pos;
 	for (int i = 0; i < 3; i++)
 	{
-		pos = line.find(' ');
+		pos = static_cast<int>(line.find(' '));
 		buffer[i] = line.substr(0, pos);
 		line = line.substr(pos + 1, line.length());
 	}

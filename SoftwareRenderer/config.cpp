@@ -9,6 +9,10 @@ void SetSettings(int x, int y, Vector3<double> Origin , Vector3<double> Rotation
 	config.bufferSize[1] = y;
 	config.backbuffer = malloc(x * y * config.intBytesize);
 
+	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+	config.ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
+	config.ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
+
 	config.camera.Origin = Origin;
 	config.camera.Rotation = Rotation;
 	config.camera.FocalLength = FocalLength;
