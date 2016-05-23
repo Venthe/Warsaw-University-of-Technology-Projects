@@ -5,7 +5,7 @@
 #include <string>
 #include "types.h"
 
-Vector3<double> ParseDoubleFromObj(std::string line)
+Vector<double,3> ParseDoubleFromObj(std::string line)
 {
 	std::string buffer[3];
 	int pos;
@@ -16,10 +16,10 @@ Vector3<double> ParseDoubleFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector3<double>(stod(buffer[0]), stod(buffer[1]), stod(buffer[2]));
+	return Vector<double, 3>({ stod(buffer[0]), stod(buffer[1]), stod(buffer[2]) });
 }
 
-Vector3<int> ParseIntFromObj(std::string line)
+Vector<int, 3> ParseIntFromObj(std::string line)
 {
 	std::string buffer[3];
 	int pos;
@@ -30,7 +30,7 @@ Vector3<int> ParseIntFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector3<int>(atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()));
+	return Vector<int, 3>({ atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()) });
 }
 
 int Model::LoadObject(std::string path)

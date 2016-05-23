@@ -7,14 +7,14 @@
 class Scalable
 {
 public:
-	Vector3<double> Scale = Vector3<double>(1.0, 1.0, 1.0);
+	Vector<double, 3> Scale = Vector<double, 3>({ 1.0, 1.0, 1.0 });
 };
 
 class ObjectData
 {
 public:
-	Vector3<double> Origin = Vector3<double>(0.0, 0.0, 0.0);
-	Vector3<double> Rotation = Vector3<double>(0.0, 0.0, 0.0);
+	Vector<double, 3> Origin = Vector<double, 3>({ 0.0, 0.0, 0.0 });
+	Vector<double, 3> Rotation = Vector<double, 3>({ 0.0, 0.0, 0.0 });
 };
 
 class Camera : public ObjectData
@@ -25,13 +25,13 @@ public:
 	{
 		FocalLength += change;
 	}
-	void ShiftLocation(Vector3<double> shift)
+	void ShiftLocation(Vector<double,3> shift)
 	{
 		Origin[0] += shift[0];
 		Origin[1] += shift[1];
 		Origin[2] += shift[2];
 	}
-	void ShiftRotation(Vector3<double> rotate)
+	void ShiftRotation(Vector<double,3> rotate)
 	{
 		Rotation[0] += rotate[0];
 		Rotation[1] += rotate[1];
@@ -44,10 +44,10 @@ class Model : public ObjectData, public Scalable
 	int LoadObject(std::string path);
 	std::array<double, 16> ModelMatrix;
 public:
-	std::vector<Vector3<double>> Vertex;
-	std::vector<Vector3<int>> Face;
+	std::vector<Vector<double,3>> Vertex;
+	std::vector<Vector<int, 3>> Face;
 
-	Model(std::string path, Vector3<double> Loc = Vector3<double>(), Vector3<double> Rot = Vector3<double>(), Vector3<double> Sca = Vector3<double>(1,1,1))
+	Model(std::string path, Vector<double, 3> Loc = Vector<double, 3>(), Vector<double, 3> Rot = Vector<double, 3>(), Vector<double, 3> Sca = Vector<double, 3>({ 1,1,1 }))
 	{
 		Origin = Loc;
 		Rotation = Rot;

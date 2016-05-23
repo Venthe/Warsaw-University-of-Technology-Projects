@@ -23,19 +23,19 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		case 'Z': config.camera.ShiftFocalLength(2.5); break;
 		case 'X': config.camera.ShiftFocalLength(-2.5); break;
 			//Translation
-		case 'A': config.camera.ShiftLocation(Vector3<double>(-0.2,0,0)); break;
-		case 'D': config.camera.ShiftLocation(Vector3<double>(0.2,0,0)); break;
-		case 'W': config.camera.ShiftLocation(Vector3<double>(0,0.2,0)); break;
-		case 'S': config.camera.ShiftLocation(Vector3<double>(0,-0.2,0)); break;
-		case 'Q': config.camera.ShiftLocation(Vector3<double>(0,0,0.2)); break;
-		case 'E': config.camera.ShiftLocation(Vector3<double>(0,0,-0.2)); break;
-			//Pitch, Yaw,Roll
-		case 'Y': config.camera.ShiftRotation(Vector3<double>(-2.5, 0, 0)); break;
-		case 'U': config.camera.ShiftRotation(Vector3<double>(2.5, 0, 0)); break;
-		case 'H': config.camera.ShiftRotation(Vector3<double>(0, 2.5, 0)); break;
-		case 'J': config.camera.ShiftRotation(Vector3<double>(0, -2.5, 0)); break;
-		case 'N': config.camera.ShiftRotation(Vector3<double>(0, 0, 2.5)); break;
-		case 'M': config.camera.ShiftRotation(Vector3<double>(0, 0, -2.5)); break;
+		case 'A': config.camera.ShiftLocation(Vector<double, 3>({ -0.2,0,0 })); break;
+		case 'D': config.camera.ShiftLocation(Vector<double, 3>({ 0.2,0,0 })); break;
+		case 'W': config.camera.ShiftLocation(Vector<double, 3>({ 0,0.2,0 })); break;
+		case 'S': config.camera.ShiftLocation(Vector<double, 3>({ 0,-0.2,0 })); break;
+		case 'Q': config.camera.ShiftLocation(Vector<double, 3>({ 0,0,0.2 })); break;
+		case 'E': config.camera.ShiftLocation(Vector<double, 3>({ 0,0,-0.2 })); break;
+			//Pitch, Yaw,Roll								   {
+		case 'Y': config.camera.ShiftRotation(Vector<double, 3>({ -2.5, 0, 0 })); break;
+		case 'U': config.camera.ShiftRotation(Vector<double, 3>({ 2.5, 0, 0 })); break;
+		case 'H': config.camera.ShiftRotation(Vector<double, 3>({ 0, 2.5, 0 })); break;
+		case 'J': config.camera.ShiftRotation(Vector<double, 3>({ 0, -2.5, 0 })); break;
+		case 'N': config.camera.ShiftRotation(Vector<double, 3>({ 0, 0, 2.5 })); break;
+		case 'M': config.camera.ShiftRotation(Vector<double, 3>({ 0, 0, -2.5 })); break;
 			//Misc
 		case 'F': //Perspective camera
 			if (config.Perspective == false) { config.Perspective = true; }
@@ -105,9 +105,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 	//load file
 	//TODO: Model name from command line?
-	Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(),Vector3<double>(-3, 2, 1.5), Vector3<double>(50, 0, 0), Vector3<double>(.1, -.1, .1));
-	Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(),Vector3<double>(),Vector3<double>(),Vector3<double>(.1,.1,.1));
-	Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector3<double>(), Vector3<double>(), Vector3<double>(.1, .1, .1));
+	Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(), Vector<double, 3>({ -3, 2, 1.5 }), Vector<double, 3>({ 50, 0, 0 }), Vector<double, 3>({ .1, -.1, .1 }));
+	Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(), Vector<double, 3>(), Vector<double, 3>(), Vector<double, 3>({ .1,.1,.1 }));
+	Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector<double, 3>(), Vector<double, 3>(), Vector<double, 3>({ .1, .1, .1 }));
 
 	Viewport();
 	config.camera.Origin[2] = -1.5;
@@ -116,7 +116,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		FillRect(Vector3<unsigned char>(70,70,70));
+		FillRect(Vector<unsigned char, 3>({ 70,70,70 }));
 		DrawGrid();
 
 		Projection();
@@ -128,16 +128,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 		for(int i = 0; i <4 ; i++)
 		{
-			ball.Origin(4, 0, -i*5);
+			ball.Origin({ 4., 0., -i * 5. });
 			DrawModel(ball);
-			ball.Origin(-4, 0, -i*5);
+			ball.Origin({ -4., 0., -i * 5. });
 			DrawModel(ball);
 		}
 		for(int j= 0,a=36,b=36;j<a;j++)
 		{
 			for (int k = 0; k < b; k++)
 			{
-				grid.Origin(-static_cast<int>(b / 2) +k, 0, -static_cast<int>(a/2) + j);
+				grid.Origin({ -static_cast<double>(b / 2) + k, 0., -static_cast<double>(a / 2) + j });
 				DrawModel(grid);
 			}
 		}

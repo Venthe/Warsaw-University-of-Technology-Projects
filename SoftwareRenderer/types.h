@@ -1,250 +1,127 @@
 #pragma once
 #include <string>
 
-template <class T>
-class Vector3
+//Base class for numerical Vectors
+template <typename T, size_t S>
+class Vector
 {
-	T t[3];
+protected:
+	T t[S];
 public:
-
-	Vector3();
-	Vector3(T a, T b, T c);
-
-	static Vector3<T> Up()
+	static Vector<T, S> Zero() { return Vector<T, S>(); }
+	Vector() { for (size_t i = 0; i < S; i++) t[i] = 0; }
+	Vector(std::initializer_list<T> l)
 	{
-		return Vector3<T>(0, 1, 0);
+		std::initializer_list<T>::iterator it;
+		size_t i = 0;
+		for (it = l.begin(); it != l.end(); ++it, i++) t[i] = *it;
+	}
+	void operator()(std::initializer_list<T> l)
+	{
+		std::initializer_list<T>::iterator it;
+		size_t i = 0;
+		for (it = l.begin(); it != l.end(); ++it, i++) t[i] = *it;
+	}
+	std::string ToString()
+	{
+		std::string str = "";
+		if(typeid(T) == typeid(double))	for (size_t i = 0; i < S; i++) str+="(" + std::to_string(t[i]) + ")";
+		return str;
+	}
+	T Magnitude() {
+		T mag = 0;
+		for (size_t i = 0; i < S; i++) mag += pow(t[i], 2.);
+		return sqrt(mag);
+	}
+	Vector<T, S>& Normalize()
+	{
+		Vector<T, S> temp = Vector<T, S>();
+		for (size_t i = 0; i < S; i++) temp[i] = this->t[i] / this->Magnitude();
+		return temp;
+	}
+	T& operator[](int i) { return t[i]; }
+	void operator=(const T input) { for (size_t i = 0; i < S; i++) t[i] = input; }
+
+	friend Vector<T, S> operator-(Vector<T, S> lhs, const Vector<T, S>& rhs) {
+		lhs += rhs;
+		return lhs;
+	}
+	friend Vector<T, S> operator+(Vector<T, S> lhs, const Vector<T, S>& rhs) {
+		lhs += rhs;
+		return lhs;
+	}
+	friend Vector<T, S>& operator* (Vector<T, S> lhs, const T& rhs) {
+		Vector<T, S> temp;
+		for (size_t i = 0; i < S; i++) temp[i] = lhs[i] * rhs;
+		return temp;
+	}
+	friend Vector<T, S>& operator* (const T& rhs, Vector<T, S> lhs) {
+		Vector<T, S> temp;
+		for (size_t i = 0; i < S; i++) temp[i] = lhs[i] * rhs;
+		return temp;
+	}
+	friend Vector<T, S>& operator/ (Vector<T, S> lhs, const T& rhs) {
+		Vector<T, S> temp;
+		for (size_t i = 0; i < S; i++) temp[i] = lhs[i] / rhs;
+		return temp;
 	}
 
-	static Vector3<T> Down()
+	Vector<T, S>& operator+=(const Vector<T, S>& rhs)
 	{
-		return Vector3<T>(0, -1, 0);
+		for (size_t i = 0; i < S; i++) t[i] += rhs.t[i];
+		return *this;
+	}
+	Vector<T, S>& operator-=(const Vector<T, S>& rhs)
+	{
+		for (size_t i = 0; i < S; i++) t[i] -= rhs.t[i];
+		return *this;
+	}
+	Vector<T, S>& operator*=(const T& rhs)
+	{
+		for (size_t i = 0; i < S; i++) t[i] *= rhs.t[i];
+		return *this;
+	}
+	Vector<T, S>& operator/=(const T& rhs)
+	{
+		for (size_t i = 0; i < S; i++) t[i] /= rhs.t[i];
+		return *this;
+	}
+};
+
+namespace Vector3
+{
+	template<typename T>
+	static Vector<T, 3> Up()
+	{
+		return Vector<T, 3>({0, 1., 0});
 	}
 
-	std::string ToString();
-
-	Vector3<T> Normalize()
-	{
-		double length = sqrt((t[0]*t[0]) + (t[1] * t[1]) + (t[2] * t[2]));
-		if (length == 0) return Vector3<T>(0, 0, 0);
-		else if (length < 0.0) length *= -1.0;
-		return Vector3<T>(t[0]/ length,t[1]/ length,t[2]/ length);
-	}
-
-	T DotProduct(Vector3<T> lhs, Vector3<T> rhs)
+	template <typename T>
+	static T DotProduct(Vector<T, 3> lhs, Vector<T, 3> rhs)
 	{
 		return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 	}
-	T Length()
+	template <typename T>
+	static Vector<T, 3> CrossProduct(Vector<T, 3> a, Vector<T, 3>b)
 	{
-		return std::sqrt(t[0]*t[0] + t[1] * t[1] + t[2] * t[2]);
-	}
-
-	void operator()(const T a, const T b, const T c);
-	Vector3<T>& operator+=(const Vector3<T>& rhs);
-	Vector3<T>& operator-=(const Vector3<T>& rhs);
-	Vector3<T>& operator*=(const T& rhs);
-	void operator=(const T input);
-	T& operator[](int i);
-
-	friend Vector3<T> operator-(Vector3<T> lhs, const Vector3<T>& rhs)
-	{
-		lhs -= rhs;
-		return lhs;
-	}
-
-	friend Vector3<T> operator+(Vector3<T> lhs, const Vector3<T>& rhs)
-	{
-		lhs += rhs;
-		return lhs;
-	}
-
-	friend Vector3<T> operator* (Vector3<T> lhs, const T& rhs)
-	{
-		lhs *= rhs;
-		return lhs;
-	}
-
-	friend Vector3<T> operator* (const T& rhs, Vector3<T> lhs)
-	{
-		lhs *= rhs;
-		return lhs;
-	}
-};
-
-template <class T>
-Vector3<T>::Vector3()
-{
-	for (int i = 0; i < 3; i++) t[i] = 0;
-	return;
-}
-
-template <class T>
-Vector3<T>::Vector3(T a, T b, T c)
-{
-	t[0] = a;
-	t[1] = b;
-	t[2] = c;
-}
-
-template <class T>
-T& Vector3<T>::operator[](int i)
-{
-	return static_cast<T>(t[i]);
-}
-
-template <class T>
-void Vector3<T>::operator()(const T a, const T b, const T c)
-{
-	t[0] = a;
-	t[1] = b;
-	t[2] = c;
-}
-
-template <class T>
-Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& rhs)
-{
-
-	t[0] += rhs.t[0];
-	t[1] += rhs.t[1];
-	t[2] += rhs.t[2];
-	return *this;
-}
-
-template <class T>
-Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& rhs)
-{
-
-	t[0] -= rhs.t[0];
-	t[1] -= rhs.t[1];
-	t[2] -= rhs.t[2];
-	return *this;
-}
-
-template <class T>
-Vector3<T>& Vector3<T>::operator*=(const T& rhs)
-{
-	t[0] *= rhs;
-	t[1] *= rhs;
-	t[2] *= rhs;
-	return *this;
-}
-
-template <class T>
-void Vector3<T>::operator=(const T input)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		t[i] = input;
+		Vector<T, 3> temp;
+		temp[0] = a[1] * b[2] - a[2] * b[1];
+		temp[1] = a[2] * b[0] - a[0] * b[2];
+		temp[2] = a[0] * b[1] - a[1] * b[0];
+		return temp;
 	}
 }
 
-template <class T>
-std::string Vector3<T>::ToString()
+namespace Quaternion
 {
-	std::string str = std::string("(") + std::to_string(t[0]) + "," + std::to_string(t[1]) + "," + std::to_string(t[2]) + ")";
-	return str;
-}
-
-template <class T>
-class Vector2
-{
-	T t[2];
-public:
-	Vector2();
-	Vector2(T a, T b);
-
-	std::string ToString();
-
-	void operator()(const T a, const T b);
-	void operator=(const T input);
-	Vector2<T>& operator-=(const Vector2<T>& rhs);
-	Vector2<T>& operator+=(const Vector2<T>& rhs);
-	T& operator[](int i);
-
-	friend Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs)
+	template<typename T>
+	Vector<T,4> Multiplication(Vector<T,4> a, Vector<T, 4> b)
 	{
-		lhs += rhs;
-		return lhs;
+		Vector<T, 4> temp;
+		temp[0] = a[0]*b[0] - a[1]*b[1] - a[2]*b[2] - a[3]*b[3];
+		temp[1] = a[0]*b[1] + a[1]*b[0] + a[2]*b[3] - a[3]*b[2];
+		temp[2] = a[0]*b[2] - a[1]*b[3] + a[2]*b[0] + a[3]*b[1];
+		temp[3] = a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0];
+		return temp;
 	}
-
-	friend Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs)
-	{
-		lhs -= rhs;
-		return lhs;
-	}
-};
-
-
-template <class T>
-Vector2<T>::Vector2()
-{
-	return;
-}
-
-template <class T>
-Vector2<T>::Vector2(T a, T b)
-{
-	t[0] = a;
-	t[1] = b;
-}
-
-template <class T>
-T& Vector2<T>::operator[](int i)
-{
-	return static_cast<T>(t[i]);
-}
-
-template <class T>
-void Vector2<T>::operator()(const T a, const T b)
-{
-	t[0] = a;
-	t[1] = b;
-}
-
-template <class T>
-Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& rhs)
-{
-	t[0] += rhs.t[1];
-	t[1] += rhs.t[2];
-	return *this;
-}
-
-template <class T>
-Vector2<T>& Vector2<T>::operator-=(const Vector2<T>& rhs)
-{
-	t[0] -= rhs.t[1];
-	t[1] -= rhs.t[2];
-	return *this;
-}
-
-template <class T>
-void Vector2<T>::operator=(const T input)
-{
-	for (int i = 0; i < 2; i++)
-	{
-		t[i] = input;
-	}
-}
-
-template <class T>
-std::string Vector2<T>::ToString()
-{
-	std::string str = std::string("(") + std::to_string(t[0]) + "," + std::to_string(t[1]) + ")";
-	return str;
-}
-
-template <class T>
-Vector3<T> CrossProduct(Vector3<T> a, Vector3<T>b)
-{
-	Vector3<T> temp;
-	temp[0] = a[1] * b[2] - a[2] * b[1];
-	temp[1] = a[2] * b[0] - a[0] * b[2];
-	temp[2] = a[0] * b[1] - a[1] * b[0];
-	return temp;
-}
-
-template <typename T>
-T DotProduct(Vector3<T> a, Vector3<T>b)
-{
-	return a[0]*b[0] + a[1] * b[1] + a[2] * b[2];
 }

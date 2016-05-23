@@ -2,7 +2,7 @@
 
 _CONFIG config;
 
-void SetSettings(int x, int y, Vector3<double> Origin , Vector3<double> Rotation, double FocalLength)
+void SetSettings(int x, int y, Vector<double,3> Origin , Vector<double,3> Rotation, double FocalLength)
 {
 	srand(time_t(NULL));
 	config.bufferSize[0] = x;

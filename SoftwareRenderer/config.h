@@ -6,7 +6,7 @@
 
 struct _CONFIG
 {
-	Vector2<int> bufferSize;
+	Vector<int,2> bufferSize;
 	int intBytesize = sizeof(int);
 	void* backbuffer;
 	Camera camera;
@@ -21,5 +21,5 @@ struct _CONFIG
 
 extern _CONFIG config;
 
-void SetSettings(int x = 640, int y = 480, Vector3<double> Origin = Vector3<double>(-0.0, 0.0, -5.0), Vector3<double> Rotation = Vector3<double>(0.0, 0.0, 0.0), double FocalLength = 25.);
+void SetSettings(int x = 640, int y = 480, Vector<double, 3> Origin = Vector<double, 3>({ -0.0, 0.0, -5.0 }), Vector<double, 3> Rotation = Vector<double, 3>(), double FocalLength = 25.);
 

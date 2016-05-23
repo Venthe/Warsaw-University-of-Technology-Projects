@@ -40,7 +40,7 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> ScaleMatrix(Vector3<T> Scale)
+	std::array <T, x> ScaleMatrix(Vector<T,3> Scale)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
 		temp[0] = Scale[0];
@@ -48,8 +48,16 @@ namespace MyMath{
 		temp[10] = Scale[2];
 		return temp;
 	}
+
+	template <typename T>
+	std::array <T, 4> QuaternionRotateMatrix(Vector<T, 4> v)
+	{
+		auto temp = IdentityMatrix<T, 4>();
+		return temp;
+	}
+
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrix(Vector3<T> v)
+	std::array <T, x> RotateMatrix(Vector<T,3> v)
 	{
 		auto temp = IdentityMatrix<T, x>();
 
@@ -61,7 +69,7 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrixZ(double d)
+	std::array <T, x> RotateMatrixZ(T d)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
 		temp[5] = std::cos(DegreesToRadians(d));
@@ -72,7 +80,7 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrixY(double d)
+	std::array <T, x> RotateMatrixY(T d)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
 		temp[0] = std::cos(DegreesToRadians(d));
@@ -83,7 +91,7 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> RotateMatrixX(double d)
+	std::array <T, x> RotateMatrixX(T d)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
 		temp[0] = std::cos(DegreesToRadians(d));
@@ -94,7 +102,7 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	std::array <T, x> TranslateMatrix(Vector3<T> Origin)
+	std::array <T, x> TranslateMatrix(Vector<T,3> Origin)
 	{
 		std::array <T, x>temp = IdentityMatrix<T, x>();
 		temp[3] = Origin[0];
@@ -104,7 +112,7 @@ namespace MyMath{
 	}
 
 	template <typename T, size_t x>
-	int transformVectorByArray(std::array<T, x> t, Vector3<T>& v, bool retroProject = false)
+	int transformVectorByArray(std::array<T, x> t, Vector<T,3>& v, bool retroProject = false)
 	{
 		//auto res2 = TranslateMatrix<T, x>(v);
 		T result[4];

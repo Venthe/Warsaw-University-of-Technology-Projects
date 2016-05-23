@@ -4,7 +4,7 @@
 #include "draw.h"
 #include "object_handler.h"
 
-void _PutPixel(Vector2<int> a, Vector3<unsigned char> color)
+void _PutPixel(Vector<int,2> a, Vector<unsigned char,3> color)
 {
 	// Out of bounds checking
 	if (a[0] < 0 || a[1] < 0) return;
@@ -16,12 +16,12 @@ void _PutPixel(Vector2<int> a, Vector3<unsigned char> color)
 	*buffer = (color[0] << 16) + (color[1] << 8) + (color[2]);
 }
 
-Vector3<unsigned char> _RandomPixelColor()
+Vector<unsigned char,3> _RandomPixelColor()
 {
-	return Vector3<unsigned char>(rand() % 0xff, rand() % 0xFF, rand() % 0xFF);
+	return Vector<unsigned char, 3>({ static_cast<unsigned char>(rand() % 0xff), static_cast<unsigned char>(rand() % 0xff), static_cast<unsigned char>(rand() % 0xff) });
 }
 
-void _MyFillRect(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color, bool full_size, bool fillMarked)
+void _MyFillRect(Vector<int,2> a, Vector<int,2> b, Vector<unsigned char,3> color, bool full_size, bool fillMarked)
 {
 	int* window_buffer = static_cast<int*>(config.backbuffer);
 
@@ -78,14 +78,14 @@ void _MyFillRect(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color, b
 
 void FillRect(bool random) // Fill with random noise
 {
-	if (random) _MyFillRect(Vector2<int>(0, 0), Vector2<int>(0, 0), _RandomPixelColor(), true, false);
+	if (random) _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), _RandomPixelColor(), true, false);
 	else FillRect();
 }
 
-void FillRect(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color) { _MyFillRect(a, b, color, false, false); } // Fill a rect with a color
-void FillRect(Vector3<unsigned char> color) { _MyFillRect(Vector2<int>(0, 0), Vector2<int>(0, 0), color, true, false); } // Fill whole drawing space with a color
+void FillRect(Vector<int,2> a, Vector<int,2> b, Vector<unsigned char,3> color) { _MyFillRect(a, b, color, false, false); } // Fill a rect with a color
+void FillRect(Vector<unsigned char, 3> color) { _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), color, true, false); } // Fill whole drawing space with a color
 
-void DrawLine(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color)
+void DrawLine(Vector<int,2> a, Vector<int,2> b, Vector<unsigned char,3> color)
 {
 	if (b[1] < a[1]) std::swap(a, b); // Sort by y value
 
@@ -100,13 +100,13 @@ void DrawLine(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color)
 		if (delta_x == 0) { current_value = a[1]; target_value = b[1]; constant = a[0]; }
 		else { current_value = a[0]; target_value = b[0]; constant = a[1]; }
 		if (current_value > target_value) std::swap(current_value, target_value);
-		Vector2<int> pixel;
+		Vector<int,2> pixel;
 
 		for (; current_value < target_value; current_value++)
 		{
-			if (delta_x == 0) pixel(constant, current_value);
-			else pixel(current_value, constant);
-			pixel(pixel[0] - 1, pixel[1] - 1);
+			if (delta_x == 0) pixel({ constant, current_value });
+			else pixel({ current_value, constant });
+			pixel({pixel[0] - 1, pixel[1] - 1});
 			_PutPixel(pixel, color);
 		}
 		return;
@@ -120,11 +120,11 @@ void DrawLine(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color)
 
 	for (int current_x = a[0]; current_x != b[0];)
 	{
-		_PutPixel(Vector2<int>(current_x, current_y), color);
+		_PutPixel(Vector<int, 2>({ current_x, current_y }), color);
 		error += delta_error;
 		while (error >= 0.5 && current_y != b[1])
 		{
-			_PutPixel(Vector2<int>(current_x, current_y), color);
+			_PutPixel(Vector<int, 2>({ current_x, current_y }), color);
 			current_y++;
 			error -= 1.0;
 		}
@@ -133,22 +133,22 @@ void DrawLine(Vector2<int> a, Vector2<int> b, Vector3<unsigned char> color)
 	}
 }
 
-void DrawGrid(int density, Vector3<unsigned char> color)
+void DrawGrid(int density, Vector<unsigned char,3> color)
 {
 	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
 	{
-		DrawLine(Vector2<int>(i * density, 0), Vector2<int>(i * density, config.bufferSize[1]), color);
-		DrawLine(Vector2<int>(0, i * density), Vector2<int>(config.bufferSize[0], i * density), color);
+		DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
+		DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
 	}
 }
 
-void DrawPolygon(Vector2<int> p[3], Vector3<unsigned char> color, bool fill_polygon)
+void DrawPolygon(Vector<int,2> p[3], Vector<unsigned char,3> color, bool fill_polygon)
 {
 	//TODO: COLORS
 	if (!fill_polygon) {
-		DrawLine(p[0], p[1], Vector3<unsigned char>(0, 0xff, 0));
-		DrawLine(p[1], p[2], Vector3<unsigned char>(0, 0xff, 0));
-		DrawLine(p[2], p[0], Vector3<unsigned char>(0xff, 0, 0));
+		DrawLine(p[0], p[1], Vector<unsigned char,3>({0, 0xff, 0}));
+		DrawLine(p[1], p[2], Vector<unsigned char,3>({0, 0xff, 0}));
+		DrawLine(p[2], p[0], Vector<unsigned char,3>({0xff, 0, 0}));
 		return;
 	}
 	// Sort Polygons by y
@@ -161,23 +161,23 @@ void DrawPolygon(Vector2<int> p[3], Vector3<unsigned char> color, bool fill_poly
 	for (int y = p[0][1]; y != p[2][1]; y++)
 	{
 		float CurrentLongx = static_cast<float>((y - p[0][1])) / TotalHeight;
-		Vector2<int> a;
-		Vector2<int> b;
+		Vector<int,2> a;
+		Vector<int,2> b;
 		if (y < p[1][1])
 		{
 			int SegmentHeight = p[1][1] - p[0][1];
 			if (SegmentHeight == 0) SegmentHeight++;
 			float CurrentShortx = static_cast<float>((y - p[0][1])) / SegmentHeight;
-			a(p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y);
-			b(p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y);
+			a({ p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y });
+			b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
 		}
 		else
 		{
 			int SegmentHeight = p[2][1] - p[1][1];
 			if (SegmentHeight == 0) SegmentHeight++;
 			float CurrentShortx = static_cast<float>((y - p[1][1])) / SegmentHeight;
-			a(p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y);
-			b(p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y);
+			a({ p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y });
+			b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
 		}
 		DrawLine(a, b, color);
 	}
@@ -199,13 +199,13 @@ void Projection(double fov, double aspectW, double aspectH, double clippingNear,
 	config.ProjectionMatrix[14] = (2 * clippingFar * clippingNear) / clippingDistance;
 }
 
-void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOrigin)
+void LookAt(Vector<double,3> lookat, Vector<double,3> up, Vector<double,3> cameraOrigin)
 {
 	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
 
-	auto z = (cameraOrigin - lookat).Normalize();
-	auto x = CrossProduct(up, z).Normalize();
-	auto y = CrossProduct(z, x).Normalize();
+	Vector<double,3> z = (cameraOrigin - lookat).Normalize();
+	Vector<double,3> x = Vector3::CrossProduct(up, z).Normalize();
+	Vector<double,3> y = Vector3::CrossProduct(z, x).Normalize();
 	auto M = MyMath::IdentityMatrix<double, 16>();
 	auto T = MyMath::IdentityMatrix<double, 16>();
 	for (int i = 0; i<3; i++) {
@@ -216,10 +216,12 @@ void LookAt(Vector3<double> lookat, Vector3<double> up, Vector3<double> cameraOr
 	}
 
 	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>((-1.)*config.camera.Origin));
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(
+		(-1.)*config.camera.Origin
+	));
 }
 
-void LookAtNothing(Vector3<double>, Vector3<double>)
+void LookAtNothing(Vector<double,3>, Vector<double,3>)
 {
 	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
 
@@ -246,13 +248,13 @@ void Viewport(int x, int y, int w, int h) {
 
 void DrawModel(Model model, bool fill_polygon)
 {
-	Vector3<double> current_vertex[3];
+	Vector<double,3> current_vertex[3];
 	int doNotDraw = 0;
-	Vector2<int> triangle[3];
+	Vector<int,2> triangle[3];
 
 	for (unsigned int i = 0; i < model.Face.size(); i++, doNotDraw = 0)
 	{
-		for (int j = 0; j<3; j++) current_vertex[j](model.Vertex.at(model.Face.at(i)[j] - 1)[0], model.Vertex.at(model.Face.at(i)[j] - 1)[1], model.Vertex.at(model.Face.at(i)[j] - 1)[2]);
+		for (int j = 0; j < 3; j++) current_vertex[j]({ model.Vertex.at(model.Face.at(i)[j] - 1)[0], model.Vertex.at(model.Face.at(i)[j] - 1)[1], model.Vertex.at(model.Face.at(i)[j] - 1)[2] });
 
 		//View with perspective
 		for(int j = 0; j<3;j++){
@@ -270,10 +272,10 @@ void DrawModel(Model model, bool fill_polygon)
 		for (int j = 0; j < 3; j++)
 		{
 			if (current_vertex[j][2] < config.camera.Origin[2]) doNotDraw++;
-			triangle[j] = Vector2<int>(static_cast<int>(current_vertex[j][0]), static_cast<int>(current_vertex[j][1]));
+			triangle[j] = Vector<int, 2>({ static_cast<int>(current_vertex[j][0]), static_cast<int>(current_vertex[j][1]) });
 		}
 
 		if (doNotDraw == 3 && config.Perspective) continue;
-		DrawPolygon(triangle, Vector3<unsigned char>(), fill_polygon);
+		DrawPolygon(triangle, Vector<unsigned char,3>(), fill_polygon);
 	}
 }
