@@ -3,6 +3,7 @@
 #include "platform_specific.h"
 #include "draw.h"
 #include "object_handler.h"
+#include "draw_window_elements.h"
 
 #ifdef _WIN32
 #include <windows.h>

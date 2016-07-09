@@ -13,6 +13,11 @@ void SetSettings(int x, int y, Vector<double, 3> Origin, Vector<double, 3> Rotat
 	config.camera.Rotation = Rotation;
 	config.camera.FocalLength = FocalLength;
 	config.defaultCamera = config.camera;
+
+	std::array<double, 16> ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<double, 16> ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<double, 16> ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
+
 	GetCurrentDirectory(DIRECTORY_LENGTH, config.CurrentDirectory);
 }
 
