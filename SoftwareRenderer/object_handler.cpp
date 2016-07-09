@@ -5,7 +5,7 @@
 #include <string>
 #include "types.h"
 
-Vector<double,3> ParseDoubleFromObj(std::string line)
+Vector<double, 3> ParseDoubleFromObj(std::string line)
 {
 	std::string buffer[3];
 	int pos;
@@ -16,7 +16,7 @@ Vector<double,3> ParseDoubleFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector<double, 3>({ stod(buffer[0]), stod(buffer[1]), stod(buffer[2]) });
+	return Vector<double, 3>({stod(buffer[0]), stod(buffer[1]), stod(buffer[2])});
 }
 
 Vector<int, 3> ParseIntFromObj(std::string line)
@@ -30,7 +30,7 @@ Vector<int, 3> ParseIntFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector<int, 3>({ atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()) });
+	return Vector<int, 3>({atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str())});
 }
 
 int Model::LoadObject(std::string path)
@@ -45,7 +45,8 @@ int Model::LoadObject(std::string path)
 	std::string line;
 	while (getline(myfile, line))
 	{
-		if (line.length() > 2 && line[1] == ' ') {
+		if (line.length() > 2 && line[1] == ' ')
+		{
 			if (line[0] == 'v' || line[0] == 'V')
 			{
 				Vertex.push_back(ParseDoubleFromObj(line.substr(2, line.length())));
@@ -73,3 +74,4 @@ std::array<double, 16> Model::GetModelMatrix()
 
 	return ModelMatrix;
 }
+

@@ -2,7 +2,7 @@
 
 _CONFIG config;
 
-void SetSettings(int x, int y, Vector<double,3> Origin , Vector<double,3> Rotation, double FocalLength)
+void SetSettings(int x, int y, Vector<double, 3> Origin, Vector<double, 3> Rotation, double FocalLength)
 {
 	srand(time_t(NULL));
 	config.bufferSize[0] = x;
@@ -15,3 +15,4 @@ void SetSettings(int x, int y, Vector<double,3> Origin , Vector<double,3> Rotati
 	config.defaultCamera = config.camera;
 	GetCurrentDirectory(DIRECTORY_LENGTH, config.CurrentDirectory);
 }
+

@@ -82,3 +82,4 @@ _WINDOW::_WINDOW(HINSTANCE _hInstance, LPSTR _windowName, LPSTR _className)
 	UpdateWindow(hwndMain);
 	_isInitialized = true;
 }
+

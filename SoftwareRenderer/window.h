@@ -7,7 +7,8 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 inline void OverlayHUD(HWND hwnd)
 {
-	if (!config.hideHUD) {
+	if (!config.hideHUD)
+	{
 		//Overlaying data
 		std::string str = "Camera:\no:" + config.camera.Origin.ToString() + "\nr:" + config.camera.Rotation.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
 		if (config.LookAt) str.append("\n").append("Looking at center");
@@ -60,7 +61,12 @@ public:
 
 	_WINDOW(HINSTANCE _hInstance, LPSTR _windowName, LPSTR _className = "MainClass");
 
-	bool isInitialized() const { return _isInitialized; }
+	bool isInitialized() const
+	{
+		return _isInitialized;
+	}
+
 	void setDrawingAreaRect(LONG l = 0, LONG t = 0, LONG r = config.bufferSize[0], long b = config.bufferSize[1]);
 	void setWC(WNDCLASSEX& _wc, HINSTANCE _hInstance);
 };
+

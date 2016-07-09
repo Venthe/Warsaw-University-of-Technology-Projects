@@ -27,15 +27,18 @@ void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> co
 	{
 		int scan_line = 0;
 		int single_pixel = 0;
-		for (int current_width = a[0]; current_width != b[0]; current_width++) { // (Inner) Width
+		for (int current_width = a[0]; current_width != b[0]; current_width++)
+		{ // (Inner) Width
 
 			if (fillMarked)
 			{
-				if (single_pixel == 0) {
+				if (single_pixel == 0)
+				{
 					int* single_pixel_window_buffer = window_buffer;
 					for (int k = current_width; k <= b[0]; k++)
 					{
-						if (((*single_pixel_window_buffer >> 24) & 0xff) == 0xff) {
+						if (((*single_pixel_window_buffer >> 24) & 0xff) == 0xff)
+						{
 							single_pixel++;
 						}
 						*single_pixel_window_buffer++;
@@ -60,18 +63,25 @@ void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> co
 
 void FillRect(bool random) // Fill with random noise
 {
-	if (random) _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), _RandomPixelColor(), true, false);
+	if (random) _MyFillRect(Vector<int, 2>({0, 0}), Vector<int, 2>({0, 0}), _RandomPixelColor(), true, false);
 	else FillRect();
 }
 
-void FillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color) { _MyFillRect(a, b, color, false, false); } // Fill a rect with a color
-void FillRect(Vector<unsigned char, 3> color) { _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), color, true, false); } // Fill whole drawing space with a color
+void FillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
+{
+	_MyFillRect(a, b, color, false, false);
+} // Fill a rect with a color
+void FillRect(Vector<unsigned char, 3> color)
+{
+	_MyFillRect(Vector<int, 2>({0, 0}), Vector<int, 2>({0, 0}), color, true, false);
+} // Fill whole drawing space with a color
 
 void DrawGrid(int density, Vector<unsigned char, 3> color)
 {
 	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
 	{
-		DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
-		DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
+		DrawLine(Vector<int, 2>({i * density, 0}), Vector<int, 2>({i * density, config.bufferSize[1]}), color);
+		DrawLine(Vector<int, 2>({0, i * density}), Vector<int, 2>({config.bufferSize[0], i * density}), color);
 	}
 }
+

@@ -2,5 +2,6 @@
 
 double MyMath::DegreesToRadians(double d)
 {
-	return d*(M_PI / 180.0);
+	return d * (M_PI / 180.0);
 }
+
