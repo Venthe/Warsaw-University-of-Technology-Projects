@@ -2,7 +2,7 @@
 
 _CONFIG config;
 
-void SetSettings(int x, int y, Vector<double, 3> Origin, Vector<double, 3> Rotation, double FocalLength)
+void SetSettings(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotation, float FocalLength)
 {
 	srand(time_t(NULL));
 	config.bufferSize[0] = x;
@@ -14,9 +14,9 @@ void SetSettings(int x, int y, Vector<double, 3> Origin, Vector<double, 3> Rotat
 	config.camera.FocalLength = FocalLength;
 	config.defaultCamera = config.camera;
 
-	std::array<double, 16> ViewMatrix = MyMath::IdentityMatrix<double, 16>();
-	std::array<double, 16> ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
-	std::array<double, 16> ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<float, 16> ViewMatrix = MyMath::IdentityMatrix<float, 16>();
+	std::array<float, 16> ViewportMatrix = MyMath::IdentityMatrix<float, 16>();
+	std::array<float, 16> ProjectionMatrix = MyMath::IdentityMatrix<float, 16>();
 
 	GetCurrentDirectory(DIRECTORY_LENGTH, config.CurrentDirectory);
 }

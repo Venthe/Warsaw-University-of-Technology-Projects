@@ -5,17 +5,17 @@
 #include "object_handler.h"
 #include "draw_commons.h"
 
-void _LookAtNothing(Vector<double, 3> up = Vector3::Up<double>(), Vector<double, 3> cameraOrigin = config.camera.Origin);
-void _LookAt(Vector<double, 3> lookat = Vector<double, 3>(), Vector<double, 3> up = Vector3::Up<double>(), Vector<double, 3> cameraOrigin = config.camera.Origin);
+void _LookAtNothing(Vector<float, 3> up = Vector3::Up<float>(), Vector<float, 3> cameraOrigin = config.camera.Origin);
+void _LookAt(Vector<float, 3> lookat = Vector<float, 3>(), Vector<float, 3> up = Vector3::Up<float>(), Vector<float, 3> cameraOrigin = config.camera.Origin);
 
-void Projection(double fov, double aspectW, double aspectH, double clippingNear, double clippingFar)
+void Projection(float fov, float aspectW, float aspectH, float clippingNear, float clippingFar)
 {
-	config.ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
-	double aspectRatio = aspectW / aspectH;
+	config.ProjectionMatrix = MyMath::IdentityMatrix<float, 16>();
+	float aspectRatio = aspectW / aspectH;
 
-	double yScale = 1.0 / tan(MyMath::DegreesToRadians(fov) / 2);
-	double xScale = yScale / aspectRatio;
-	double clippingDistance = clippingNear - clippingFar;
+	float yScale = 1.0f / tanf(MyMath::DegreesToRadians(fov) / 2.f);
+	float xScale = yScale / aspectRatio;
+	float clippingDistance = clippingNear - clippingFar;
 
 	config.ProjectionMatrix[0] = xScale;
 	config.ProjectionMatrix[5] = yScale;
@@ -24,31 +24,30 @@ void Projection(double fov, double aspectW, double aspectH, double clippingNear,
 	config.ProjectionMatrix[14] = (2 * clippingFar * clippingNear) / clippingDistance;
 }
 
-void LookAt(Vector<double, 3> up, Vector<double, 3> cameraOrigin)
+void LookAt(Vector<float, 3> up, Vector<float, 3> cameraOrigin)
 {
-	if (config.LookAt) _LookAt(Vector<double, 3>(), up, cameraOrigin);
+	if (config.LookAt) _LookAt(Vector<float, 3>(), up, cameraOrigin);
 	else _LookAtNothing(up, cameraOrigin);
 }
 
 void Viewport(int x, int y, int w, int h)
 {
-	config.ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
-	//config.ViewportMatrix.fill(0);
-	double depth = 256.;
-	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.;
-	config.ViewportMatrix[1 * 4 + 3] = y + h / 2.;
-	if (!config.Perspective) config.ViewportMatrix[2 * 4 + 3] = depth / 2.;
-	else config.ViewportMatrix[2 * 4 + 3] = 1;
+	config.ViewportMatrix = MyMath::IdentityMatrix<float, 16>();
+
+	//float depth = 256.f;
+
+	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.f;
+	config.ViewportMatrix[1 * 4 + 3] = y + h / 2.f;
 
 	config.ViewportMatrix[0 * 4 + 0] = w / 2.f;
 	config.ViewportMatrix[1 * 4 + 1] = h / 2.f;
-	if (!config.Perspective) config.ViewportMatrix[2 * 4 + 3] = depth / 2.;
-	else config.ViewportMatrix[2 * 4 + 3] = 0;
+
+	//if (!config.Perspective) config.ViewportMatrix[2 * 4 + 3] = depth / 2.f;
 }
 
 void DrawModel(Model model, bool fill_polygon)
 {
-	Vector<double, 3> current_vertex[3];
+	Vector<float, 3> current_vertex[3];
 	int doNotDraw = 0;
 	Vector<int, 2> triangle[3];
 
@@ -80,15 +79,15 @@ void DrawModel(Model model, bool fill_polygon)
 	}
 }
 
-void _LookAt(Vector<double, 3> lookat, Vector<double, 3> up, Vector<double, 3> cameraOrigin)
+void _LookAt(Vector<float, 3> lookat, Vector<float, 3> up, Vector<float, 3> cameraOrigin)
 {
-	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+	config.ViewMatrix = MyMath::IdentityMatrix<float, 16>();
 
-	Vector<double, 3> z = (cameraOrigin - lookat).Normalize();
-	Vector<double, 3> x = Vector3::CrossProduct(up, z).Normalize();
-	Vector<double, 3> y = Vector3::CrossProduct(z, x).Normalize();
-	auto M = MyMath::IdentityMatrix<double, 16>();
-	auto T = MyMath::IdentityMatrix<double, 16>();
+	Vector<float, 3> z = (cameraOrigin - lookat).Normalize();
+	Vector<float, 3> x = Vector3::CrossProduct(up, z).Normalize();
+	Vector<float, 3> y = Vector3::CrossProduct(z, x).Normalize();
+	auto M = MyMath::IdentityMatrix<float, 16>();
+	auto T = MyMath::IdentityMatrix<float, 16>();
 	for (int i = 0; i < 3; i++)
 	{
 		M[0 * 4 + i] = x[i];
@@ -98,17 +97,17 @@ void _LookAt(Vector<double, 3> lookat, Vector<double, 3> up, Vector<double, 3> c
 	}
 
 	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<float, 16>(
 		                                                (-1.) * config.camera.Origin
 	                                                ));
 }
 
-void _LookAtNothing(Vector<double, 3>, Vector<double, 3>)
+void _LookAtNothing(Vector<float, 3>, Vector<float, 3>)
 {
-	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<double, 16>(config.camera.Rotation));
+	config.ViewMatrix = MyMath::IdentityMatrix<float, 16>();
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<float, 16>(config.camera.Rotation));
 	config.camera.Origin[0] *= -1.;
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(config.camera.Origin));
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<float, 16>(config.camera.Origin));
 	config.camera.Origin[0] *= -1.;
 }
 

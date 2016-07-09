@@ -11,30 +11,30 @@ inline void Controller(WPARAM wParam)
 	case 'X': config.camera.ShiftFocalLength(-2.5);
 		break;
 		//Translation
-	case 'A': config.camera.ShiftLocation(Vector<double, 3>({-0.2,0,0}));
+	case 'A': config.camera.ShiftLocation(Vector<float, 3>({-0.2f,0,0}));
 		break;
-	case 'D': config.camera.ShiftLocation(Vector<double, 3>({0.2,0,0}));
+	case 'D': config.camera.ShiftLocation(Vector<float, 3>({0.2f,0,0}));
 		break;
-	case 'W': config.camera.ShiftLocation(Vector<double, 3>({0,0.2,0}));
+	case 'W': config.camera.ShiftLocation(Vector<float, 3>({0,0.2f,0}));
 		break;
-	case 'S': config.camera.ShiftLocation(Vector<double, 3>({0,-0.2,0}));
+	case 'S': config.camera.ShiftLocation(Vector<float, 3>({0,-0.2f,0}));
 		break;
-	case 'Q': config.camera.ShiftLocation(Vector<double, 3>({0,0,0.2}));
+	case 'Q': config.camera.ShiftLocation(Vector<float, 3>({0,0,0.2f}));
 		break;
-	case 'E': config.camera.ShiftLocation(Vector<double, 3>({0,0,-0.2}));
+	case 'E': config.camera.ShiftLocation(Vector<float, 3>({0,0,-0.2f}));
 		break;
-		//Pitch, Yaw,Roll								   {
-	case 'Y': config.camera.ShiftRotation(Vector<double, 3>({-2.5, 0, 0}));
+		//Pitch, Yaw,Roll
+	case 'Y': config.camera.ShiftRotation(Vector<float, 3>({-2.5f, 0, 0}));
 		break;
-	case 'U': config.camera.ShiftRotation(Vector<double, 3>({2.5, 0, 0}));
+	case 'U': config.camera.ShiftRotation(Vector<float, 3>({2.5f, 0, 0}));
 		break;
-	case 'H': config.camera.ShiftRotation(Vector<double, 3>({0, 2.5, 0}));
+	case 'H': config.camera.ShiftRotation(Vector<float, 3>({0, 2.5f, 0}));
 		break;
-	case 'J': config.camera.ShiftRotation(Vector<double, 3>({0, -2.5, 0}));
+	case 'J': config.camera.ShiftRotation(Vector<float, 3>({0, -2.5f, 0}));
 		break;
-	case 'N': config.camera.ShiftRotation(Vector<double, 3>({0, 0, 2.5}));
+	case 'N': config.camera.ShiftRotation(Vector<float, 3>({0, 0, 2.5f}));
 		break;
-	case 'M': config.camera.ShiftRotation(Vector<double, 3>({0, 0, -2.5}));
+	case 'M': config.camera.ShiftRotation(Vector<float, 3>({0, 0, -2.5f}));
 		break;
 		//Misc
 	case 'F': //Perspective camera

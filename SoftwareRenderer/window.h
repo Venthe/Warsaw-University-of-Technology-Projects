@@ -67,6 +67,6 @@ public:
 	}
 
 	void setDrawingAreaRect(LONG l = 0, LONG t = 0, LONG r = config.bufferSize[0], long b = config.bufferSize[1]);
-	void setWC(WNDCLASSEX& _wc, HINSTANCE _hInstance);
+	void setWC(HINSTANCE _hInstance);
 };
 

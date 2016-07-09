@@ -5,7 +5,7 @@
 #include <string>
 #include "types.h"
 
-Vector<double, 3> ParseDoubleFromObj(std::string line)
+Vector<float, 3> ParsefloatFromObj(std::string line)
 {
 	std::string buffer[3];
 	int pos;
@@ -16,7 +16,7 @@ Vector<double, 3> ParseDoubleFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector<double, 3>({stod(buffer[0]), stod(buffer[1]), stod(buffer[2])});
+	return Vector<float, 3>({stof(buffer[0]), stof(buffer[1]), stof(buffer[2])});
 }
 
 Vector<int, 3> ParseIntFromObj(std::string line)
@@ -49,7 +49,7 @@ int Model::LoadObject(std::string path)
 		{
 			if (line[0] == 'v' || line[0] == 'V')
 			{
-				Vertex.push_back(ParseDoubleFromObj(line.substr(2, line.length())));
+				Vertex.push_back(ParsefloatFromObj(line.substr(2, line.length())));
 			}
 			else if (line[0] == 'f' || line[0] == 'F')
 			{
@@ -61,13 +61,13 @@ int Model::LoadObject(std::string path)
 	return 0;
 }
 
-std::array<double, 16> Model::GetModelMatrix()
+std::array<float, 16> Model::GetModelMatrix()
 {
-	std::array<double, 16> ScaleM = MyMath::ScaleMatrix<double, 16>(Scale);
-	std::array<double, 16> TranslateM = MyMath::TranslateMatrix<double, 16>(Origin);
-	std::array<double, 16> Rotate = MyMath::RotateMatrix<double, 16>(Rotation);
+	std::array<float, 16> ScaleM = MyMath::ScaleMatrix<float, 16>(Scale);
+	std::array<float, 16> TranslateM = MyMath::TranslateMatrix<float, 16>(Origin);
+	std::array<float, 16> Rotate = MyMath::RotateMatrix<float, 16>(Rotation);
 
-	ModelMatrix = MyMath::IdentityMatrix<double, 16>();
+	ModelMatrix = MyMath::IdentityMatrix<float, 16>();
 	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, Rotate);
 	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, ScaleM);
 	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, TranslateM);

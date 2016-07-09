@@ -27,7 +27,7 @@ void _WINDOW::setDrawingAreaRect(LONG l, LONG t, LONG r, LONG b)
 	drawing_area_rect.bottom = b;
 }
 
-void _WINDOW::setWC(WNDCLASSEX& _wc, HINSTANCE _hInstance)
+void _WINDOW::setWC(HINSTANCE _hInstance)
 {
 	wc.cbSize = sizeof(WNDCLASSEX); // The size, in bytes, of this structure. Set this member to sizeof(WNDCLASSEx)
 	wc.cbClsExtra = 0; // The number of extra bytes to allocate following the window-class structure.
@@ -48,7 +48,7 @@ _WINDOW::_WINDOW(HINSTANCE _hInstance, LPSTR _windowName, LPSTR _className)
 	className = _className;
 
 	PlatformSpecificInitialization();
-	setWC(wc, _hInstance);
+	setWC(_hInstance);
 	setDrawingAreaRect();
 
 	if (!RegisterClassEx(&wc)) // If hwnd is null; it means that the RegisterClassEx failed

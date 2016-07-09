@@ -35,18 +35,18 @@ public:
 	std::string ToString()
 	{
 		std::string str = "";
-		if (typeid(T) == typeid(double)) for (size_t i = 0; i < S; i++) str += "(" + std::to_string(t[i]) + ")";
+		if (typeid(T) == typeid(float)) for (size_t i = 0; i < S; i++) str += "(" + std::to_string(t[i]) + ")";
 		return str;
 	}
 
 	T Magnitude()
 	{
 		T mag = 0;
-		for (size_t i = 0; i < S; i++) mag += pow(t[i], 2.);
+		for (size_t i = 0; i < S; i++) mag += pow(t[i], 2.f);
 		return sqrt(mag);
 	}
 
-	Vector<T, S>& Normalize()
+	Vector<T, S> Normalize()
 	{
 		Vector<T, S> temp = Vector<T, S>();
 		for (size_t i = 0; i < S; i++) temp[i] = this->t[i] / this->Magnitude();
@@ -82,7 +82,7 @@ public:
 		return temp;
 	}
 
-	friend Vector<T, S>& operator*(const T& rhs, Vector<T, S> lhs)
+	friend Vector<T, S> operator*(const T& rhs, Vector<T, S> lhs)
 	{
 		Vector<T, S> temp;
 		for (size_t i = 0; i < S; i++) temp[i] = lhs[i] * rhs;

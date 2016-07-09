@@ -60,9 +60,9 @@ void _DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> colo
 		return;
 	}
 
-	double delta_error = static_cast<double>(delta_y) / static_cast<double>(delta_x); // real deltaerr : = abs(deltay / deltax)
+	float delta_error = static_cast<float>(delta_y) / static_cast<float>(delta_x); // real deltaerr : = abs(deltay / deltax)
 	if (delta_error < 0.0) delta_error *= -1.0;
-	double error = 0.0f;
+	float error = 0.0f;
 
 	int current_y = a[1];
 

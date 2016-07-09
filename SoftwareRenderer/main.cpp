@@ -16,15 +16,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 
 	if (wnd.isInitialized())
 	{
-		Viewport();
-
 		//load file
 		//TODO: Model name from command line?
-		Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(), Vector<double, 3>({-3, 2, 1.5}), Vector<double, 3>({50, 0, 0}), Vector<double, 3>({.1, -.1, .1}));
-		Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(), Vector<double, 3>(), Vector<double, 3>(), Vector<double, 3>({.1,.1,.1}));
-		Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector<double, 3>(), Vector<double, 3>(), Vector<double, 3>({.1, .1, .1}));
+		Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(), Vector<float, 3>({-3, 2, 1.5f}), Vector<float, 3>({50, 0, 0}), Vector<float, 3>({.1f, -.1f, .1f}));
+		Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(), Vector<float, 3>(), Vector<float, 3>(), Vector<float, 3>({.1f,.1f,.1f}));
+		Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector<float, 3>(), Vector<float, 3>(), Vector<float, 3>({.1f, .1f, .1f}));
 
-		config.camera.Origin[2] = -1.5;
+		Viewport();
 
 		while (GetMessage(&wnd.msg, nullptr, 0, 0))
 		{
@@ -45,9 +43,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 			//Drawing balls
 			for (int i = 0; i < 4; i++)
 			{
-				ball.Origin({4., 0., -i * 5.});
+				ball.Origin({4., 0., -i * 5.f});
 				DrawModel(ball);
-				ball.Origin({-4., 0., -i * 5.});
+				ball.Origin({-4., 0., -i * 5.f});
 				DrawModel(ball);
 			}
 
@@ -56,7 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 			{
 				for (int k = 0; k < b; k++)
 				{
-					grid.Origin({-static_cast<double>(b / 2) + k, 0., -static_cast<double>(a / 2) + j});
+					grid.Origin({-static_cast<float>(b / 2) + k, 0., -static_cast<float>(a / 2) + j});
 					DrawModel(grid);
 				}
 			}
@@ -70,5 +68,3 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 }
 
 #endif // _WIN32
-
-

@@ -6,7 +6,7 @@ namespace MyMath
 {
 #define M_PI 3.14159
 
-	double DegreesToRadians(double d);
+	float DegreesToRadians(float d);
 
 	template <typename T, size_t x>
 	std::array<T, x> IdentityMatrix()

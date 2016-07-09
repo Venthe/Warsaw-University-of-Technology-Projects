@@ -16,13 +16,13 @@ struct _CONFIG
 	bool hideHUD = false;
 	bool Perspective = true;
 
-	std::array<double, 16> ViewMatrix;
-	std::array<double, 16> ViewportMatrix;
-	std::array<double, 16> ProjectionMatrix ;
+	std::array<float, 16> ViewMatrix;
+	std::array<float, 16> ViewportMatrix;
+	std::array<float, 16> ProjectionMatrix ;
 	char* CurrentDirectory = static_cast<char*>(std::malloc(sizeof(char) * DIRECTORY_LENGTH));
 };
 
 extern _CONFIG config;
 
-void SetSettings(int x = 640, int y = 480, Vector<double, 3> Origin = Vector<double, 3>({-0.0, 0.0, -5.0}), Vector<double, 3> Rotation = Vector<double, 3>(), double FocalLength = 25.);
+void SetSettings(int x = 640, int y = 480, Vector<float, 3> Origin = Vector<float, 3>({-0.0, 0.0, -5.0}), Vector<float, 3> Rotation = Vector<float, 3>(), float FocalLength = 25.);
 
