@@ -7,15 +7,18 @@
 struct _CONFIG
 {
 	Vector<int,2> bufferSize;
-	int intBytesize = sizeof(int);
 	void* backbuffer;
 	Camera camera;
 	Camera defaultCamera;
+
+	int intBytesize = sizeof(int);
 	bool LookAt = false;
+	bool hideHUD = false;
 	bool Perspective = true;
-	std::array<double, 16> ViewMatrix      ;
-	std::array<double, 16> ViewportMatrix  ;
-	std::array<double, 16> ProjectionMatrix;
+
+	std::array<double, 16> ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<double, 16> ViewportMatrix = MyMath::IdentityMatrix<double, 16>();
+	std::array<double, 16> ProjectionMatrix = MyMath::IdentityMatrix<double, 16>();
 	char * CurrentDirectory = static_cast<char*>(std::malloc(sizeof(char)*DIRECTORY_LENGTH));
 };
 

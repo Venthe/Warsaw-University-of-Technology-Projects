@@ -3,185 +3,10 @@
 #include "config.h"
 #include "draw.h"
 #include "object_handler.h"
+#include "draw_commons.h"
 
-void _PutPixel(Vector<int,2> a, Vector<unsigned char,3> color)
-{
-	// Out of bounds checking
-	if (a[0] < 0 || a[1] < 0) return;
-	if (a[0] >= config.bufferSize[0] || a[1] >= config.bufferSize[1]) return;
-
-	int* buffer = static_cast<int*> (config.backbuffer);
-
-	buffer += (a[1] * config.bufferSize[0]) + (a[0]);
-	*buffer = (color[0] << 16) + (color[1] << 8) + (color[2]);
-}
-
-Vector<unsigned char,3> _RandomPixelColor()
-{
-	return Vector<unsigned char, 3>({ static_cast<unsigned char>(rand() % 0xff), static_cast<unsigned char>(rand() % 0xff), static_cast<unsigned char>(rand() % 0xff) });
-}
-
-void _MyFillRect(Vector<int,2> a, Vector<int,2> b, Vector<unsigned char,3> color, bool full_size, bool fillMarked)
-{
-	int* window_buffer = static_cast<int*>(config.backbuffer);
-
-	// Sort corners.
-	if (a[0] > b[0]) std::swap(a[0], b[0]);
-	if (a[1] > b[1]) std::swap(a[1], b[1]);
-
-	// If full_size, mark whole area as drawable
-	if (full_size)
-	{
-		a[0] = 0;
-		a[1] = 0;
-		b[0] = config.bufferSize[0];
-		b[1] = config.bufferSize[1];
-	}
-
-	int delta_x = b[0] - a[0]; // Specify shift to next line
-	window_buffer += (config.bufferSize[0] * a[1]) + a[0]; // move to initial x,y point
-
-	for (int current_height = a[1]; current_height != b[1]; current_height++) // (Outer) Height
-	{
-		int scan_line = 0;
-		int single_pixel = 0;
-		for (int current_width = a[0]; current_width != b[0]; current_width++) { // (Inner) Width
-
-			if (fillMarked)
-			{
-				if (single_pixel == 0) {
-					int* single_pixel_window_buffer = window_buffer;
-					for (int k = current_width; k <= b[0]; k++)
-					{
-						if (((*single_pixel_window_buffer >> 24) & 0xff) == 0xff) {
-							single_pixel++;
-						}
-						*single_pixel_window_buffer++;
-					}
-				}
-				if (scan_line != single_pixel)
-				{
-					if (((*window_buffer >> 24) & 0xff) == 0xff) scan_line++;
-					if (scan_line > 0)
-					{
-						*window_buffer++ = (0 << 24) + (color[0] << 16) + (color[1] << 8) + color[2];
-						continue;
-					}
-				}
-				*window_buffer++;
-			}
-			else *window_buffer++ = (color[0] << 16) + (color[1] << 8) + color[2];
-		}
-		if (!full_size) window_buffer += config.bufferSize[0] - delta_x;
-	}
-}
-
-void FillRect(bool random) // Fill with random noise
-{
-	if (random) _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), _RandomPixelColor(), true, false);
-	else FillRect();
-}
-
-void FillRect(Vector<int,2> a, Vector<int,2> b, Vector<unsigned char,3> color) { _MyFillRect(a, b, color, false, false); } // Fill a rect with a color
-void FillRect(Vector<unsigned char, 3> color) { _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), color, true, false); } // Fill whole drawing space with a color
-
-void DrawLine(Vector<int,2> a, Vector<int,2> b, Vector<unsigned char,3> color)
-{
-	if (b[1] < a[1]) std::swap(a, b); // Sort by y value
-
-	int delta_x = b[0] - a[0]; //deltax==0 -> vertical
-	int delta_y = b[1] - a[1]; //deltay==0 -> horizontal
-	if (delta_x == 0 && delta_y == 0) { _PutPixel(a, color); }
-	else if (delta_x == 0 || delta_y == 0)
-	{
-		int current_value;
-		int target_value;
-		int constant;
-		if (delta_x == 0) { current_value = a[1]; target_value = b[1]; constant = a[0]; }
-		else { current_value = a[0]; target_value = b[0]; constant = a[1]; }
-		if (current_value > target_value) std::swap(current_value, target_value);
-		Vector<int,2> pixel;
-
-		for (; current_value < target_value; current_value++)
-		{
-			if (delta_x == 0) pixel({ constant, current_value });
-			else pixel({ current_value, constant });
-			pixel({pixel[0] - 1, pixel[1] - 1});
-			_PutPixel(pixel, color);
-		}
-		return;
-	}
-
-	double delta_error = static_cast<double>(delta_y) / static_cast<double>(delta_x); // real deltaerr : = abs(deltay / deltax)
-	if (delta_error < 0.0) delta_error *= -1.0;
-	double error = 0.0f;
-
-	int current_y = a[1];
-
-	for (int current_x = a[0]; current_x != b[0];)
-	{
-		_PutPixel(Vector<int, 2>({ current_x, current_y }), color);
-		error += delta_error;
-		while (error >= 0.5 && current_y != b[1])
-		{
-			_PutPixel(Vector<int, 2>({ current_x, current_y }), color);
-			current_y++;
-			error -= 1.0;
-		}
-		if (delta_x > 0) current_x++;
-		else current_x--;
-	}
-}
-
-void DrawGrid(int density, Vector<unsigned char,3> color)
-{
-	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
-	{
-		DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
-		DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
-	}
-}
-
-void DrawPolygon(Vector<int,2> p[3], Vector<unsigned char,3> color, bool fill_polygon)
-{
-	//TODO: COLORS
-	if (!fill_polygon) {
-		DrawLine(p[0], p[1], Vector<unsigned char,3>({0, 0xff, 0}));
-		DrawLine(p[1], p[2], Vector<unsigned char,3>({0, 0xff, 0}));
-		DrawLine(p[2], p[0], Vector<unsigned char,3>({0xff, 0, 0}));
-		return;
-	}
-	// Sort Polygons by y
-	if (p[0][1] > p[1][1]) std::swap(p[1], p[0]);
-	if (p[0][1] > p[2][1]) std::swap(p[2], p[0]);
-	if (p[1][1] > p[2][1]) std::swap(p[1], p[2]);
-
-	int TotalHeight = p[2][1] - p[0][1];
-
-	for (int y = p[0][1]; y != p[2][1]; y++)
-	{
-		float CurrentLongx = static_cast<float>((y - p[0][1])) / TotalHeight;
-		Vector<int,2> a;
-		Vector<int,2> b;
-		if (y < p[1][1])
-		{
-			int SegmentHeight = p[1][1] - p[0][1];
-			if (SegmentHeight == 0) SegmentHeight++;
-			float CurrentShortx = static_cast<float>((y - p[0][1])) / SegmentHeight;
-			a({ p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y });
-			b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
-		}
-		else
-		{
-			int SegmentHeight = p[2][1] - p[1][1];
-			if (SegmentHeight == 0) SegmentHeight++;
-			float CurrentShortx = static_cast<float>((y - p[1][1])) / SegmentHeight;
-			a({ p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y });
-			b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
-		}
-		DrawLine(a, b, color);
-	}
-}
+void _LookAtNothing(Vector<double, 3> up = Vector3::Up<double>(), Vector<double, 3> cameraOrigin = config.camera.Origin);
+void _LookAt(Vector<double, 3> lookat = Vector<double, 3>(), Vector<double, 3> up = Vector3::Up<double>(), Vector<double, 3> cameraOrigin = config.camera.Origin);
 
 void Projection(double fov, double aspectW, double aspectH, double clippingNear, double clippingFar)
 {
@@ -199,36 +24,10 @@ void Projection(double fov, double aspectW, double aspectH, double clippingNear,
 	config.ProjectionMatrix[14] = (2 * clippingFar * clippingNear) / clippingDistance;
 }
 
-void LookAt(Vector<double,3> lookat, Vector<double,3> up, Vector<double,3> cameraOrigin)
-{
-	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+void LookAt(Vector<double, 3> up, Vector<double, 3> cameraOrigin){
 
-	Vector<double,3> z = (cameraOrigin - lookat).Normalize();
-	Vector<double,3> x = Vector3::CrossProduct(up, z).Normalize();
-	Vector<double,3> y = Vector3::CrossProduct(z, x).Normalize();
-	auto M = MyMath::IdentityMatrix<double, 16>();
-	auto T = MyMath::IdentityMatrix<double, 16>();
-	for (int i = 0; i<3; i++) {
-		M[0*4+i] = x[i];
-		M[1*4+i] = y[i];
-		M[2*4+i] = z[i];
-		T[i*4+3] = -lookat[i];
-	}
-
-	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(
-		(-1.)*config.camera.Origin
-	));
-}
-
-void LookAtNothing(Vector<double,3>, Vector<double,3>)
-{
-	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
-
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<double, 16>(config.camera.Rotation));
-	config.camera.Origin[0] *= -1.;
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(config.camera.Origin));
-	config.camera.Origin[0] *= -1.;
+	if (config.LookAt) _LookAt(Vector<double, 3>(), up, cameraOrigin);
+	else _LookAtNothing(up, cameraOrigin);
 }
 
 void Viewport(int x, int y, int w, int h) {
@@ -276,6 +75,37 @@ void DrawModel(Model model, bool fill_polygon)
 		}
 
 		if (doNotDraw == 3 && config.Perspective) continue;
-		DrawPolygon(triangle, Vector<unsigned char,3>(), fill_polygon);
+		_DrawPolygon(triangle, Vector<unsigned char,3>(), fill_polygon);
 	}
+}
+
+void _LookAt(Vector<double, 3> lookat, Vector<double, 3> up, Vector<double, 3> cameraOrigin)
+{
+	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+
+	Vector<double, 3> z = (cameraOrigin - lookat).Normalize();
+	Vector<double, 3> x = Vector3::CrossProduct(up, z).Normalize();
+	Vector<double, 3> y = Vector3::CrossProduct(z, x).Normalize();
+	auto M = MyMath::IdentityMatrix<double, 16>();
+	auto T = MyMath::IdentityMatrix<double, 16>();
+	for (int i = 0; i<3; i++) {
+		M[0 * 4 + i] = x[i];
+		M[1 * 4 + i] = y[i];
+		M[2 * 4 + i] = z[i];
+		T[i * 4 + 3] = -lookat[i];
+	}
+
+	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(
+		(-1.)*config.camera.Origin
+		));
+}
+
+void _LookAtNothing(Vector<double, 3>, Vector<double, 3>)
+{
+	config.ViewMatrix = MyMath::IdentityMatrix<double, 16>();
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<double, 16>(config.camera.Rotation));
+	config.camera.Origin[0] *= -1.;
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<double, 16>(config.camera.Origin));
+	config.camera.Origin[0] *= -1.;
 }
