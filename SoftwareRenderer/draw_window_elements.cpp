@@ -81,7 +81,12 @@ void DrawGrid(int density, Vector<unsigned char, 3> color)
 	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
 	{
 		_DrawLine(Vector<int, 2>({i * density, 0}), Vector<int, 2>({i * density, config.bufferSize[1]}), color);
-		_DrawLine(Vector<int, 2>({0, i * density}), Vector<int, 2>({config.bufferSize[0], i * density}), color);
+		//_DrawLine(Vector<int, 2>({0, i * density}), Vector<int, 2>({config.bufferSize[0], i * density}), color);
+	}
+	for (int i = 0; i < ((config.bufferSize[1]) / density) + 1; i++)
+	{
+		//_DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
+		_DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
 	}
 }
 

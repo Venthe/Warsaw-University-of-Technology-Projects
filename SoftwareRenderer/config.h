@@ -4,15 +4,17 @@
 #include "object_handler.h"
 #include "platform_specific.h"
 
+const int intBytesize = sizeof(int);
+const unsigned char ucharBytesize = sizeof(unsigned char);
+
 struct _CONFIG
 {
 	Vector<int, 2> bufferSize;
 	void* backbuffer;
+	void* zbackbuffer;
 	Camera camera;
 	Camera defaultCamera;
-
-	int intBytesize = sizeof(int);
-	bool LookAt = false;
+	bool LookAt = true;
 	bool hideHUD = false;
 	bool Perspective = true;
 
@@ -24,5 +26,5 @@ struct _CONFIG
 
 extern _CONFIG config;
 
-void SetSettings(int x = 640, int y = 480, Vector<float, 3> Origin = Vector<float, 3>({-0.0, 0.0, -5.0}), Vector<float, 3> Rotation = Vector<float, 3>(), float FocalLength = 25.);
+void SetSettings(int x = 640, int y = 480, Vector<float, 3> Origin = Vector<float, 3>({1.4f, -0.8f, -5.0f}), Vector<float, 3> Rotation = Vector<float, 3>(), float FocalLength = 60.);
 

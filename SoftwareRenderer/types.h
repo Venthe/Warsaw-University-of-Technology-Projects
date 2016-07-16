@@ -17,6 +17,10 @@ public:
 	{
 		for (size_t i = 0; i < S; i++) t[i] = 0;
 	}
+	Vector(T val)
+	{
+		for (size_t i = 0; i < S; i++) t[i] = val;
+	}
 
 	Vector(std::initializer_list<T> l)
 	{
@@ -46,7 +50,7 @@ public:
 		return sqrt(mag);
 	}
 
-	Vector<T, S> Normalize()
+	Vector<T, S>& Normalize()
 	{
 		Vector<T, S> temp = Vector<T, S>();
 		for (size_t i = 0; i < S; i++) temp[i] = this->t[i] / this->Magnitude();
@@ -65,7 +69,7 @@ public:
 
 	friend Vector<T, S> operator-(Vector<T, S> lhs, const Vector<T, S>& rhs)
 	{
-		lhs += rhs;
+		lhs -= rhs;
 		return lhs;
 	}
 
@@ -82,7 +86,7 @@ public:
 		return temp;
 	}
 
-	friend Vector<T, S> operator*(const T& rhs, Vector<T, S> lhs)
+	friend Vector<T, S>& operator*(const T& rhs, Vector<T, S> lhs)
 	{
 		Vector<T, S> temp;
 		for (size_t i = 0; i < S; i++) temp[i] = lhs[i] * rhs;

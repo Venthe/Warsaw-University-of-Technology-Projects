@@ -61,17 +61,17 @@ int Model::LoadObject(std::string path)
 	return 0;
 }
 
-std::array<float, 16> Model::GetModelMatrix()
+std::array<float, 16> Model::GetModelTransformationMatrix()
 {
 	std::array<float, 16> ScaleM = MyMath::ScaleMatrix<float, 16>(Scale);
 	std::array<float, 16> TranslateM = MyMath::TranslateMatrix<float, 16>(Origin);
 	std::array<float, 16> Rotate = MyMath::RotateMatrix<float, 16>(Rotation);
 
-	ModelMatrix = MyMath::IdentityMatrix<float, 16>();
-	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, Rotate);
-	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, ScaleM);
-	ModelMatrix = MyMath::ArrayMultiplication(ModelMatrix, TranslateM);
+	ModelTransformationMatrix = MyMath::IdentityMatrix<float, 16>();
+	ModelTransformationMatrix = MyMath::ArrayMultiplication(ModelTransformationMatrix, Rotate);
+	ModelTransformationMatrix = MyMath::ArrayMultiplication(ModelTransformationMatrix, ScaleM);
+	ModelTransformationMatrix = MyMath::ArrayMultiplication(ModelTransformationMatrix, TranslateM);
 
-	return ModelMatrix;
+	return ModelTransformationMatrix;
 }
 

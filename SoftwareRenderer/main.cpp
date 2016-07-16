@@ -11,14 +11,14 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
-	SetSettings(1024, 768);
+	SetSettings(1280, 768);
 	_WINDOW wnd = _WINDOW(hInstance, "Main Window");
 
 	if (wnd.isInitialized())
 	{
 		//load file
 		//TODO: Model name from command line?
-		Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(), Vector<float, 3>({-3, 2, 1.5f}), Vector<float, 3>({50, 0, 0}), Vector<float, 3>({.1f, -.1f, .1f}));
+		Model object((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(), Vector<float, 3>({-0.0f, 0.0f, 0.0f}), Vector<float, 3>({0, 0, 0}), Vector<float, 3>({.2f, -.2f, .2f}));
 		Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(), Vector<float, 3>(), Vector<float, 3>(), Vector<float, 3>({.1f,.1f,.1f}));
 		Model grid((std::string(config.CurrentDirectory) + std::string("\\grid.obj")).c_str(), Vector<float, 3>(), Vector<float, 3>(), Vector<float, 3>({.1f, .1f, .1f}));
 
@@ -55,7 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 				for (int k = 0; k < b; k++)
 				{
 					grid.Origin({-static_cast<float>(b / 2) + k, 0., -static_cast<float>(a / 2) + j});
-					DrawModel(grid);
+					DrawModel(grid,false);
 				}
 			}
 

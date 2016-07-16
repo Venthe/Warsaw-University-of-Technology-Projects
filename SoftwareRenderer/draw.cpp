@@ -34,48 +34,66 @@ void Viewport(int x, int y, int w, int h)
 {
 	config.ViewportMatrix = MyMath::IdentityMatrix<float, 16>();
 
-	//float depth = 256.f;
+	float depth = 256.f;
 
-	config.ViewportMatrix[0 * 4 + 3] = x + w / 2.f;
-	config.ViewportMatrix[1 * 4 + 3] = y + h / 2.f;
+	config.ViewportMatrix[0 * 4 + 3] = x + (w / 2.f);
+	config.ViewportMatrix[1 * 4 + 3] = y +( h / 2.f);
+	config.ViewportMatrix[2 * 4 + 3] = depth / 2.f;
 
 	config.ViewportMatrix[0 * 4 + 0] = w / 2.f;
 	config.ViewportMatrix[1 * 4 + 1] = h / 2.f;
-
-	//if (!config.Perspective) config.ViewportMatrix[2 * 4 + 3] = depth / 2.f;
+	config.ViewportMatrix[2 * 4 + 2] = depth / 2.f;
 }
 
 void DrawModel(Model model, bool fill_polygon)
 {
 	Vector<float, 3> current_vertex[3];
-	int doNotDraw = 0;
 	Vector<int, 2> triangle[3];
 
-	for (unsigned int i = 0; i < model.Face.size(); i++ , doNotDraw = 0)
+	for (unsigned int i = 0; i < model.Face.size(); i++)
 	{
-		for (int j = 0; j < 3; j++) current_vertex[j]({model.Vertex.at(model.Face.at(i)[j] - 1)[0], model.Vertex.at(model.Face.at(i)[j] - 1)[1], model.Vertex.at(model.Face.at(i)[j] - 1)[2]});
+		// Assigning processed face a vertcies, which in turn are placed in temp
+		for (int j = 0; j < 3; j++) {
+			current_vertex[j]({
+				model.Vertex.at(model.Face.at(i)[j] - 1)[0],
+				model.Vertex.at(model.Face.at(i)[j] - 1)[1],
+				model.Vertex.at(model.Face.at(i)[j] - 1)[2]
+			});
+		}
 
 		//View with perspective
 		for (int j = 0; j < 3; j++)
 		{
-			MyMath::transformVectorByArray(model.GetModelMatrix(), current_vertex[j]);
+			MyMath::transformVectorByArray(model.GetModelTransformationMatrix(), current_vertex[j]);
 			MyMath::transformVectorByArray(config.ViewMatrix, current_vertex[j]);
-			if (config.Perspective)
-				if (MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], true) == 1) doNotDraw++;
+			MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], config.Perspective);
 			MyMath::transformVectorByArray(config.ViewportMatrix, current_vertex[j]);
 		}
-
-		if (doNotDraw == 3 && config.Perspective) continue;
-
-		doNotDraw = 0;
 		for (int j = 0; j < 3; j++)
 		{
-			if (current_vertex[j][2] < config.camera.Origin[2]) doNotDraw++;
-			triangle[j] = Vector<int, 2>({static_cast<int>(current_vertex[j][0]), static_cast<int>(current_vertex[j][1])});
+			triangle[j] = Vector<int, 2>({
+				static_cast<int>(current_vertex[j][0]),
+				static_cast<int>(current_vertex[j][1])
+			});
 		}
 
-		if (doNotDraw == 3 && config.Perspective) continue;
-		_DrawPolygon(triangle, Vector<unsigned char, 3>(), fill_polygon);
+		//_DrawPolygon(triangle);
+		if (!fill_polygon) { _DrawPolygon(triangle); }
+		else {
+			//Calculating normal for the color fill
+			Vector<float, 3> U = current_vertex[1] - current_vertex[0];
+			Vector<float, 3> W = current_vertex[2] - current_vertex[0];
+			Vector<float, 3> normal = Vector3::CrossProduct(U, W).Normalize();
+			float intensity = Vector3::DotProduct(normal, Vector<float, 3>({ 0.f,0.f,-1.f }));
+
+			if (intensity > 0) {
+				;
+				Vector<unsigned char, 3> color = Vector<unsigned char, 3>(static_cast<int>(round(intensity*256.f)));
+				_DrawPolygon(triangle, color, fill_polygon); // Fill Polygon
+			}
+		}
+
+
 	}
 }
 
@@ -98,8 +116,8 @@ void _LookAt(Vector<float, 3> lookat, Vector<float, 3> up, Vector<float, 3> came
 
 	config.ViewMatrix = MyMath::ArrayMultiplication(M, T);
 	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<float, 16>(
-		                                                (-1.) * config.camera.Origin
-	                                                ));
+		(-1.) * config.camera.Origin
+		));
 }
 
 void _LookAtNothing(Vector<float, 3>, Vector<float, 3>)

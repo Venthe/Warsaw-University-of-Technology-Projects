@@ -52,9 +52,18 @@ namespace MyMath
 	}
 
 	template <typename T>
-	std::array<T, 4> QuaternionRotateMatrix(Vector<T, 4> v)
+	std::array<T, 4> QuaternionRotateMatrix(Vector<T, 3> v)
 	{
 		auto temp = IdentityMatrix<T, 4>();
+		//temp[0 * 4 + 0]; // 1-2y2-2z2
+		//temp[0 * 4 + 1]; // 2xy-2wz
+		//temp[0 * 4 + 2]; // 2xz + 2wy
+		//temp[1 * 4 + 0]; // 2xy+2wz
+		//temp[1 * 4 + 1]; // 1-2x2-2z2
+		//temp[1 * 4 + 2]; // 2yz+2wx
+		//temp[2 * 4 + 0]; // 2xz-2wy
+		//temp[2 * 4 + 1]; // 2yz-2wx
+		//temp[2 * 4 + 2]; // 1-2x2-2y2
 		return temp;
 	}
 

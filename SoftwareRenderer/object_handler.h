@@ -45,7 +45,7 @@ public:
 class Model : public ObjectData, public Scalable
 {
 	int LoadObject(std::string path);
-	std::array<float, 16> ModelMatrix;
+	std::array<float, 16> ModelTransformationMatrix;
 public:
 	std::vector<Vector<float, 3>> Vertex;
 	std::vector<Vector<int, 3>> Face;
@@ -58,6 +58,6 @@ public:
 		this->LoadObject(path);
 	}
 
-	std::array<float, 16> GetModelMatrix();
+	std::array<float, 16> GetModelTransformationMatrix();
 };
 

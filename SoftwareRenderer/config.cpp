@@ -7,7 +7,8 @@ void SetSettings(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotatio
 	srand(time_t(NULL));
 	config.bufferSize[0] = x;
 	config.bufferSize[1] = y;
-	config.backbuffer = malloc(x * y * config.intBytesize);
+	config.backbuffer = malloc(x * y * intBytesize);
+	config.zbackbuffer = malloc(x * y * ucharBytesize);
 
 	config.camera.Origin = Origin;
 	config.camera.Rotation = Rotation;
