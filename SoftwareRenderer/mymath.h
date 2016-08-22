@@ -6,6 +6,18 @@ namespace MyMath
 {
 #define M_PI 3.14159
 
+	template <typename T>
+	bool isBetween(T value, T min, T max)
+	{
+		if (value >= min&&value <= max) return true;
+		return false;
+	}
+
+	float normalizeToRange(float value, float min, float max)
+	{
+		return (value - min) / (max - min);
+	}
+
 	float DegreesToRadians(float d);
 
 	template <typename T, size_t x>
@@ -33,8 +45,8 @@ namespace MyMath
 			{
 				for (int inner = 0; inner < sqrt(static_cast<int>(x)); inner++)
 					result[r * static_cast<int>(sqrt(x)) + c]
-						+= a[r * static_cast<int>(sqrt(x)) + inner]
-						* b[inner * static_cast<int>(sqrt(x)) + c];
+					+= a[r * static_cast<int>(sqrt(x)) + inner]
+					* b[inner * static_cast<int>(sqrt(x)) + c];
 			}
 		}
 
@@ -123,7 +135,7 @@ namespace MyMath
 	}
 
 	template <typename T, size_t x>
-	int transformVectorByArray(std::array<T, x> t, Vector<T, 3>& v, bool retroProject = false)
+	bool transformVectorByArray(std::array<T, x> t, Vector<T, 3>& v, bool retroProject = false)
 	{
 		//auto res2 = TranslateMatrix<T, x>(v);
 		T result[4];
@@ -144,8 +156,8 @@ namespace MyMath
 		}
 		if (v[0] < -result[3] || v[0] > result[3])
 			if (v[1] < -result[3] || v[1] > result[3])
-				if (v[2] < -result[3] || v[2] > result[3]) return 1;
-		return 0;
+				if (v[2] < -result[3] || v[2] > result[3]) return false;
+		return true;
 	}
 }
 
