@@ -36,9 +36,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>Source Files\Draw</Filter>
-    </ClCompile>
     <ClCompile Include="draw_window_elements.cpp">
       <Filter>Source Files\Draw</Filter>
     </ClCompile>
@@ -48,9 +45,6 @@
     <ClCompile Include="window.cpp">
       <Filter>Source Files\Window</Filter>
     </ClCompile>
-    <ClCompile Include="draw_commons.cpp">
-      <Filter>Source Files\Draw</Filter>
-    </ClCompile>
     <ClCompile Include="mymath.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -59,6 +53,12 @@
     </ClCompile>
     <ClCompile Include="object_handler.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="draw.cpp">
+      <Filter>Source Files\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_internal.cpp">
+      <Filter>Source Files\Draw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,13 +71,7 @@
     <ClInclude Include="controller.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="draw.h">
-      <Filter>Header Files\Draw</Filter>
-    </ClInclude>
     <ClInclude Include="draw_window_elements.h">
-      <Filter>Header Files\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="draw_commons.h">
       <Filter>Header Files\Draw</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
@@ -91,6 +85,15 @@
     </ClInclude>
     <ClInclude Include="types.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
+      <Filter>Header Files\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_internal.h">
+      <Filter>Header Files\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

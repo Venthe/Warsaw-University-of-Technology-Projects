@@ -33,8 +33,8 @@ namespace MyMath
 			{
 				for (int inner = 0; inner < sqrt(static_cast<int>(x)); inner++)
 					result[r * static_cast<int>(sqrt(x)) + c]
-						+= a[r * static_cast<int>(sqrt(x)) + inner]
-						* b[inner * static_cast<int>(sqrt(x)) + c];
+					+= a[r * static_cast<int>(sqrt(x)) + inner]
+					* b[inner * static_cast<int>(sqrt(x)) + c];
 			}
 		}
 
@@ -125,7 +125,6 @@ namespace MyMath
 	template <typename T, size_t x>
 	int transformVectorByArray(std::array<T, x> t, Vector<T, 3>& v, bool retroProject = false)
 	{
-		//auto res2 = TranslateMatrix<T, x>(v);
 		T result[4];
 
 		for (int i = 0; i < sqrt(x); i++)

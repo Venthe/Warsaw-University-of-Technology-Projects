@@ -1,7 +1,10 @@
 #include "types.h"
 #include "config.h"
 #include "draw_window_elements.h"
-#include "draw_commons.h"
+#include "draw_internal.h"
+#include "main.h"
+
+void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked);
 
 void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
 {
@@ -61,32 +64,30 @@ void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> co
 	}
 }
 
-void FillRect(bool random) // Fill with random noise
+void DrawWindowElements::FillRectangle(bool random) // Fill with random noise
 {
-	if (random) _MyFillRect(Vector<int, 2>({0, 0}), Vector<int, 2>({0, 0}), _RandomPixelColor(), true, false);
-	else FillRect();
+	if (random) _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), DrawInternal::_RandomPixelColor(), true, false);
+	else FillRectangle();
 }
 
-void FillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
+void DrawWindowElements::FillRectangle(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
 {
 	_MyFillRect(a, b, color, false, false);
 } // Fill a rect with a color
-void FillRect(Vector<unsigned char, 3> color)
+void DrawWindowElements::FillRectangle(Vector<unsigned char, 3> color)
 {
-	_MyFillRect(Vector<int, 2>({0, 0}), Vector<int, 2>({0, 0}), color, true, false);
+	_MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), color, true, false);
 } // Fill whole drawing space with a color
 
-void DrawGrid(int density, Vector<unsigned char, 3> color)
+void DrawWindowElements::DrawGrid(int density, Vector<unsigned char, 3> color)
 {
 	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
 	{
-		_DrawLine(Vector<int, 2>({i * density, 0}), Vector<int, 2>({i * density, config.bufferSize[1]}), color);
-		//_DrawLine(Vector<int, 2>({0, i * density}), Vector<int, 2>({config.bufferSize[0], i * density}), color);
+		DrawInternal::_DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
 	}
 	for (int i = 0; i < ((config.bufferSize[1]) / density) + 1; i++)
 	{
-		//_DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
-		_DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
+		DrawInternal::_DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
 	}
 }
 

@@ -1,8 +1,9 @@
 #include "types.h"
 #include "config.h"
-#include "draw_commons.h"
+#include "draw_internal.h"
+#include "main.h"
 
-void _PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
+void DrawInternal::_PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
 {
 	// Out of bounds checking
 	if (a[0] < 0 || a[1] < 0) return;
@@ -14,13 +15,12 @@ void _PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
 	*buffer = (color[0] << 16) + (color[1] << 8) + (color[2]);
 }
 
-Vector<unsigned char, 3> _RandomPixelColor()
+Vector<unsigned char, 3> DrawInternal::_RandomPixelColor()
 {
 	return Vector<unsigned char, 3>({ static_cast<unsigned char>(rand() % 0xff), static_cast<unsigned char>(rand() % 0xff), static_cast<unsigned char>(rand() % 0xff) });
 }
 
-
-void _DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
+void DrawInternal::_DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
 {
 	if (b[1] < a[1]) std::swap(a, b); // Sort by y value
 
@@ -81,46 +81,53 @@ void _DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> colo
 	}
 }
 
-void _DrawPolygon(Vector<int, 2> p[3], Vector<unsigned char, 3> color, bool fill_polygon)
+void DrawInternal::_DrawPolygon(Vector<float, 3> _p[3], Vector<unsigned char, 3> color, bool fill_polygon)
 {
+	Vector<int, 2> p[3];
+
+	for (int i = 0; i < 3; i++)
+	{
+		p[i][0] = static_cast<int>(_p[i][0]);
+		p[i][1] = static_cast<int>(_p[i][1]);
+	}
+
 	if (fill_polygon)
 	{
-	// Sort Polygons by y
-	if (p[0][1] > p[1][1]) std::swap(p[1], p[0]);
-	if (p[0][1] > p[2][1]) std::swap(p[2], p[0]);
-	if (p[1][1] > p[2][1]) std::swap(p[1], p[2]);
+		// Sort Polygons by y
+		if (p[0][1] > p[1][1]) std::swap(p[1], p[0]);
+		if (p[0][1] > p[2][1]) std::swap(p[2], p[0]);
+		if (p[1][1] > p[2][1]) std::swap(p[1], p[2]);
 
-	int TotalHeight = p[2][1] - p[0][1];
+		int TotalHeight = p[2][1] - p[0][1];
 
-	for (int y = p[0][1]; y != p[2][1]; y++)
-	{
-		float CurrentLongx = static_cast<float>((y - p[0][1])) / TotalHeight;
-		Vector<int, 2> a;
-		Vector<int, 2> b;
-		if (y < p[1][1])
+		for (int y = p[0][1]; y != p[2][1]; y++)
 		{
-			int SegmentHeight = p[1][1] - p[0][1];
-			if (SegmentHeight == 0) SegmentHeight++;
-			float CurrentShortx = static_cast<float>((y - p[0][1])) / SegmentHeight;
-			a({ p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y });
-			b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
+			float CurrentLongx = static_cast<float>((y - p[0][1])) / TotalHeight;
+			Vector<int, 2> a;
+			Vector<int, 2> b;
+			if (y < p[1][1])
+			{
+				int SegmentHeight = p[1][1] - p[0][1];
+				if (SegmentHeight == 0) SegmentHeight++;
+				float CurrentShortx = static_cast<float>((y - p[0][1])) / SegmentHeight;
+				a({ p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y });
+				b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
+			}
+			else
+			{
+				int SegmentHeight = p[2][1] - p[1][1];
+				if (SegmentHeight == 0) SegmentHeight++;
+				float CurrentShortx = static_cast<float>((y - p[1][1])) / SegmentHeight;
+				a({ p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y });
+				b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
+			}
+			_DrawLine(a, b, color);
 		}
-		else
-		{
-			int SegmentHeight = p[2][1] - p[1][1];
-			if (SegmentHeight == 0) SegmentHeight++;
-			float CurrentShortx = static_cast<float>((y - p[1][1])) / SegmentHeight;
-			a({ p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y });
-			b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
-		}
-		_DrawLine(a, b, color);
+	}
+
+	else {
+		_DrawLine(p[0], p[1], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
+		_DrawLine(p[1], p[2], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
+		_DrawLine(p[2], p[0], Vector<unsigned char, 3>({ 0xff, 0, 0 }));
 	}
 }
-
-else {
-	_DrawLine(p[0], p[1], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
-	_DrawLine(p[1], p[2], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
-	_DrawLine(p[2], p[0], Vector<unsigned char, 3>({ 0xff, 0, 0 }));
-	}
-}
-
