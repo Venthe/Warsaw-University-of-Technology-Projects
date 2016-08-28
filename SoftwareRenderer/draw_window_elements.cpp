@@ -4,8 +4,6 @@
 #include "draw_internal.h"
 #include "main.h"
 
-void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked);
-
 void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
 {
 	int* window_buffer = static_cast<int*>(config.backbuffer);
@@ -89,5 +87,13 @@ void DrawWindowElements::DrawGrid(int density, Vector<unsigned char, 3> color)
 	{
 		DrawInternal::_DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
 	}
+}
+
+void DrawWindowElements::ClearZBuffer()
+{
+	unsigned char* window_buffer = static_cast<unsigned char*>(config.zbackbuffer);
+
+	for (int current_height = 0; current_height != config.bufferSize[1]; current_height++) // (Outer) Height
+		for (int current_width = 0; current_width != config.bufferSize[0]; current_width++) *window_buffer++ = 0;
 }
 

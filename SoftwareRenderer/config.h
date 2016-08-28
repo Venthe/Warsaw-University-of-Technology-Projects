@@ -16,7 +16,7 @@ public:
 
 	Camera camera;
 	Camera defaultCamera;
-	bool LookAt = true;
+	bool LookAt = false;
 	bool hideHUD = false;
 	bool Perspective = true;
 
@@ -28,5 +28,5 @@ public:
 	float clipNear;
 	float clipFar;
 
-	_CONFIG(int x = 640, int y = 480, Vector<float, 3> Origin = Vector<float, 3>({ 1.4f, -0.8f, -5.0f }), Vector<float, 3> Rotation = Vector<float, 3>(), float FocalLength = 60., float clipNear = 0.05f, float clipFar = 300.);
+	_CONFIG(int x = 640, int y = 480, Vector<float, 3> Origin = Vector<float, 3>({ 0.f, 0.f, -5.f }), Vector<float, 3> Rotation = Vector<float, 3>(), float FocalLength = 60., float clipNear = 0.02f, float clipFar = 600.);
 };

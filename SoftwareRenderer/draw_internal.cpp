@@ -2,6 +2,7 @@
 #include "config.h"
 #include "draw_internal.h"
 #include "main.h"
+#include <iostream>
 
 void DrawInternal::_PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
 {
@@ -11,6 +12,24 @@ void DrawInternal::_PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
 
 	int* buffer = static_cast<int*>(config.backbuffer);
 
+	buffer += (a[1] * config.bufferSize[0]) + (a[0]);
+	*buffer = (color[0] << 16) + (color[1] << 8) + (color[2]);
+}
+
+void DrawInternal::_PutPixelWithZBuffer(Vector<int, 2> a, Vector<unsigned char, 3> color, unsigned char zcolor)
+{
+	zcolor += 1;
+	// Out of bounds checking
+	if (a[0] < 0 || a[1] < 0) return;
+	if (a[0] >= config.bufferSize[0] || a[1] >= config.bufferSize[1]) return;
+
+
+	unsigned char* zbuffer = static_cast<unsigned char*>(config.zbackbuffer);
+	zbuffer += (a[1] * config.bufferSize[0]) + (a[0]);
+	if (*zbuffer != 0 && *zbuffer > zcolor) return;
+	*zbuffer = zcolor;
+
+	int* buffer = static_cast<int*>(config.backbuffer);
 	buffer += (a[1] * config.bufferSize[0]) + (a[0]);
 	*buffer = (color[0] << 16) + (color[1] << 8) + (color[2]);
 }
@@ -81,53 +100,113 @@ void DrawInternal::_DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned
 	}
 }
 
-void DrawInternal::_DrawPolygon(Vector<float, 3> _p[3], Vector<unsigned char, 3> color, bool fill_polygon)
+float _normalizationToUnity(float value, float min = config.clipNear, float max = config.clipFar)
 {
-	Vector<int, 2> p[3];
+	return ((value - min) / (max - min));
+}
 
-	for (int i = 0; i < 3; i++)
-	{
-		p[i][0] = static_cast<int>(_p[i][0]);
-		p[i][1] = static_cast<int>(_p[i][1]);
-	}
+struct Point3D
+{
+	int x, y, z;
+	Point3D() {}
+	Point3D(int a, int b, int c) { x = a; y = b; z = c; }
+	Point3D(int a, int b) { x = a; y = b; }
+};
+
+float CrossProductIn2D(Point3D v1, Point3D v2)
+{
+	return static_cast<float>(v1.x * v2.y) - static_cast<float>(v1.y * v2.x);
+}
+
+int orient2d(const Point3D& a, const Point3D& b, const Point3D& c)
+{
+	return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
+}
+
+void DrawInternal::_DrawPolygon(Vector<float, 3> input[3], Vector<unsigned char, 3> color, bool fill_polygon)
+{
 
 	if (fill_polygon)
 	{
-		// Sort Polygons by y
-		if (p[0][1] > p[1][1]) std::swap(p[1], p[0]);
-		if (p[0][1] > p[2][1]) std::swap(p[2], p[0]);
-		if (p[1][1] > p[2][1]) std::swap(p[1], p[2]);
-
-		int TotalHeight = p[2][1] - p[0][1];
-
-		for (int y = p[0][1]; y != p[2][1]; y++)
+		Point3D point[3];
+		for (int i = 0; i < 3; i++)
 		{
-			float CurrentLongx = static_cast<float>((y - p[0][1])) / TotalHeight;
-			Vector<int, 2> a;
-			Vector<int, 2> b;
-			if (y < p[1][1])
+			point[i].x = input[i][0];
+			point[i].y = input[i][1];
+			point[i].z = _normalizationToUnity(input[i][2]) * 254;
+		}
+
+		// Bounding box
+		int minX = fmin(point[0].x, fmin(point[1].x, point[2].x));
+		int maxX = fmax(point[0].x, fmax(point[1].x, point[2].x));
+		int minY = fmin(point[0].y, fmin(point[1].y, point[2].y));
+		int maxY = fmax(point[0].y, fmax(point[1].y, point[2].y));
+
+		Point3D p;
+
+		/* spanning vectors of edge (v1,v2) and (v1,v3) */
+		Point3D vs1 = Point3D(point[1].x - point[0].x, point[1].y - point[0].y);
+		Point3D vs2 = Point3D(point[2].x - point[0].x, point[2].y - point[0].y);
+
+		for (p.x = minX; p.x <= maxX; p.x++)
+		{
+			for (p.y = minY; p.y <= maxY; p.y++)
 			{
-				int SegmentHeight = p[1][1] - p[0][1];
-				if (SegmentHeight == 0) SegmentHeight++;
-				float CurrentShortx = static_cast<float>((y - p[0][1])) / SegmentHeight;
-				a({ p[0][0] + static_cast<int>((p[1][0] - p[0][0]) * CurrentShortx), y });
-				b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
+				Point3D q = Point3D(p.x - point[0].x, p.y - point[0].y);
+
+				float s = CrossProductIn2D(q, vs2) / CrossProductIn2D(vs1, vs2);
+				float t = CrossProductIn2D(vs1, q) / CrossProductIn2D(vs1, vs2);
+
+				if ((s >= 0) && (t >= 0) && (s + t <= 1))
+				{
+					unsigned char ZCOLOR = ((1 - s - t)*point[0].z + s*point[1].z + t*point[2].z);
+					_PutPixelWithZBuffer(Vector<int, 2>({ p.x,p.y }), color, ZCOLOR);
+				}
 			}
-			else
-			{
-				int SegmentHeight = p[2][1] - p[1][1];
-				if (SegmentHeight == 0) SegmentHeight++;
-				float CurrentShortx = static_cast<float>((y - p[1][1])) / SegmentHeight;
-				a({ p[1][0] + static_cast<int>((p[2][0] - p[1][0]) * CurrentShortx), y });
-				b({ p[0][0] + static_cast<int>((p[2][0] - p[0][0]) * CurrentLongx), y });
-			}
-			_DrawLine(a, b, color);
 		}
 	}
-
 	else {
-		_DrawLine(p[0], p[1], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
-		_DrawLine(p[1], p[2], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
-		_DrawLine(p[2], p[0], Vector<unsigned char, 3>({ 0xff, 0, 0 }));
+		Vector<int, 2> VerticiesIn2D[3];
+		VerticiesIn2D[0] = Vector<int, 2>({ (int)input[0][0], (int)input[0][1] });
+		VerticiesIn2D[1] = Vector<int, 2>({ (int)input[1][0], (int)input[1][1] });
+		VerticiesIn2D[2] = Vector<int, 2>({ (int)input[2][0], (int)input[2][1] });
+		if (false)//bersenham
+		{
+			// Sort VerticiesIn2Dolygons by y
+			if (VerticiesIn2D[0][1] > VerticiesIn2D[1][1]) std::swap(VerticiesIn2D[1], VerticiesIn2D[0]);
+			if (VerticiesIn2D[0][1] > VerticiesIn2D[2][1]) std::swap(VerticiesIn2D[2], VerticiesIn2D[0]);
+			if (VerticiesIn2D[1][1] > VerticiesIn2D[2][1]) std::swap(VerticiesIn2D[1], VerticiesIn2D[2]);
+
+			int TotalHeight = VerticiesIn2D[2][1] - VerticiesIn2D[0][1];
+
+			for (int y = VerticiesIn2D[0][1]; y != VerticiesIn2D[2][1]; y++)
+			{
+				float CurrentLongx = static_cast<float>((y - VerticiesIn2D[0][1])) / TotalHeight;
+				Vector<int, 2> a;
+				Vector<int, 2> b;
+				if (y < VerticiesIn2D[1][1])
+				{
+					int SegmentHeight = VerticiesIn2D[1][1] - VerticiesIn2D[0][1];
+					if (SegmentHeight == 0) SegmentHeight++;
+					float CurrentShortx = static_cast<float>((y - VerticiesIn2D[0][1])) / SegmentHeight;
+					a({ VerticiesIn2D[0][0] + static_cast<int>((VerticiesIn2D[1][0] - VerticiesIn2D[0][0]) * CurrentShortx), y });
+					b({ VerticiesIn2D[0][0] + static_cast<int>((VerticiesIn2D[2][0] - VerticiesIn2D[0][0]) * CurrentLongx), y });
+				}
+				else
+				{
+					int SegmentHeight = VerticiesIn2D[2][1] - VerticiesIn2D[1][1];
+					if (SegmentHeight == 0) SegmentHeight++;
+					float CurrentShortx = static_cast<float>((y - VerticiesIn2D[1][1])) / SegmentHeight;
+					a({ VerticiesIn2D[1][0] + static_cast<int>((VerticiesIn2D[2][0] - VerticiesIn2D[1][0]) * CurrentShortx), y });
+					b({ VerticiesIn2D[0][0] + static_cast<int>((VerticiesIn2D[2][0] - VerticiesIn2D[0][0]) * CurrentLongx), y });
+				}
+				_DrawLine(a, b, color);
+			}
+		}
+		else {
+			_DrawLine(VerticiesIn2D[0], VerticiesIn2D[1], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
+			_DrawLine(VerticiesIn2D[1], VerticiesIn2D[2], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
+			_DrawLine(VerticiesIn2D[2], VerticiesIn2D[0], Vector<unsigned char, 3>({ 0xff, 0, 0 }));
+		}
 	}
 }

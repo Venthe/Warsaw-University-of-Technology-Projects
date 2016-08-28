@@ -51,9 +51,9 @@ bool isVertexWithinBoundaries(Vector<float, 3> v)
 	{
 		return false;
 	}
-	else if ()
+	else if ((v[0] > config.bufferSize[0] || v[0] < 0) && ((v[1] > config.bufferSize[1] || v[1] < 0)))
 	{
-
+		return false;
 	}
 	return true;
 }
@@ -78,17 +78,17 @@ void DrawCommon::DrawModel(Model model, bool fill_polygon)
 			MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], config.Perspective);
 			MyMath::transformVectorByArray(config.ViewportMatrix, current_vertex[j]);
 
-			if (!qualified) qualified = isVertexWithinBoundaries(current_vertex);
+			if (!qualified) qualified = isVertexWithinBoundaries(current_vertex[j]);
 		}
 		if (!qualified) continue;
-		//_DrawPolygon(triangle);
+
 		if (!fill_polygon) { DrawInternal::_DrawPolygon(current_vertex); }
 		else {
 			//Calculating normal for the color fill
 			Vector<float, 3> U = current_vertex[1] - current_vertex[0];
 			Vector<float, 3> W = current_vertex[2] - current_vertex[0];
 			Vector<float, 3> normal = Vector3::CrossProduct(U, W).Normalize();
-			float intensity = Vector3::DotProduct(normal, Vector<float, 3>({ 0.f,0.f,-1.f }));
+			float intensity = Vector3::DotProduct(normal, Vector<float, 3>({ 0.f,0.f,1.f }));
 
 			if (intensity > 0) {
 				Vector<unsigned char, 3> color = Vector<unsigned char, 3>(static_cast<unsigned char>(round(intensity*256.f) - 1));

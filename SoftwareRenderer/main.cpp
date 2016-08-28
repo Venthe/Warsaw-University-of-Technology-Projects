@@ -5,6 +5,7 @@
 #include "draw.h"
 #include "object_handler.h"
 #include "draw_window_elements.h"
+#include "draw_internal.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -32,6 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 			DispatchMessage(&wnd.msg);
 
 			//Background
+			DrawWindowElements::ClearZBuffer();
 			DrawWindowElements::FillRectangle(Vector<unsigned char, 3>({ 70,70,70 }));
 			DrawWindowElements::DrawGrid();
 
