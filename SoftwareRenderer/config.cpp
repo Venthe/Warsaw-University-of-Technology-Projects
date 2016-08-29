@@ -1,24 +1,25 @@
 #include "config.h"
 
-_CONFIG config;
-
-void SetSettings(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotation, float FocalLength)
+_CONFIG::_CONFIG(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotation, float FocalLength, float _clipNear, float _clipFar)
 {
 	srand(time_t(NULL));
-	config.bufferSize[0] = x;
-	config.bufferSize[1] = y;
-	config.backbuffer = malloc(x * y * intBytesize);
-	config.zbackbuffer = malloc(x * y * ucharBytesize);
+	bufferSize[0] = x;
+	bufferSize[1] = y;
+	backbuffer = malloc(x * y * intBytesize);
+	zbackbuffer = malloc(x * y * ucharBytesize);
 
-	config.camera.Origin = Origin;
-	config.camera.Rotation = Rotation;
-	config.camera.FocalLength = FocalLength;
-	config.defaultCamera = config.camera;
+	camera.Origin = Origin;
+	camera.Rotation = Rotation;
+	camera.FocalLength = FocalLength;
+	defaultCamera = camera;
 
-	std::array<float, 16> ViewMatrix = MyMath::IdentityMatrix<float, 16>();
-	std::array<float, 16> ViewportMatrix = MyMath::IdentityMatrix<float, 16>();
-	std::array<float, 16> ProjectionMatrix = MyMath::IdentityMatrix<float, 16>();
+	clipFar = _clipFar;
+	clipNear = _clipNear;
 
-	GetCurrentDirectory(DIRECTORY_LENGTH, config.CurrentDirectory);
+	ViewMatrix = MyMath::IdentityMatrix<float, 16>();
+	ViewportMatrix = MyMath::IdentityMatrix<float, 16>();
+	ProjectionMatrix = MyMath::IdentityMatrix<float, 16>();
+
+	GetCurrentDirectory(DIRECTORY_LENGTH, CurrentDirectory);
 }
 

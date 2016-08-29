@@ -156,7 +156,7 @@
   <ItemGroup>
     <ClCompile Include="config.cpp" />
     <ClCompile Include="draw.cpp" />
-    <ClCompile Include="draw_commons.cpp" />
+    <ClCompile Include="draw_internal.cpp" />
     <ClCompile Include="draw_window_elements.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mymath.cpp" />
@@ -168,8 +168,9 @@
     <ClInclude Include="controller.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="config.h" />
-    <ClInclude Include="draw_commons.h" />
+    <ClInclude Include="draw_internal.h" />
     <ClInclude Include="draw_window_elements.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="mymath.h" />
     <ClInclude Include="object_handler.h" />
     <ClInclude Include="platform_specific.h" />

@@ -26,14 +26,14 @@ public:
 	{
 		std::initializer_list<T>::iterator it;
 		size_t i = 0;
-		for (it = l.begin(); it != l.end(); ++it , i++) t[i] = *it;
+		for (it = l.begin(); it != l.end(); ++it, i++) t[i] = *it;
 	}
 
 	void operator()(std::initializer_list<T> l)
 	{
 		std::initializer_list<T>::iterator it;
 		size_t i = 0;
-		for (it = l.begin(); it != l.end(); ++it , i++) t[i] = *it;
+		for (it = l.begin(); it != l.end(); ++it, i++) t[i] = *it;
 	}
 
 	std::string ToString()
@@ -130,7 +130,7 @@ namespace Vector3
 	template <typename T>
 	static Vector<T, 3> Up()
 	{
-		return Vector<T, 3>({0, 1., 0});
+		return Vector<T, 3>({ 0, 1., 0 });
 	}
 
 	template <typename T>
