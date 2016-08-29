@@ -2,7 +2,7 @@
 
 _CONFIG config;
 
-void SetSettings(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotation, float FocalLength, float clippingNear, float clippingFar)
+void SetSettings(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotation, float FocalLength)
 {
 	srand(time_t(NULL));
 	config.bufferSize[0] = x;
@@ -14,9 +14,6 @@ void SetSettings(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotatio
 	config.camera.Rotation = Rotation;
 	config.camera.FocalLength = FocalLength;
 	config.defaultCamera = config.camera;
-
-	config.clippingNear = clippingNear;
-	config.clippingFar = clippingFar;
 
 	std::array<float, 16> ViewMatrix = MyMath::IdentityMatrix<float, 16>();
 	std::array<float, 16> ViewportMatrix = MyMath::IdentityMatrix<float, 16>();

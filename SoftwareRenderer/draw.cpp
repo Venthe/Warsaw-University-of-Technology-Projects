@@ -1,5 +1,4 @@
 ﻿#include <array>
-#include <climits>
 #include "mymath.h"
 #include "config.h"
 #include "draw.h"
@@ -38,7 +37,7 @@ void Viewport(int x, int y, int w, int h)
 	float depth = 256.f;
 
 	config.ViewportMatrix[0 * 4 + 3] = x + (w / 2.f);
-	config.ViewportMatrix[1 * 4 + 3] = y + (h / 2.f);
+	config.ViewportMatrix[1 * 4 + 3] = y +( h / 2.f);
 	config.ViewportMatrix[2 * 4 + 3] = depth / 2.f;
 
 	config.ViewportMatrix[0 * 4 + 0] = w / 2.f;
@@ -50,6 +49,7 @@ void DrawModel(Model model, bool fill_polygon)
 {
 	Vector<float, 3> current_vertex[3];
 	Vector<int, 2> triangle[3];
+
 	for (unsigned int i = 0; i < model.Face.size(); i++)
 	{
 		// Assigning processed face a vertcies, which in turn are placed in temp
@@ -69,14 +69,16 @@ void DrawModel(Model model, bool fill_polygon)
 			MyMath::transformVectorByArray(config.ProjectionMatrix, current_vertex[j], config.Perspective);
 			MyMath::transformVectorByArray(config.ViewportMatrix, current_vertex[j]);
 		}
-
-		if (!MyMath::isBetween(current_vertex[0][2], config.clippingNear, config.clippingFar)
-			&& !MyMath::isBetween(current_vertex[1][2], config.clippingNear, config.clippingFar)
-			&& !MyMath::isBetween(current_vertex[2][2], config.clippingNear, config.clippingFar))
-			continue;
+		for (int j = 0; j < 3; j++)
+		{
+			triangle[j] = Vector<int, 2>({
+				static_cast<int>(current_vertex[j][0]),
+				static_cast<int>(current_vertex[j][1])
+			});
+		}
 
 		//_DrawPolygon(triangle);
-		if (!fill_polygon) { _DrawPolygon(current_vertex); }
+		if (!fill_polygon) { _DrawPolygon(triangle); }
 		else {
 			//Calculating normal for the color fill
 			Vector<float, 3> U = current_vertex[1] - current_vertex[0];
@@ -85,8 +87,9 @@ void DrawModel(Model model, bool fill_polygon)
 			float intensity = Vector3::DotProduct(normal, Vector<float, 3>({ 0.f,0.f,-1.f }));
 
 			if (intensity > 0) {
-				Vector<unsigned char, 3> color = Vector<unsigned char, 3>(static_cast<unsigned char>(round(intensity*256.f)) - 1);
-				_DrawPolygon(current_vertex, color, fill_polygon); // Fill Polygon
+				;
+				Vector<unsigned char, 3> color = Vector<unsigned char, 3>(static_cast<int>(round(intensity*256.f)));
+				_DrawPolygon(triangle, color, fill_polygon); // Fill Polygon
 			}
 		}
 

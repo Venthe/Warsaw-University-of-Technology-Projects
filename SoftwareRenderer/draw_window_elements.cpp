@@ -3,7 +3,7 @@
 #include "draw_window_elements.h"
 #include "draw_commons.h"
 
-void WindowElements::_MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked) const
+void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
 {
 	int* window_buffer = static_cast<int*>(config.backbuffer);
 
@@ -61,25 +61,26 @@ void WindowElements::_MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsi
 	}
 }
 
-void WindowElements::FillRect(bool random) const
-// Fill with random noise
+void FillRect(bool random) // Fill with random noise
 {
-	if (random) _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), _RandomPixelColor(), true, false);
+	if (random) _MyFillRect(Vector<int, 2>({0, 0}), Vector<int, 2>({0, 0}), _RandomPixelColor(), true, false);
 	else FillRect();
 }
-void WindowElements::FillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color) const
+
+void FillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
 {
 	_MyFillRect(a, b, color, false, false);
 } // Fill a rect with a color
-void WindowElements::FillRect(Vector<unsigned char, 3> color) const
+void FillRect(Vector<unsigned char, 3> color)
 {
-	_MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), color, true, false);
+	_MyFillRect(Vector<int, 2>({0, 0}), Vector<int, 2>({0, 0}), color, true, false);
 } // Fill whole drawing space with a color
-void WindowElements::DrawGrid(int density, Vector<unsigned char, 3> color)
+
+void DrawGrid(int density, Vector<unsigned char, 3> color)
 {
 	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
 	{
-		_DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
+		_DrawLine(Vector<int, 2>({i * density, 0}), Vector<int, 2>({i * density, config.bufferSize[1]}), color);
 		//_DrawLine(Vector<int, 2>({0, i * density}), Vector<int, 2>({config.bufferSize[0], i * density}), color);
 	}
 	for (int i = 0; i < ((config.bufferSize[1]) / density) + 1; i++)
@@ -88,5 +89,4 @@ void WindowElements::DrawGrid(int density, Vector<unsigned char, 3> color)
 		_DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
 	}
 }
-
 
