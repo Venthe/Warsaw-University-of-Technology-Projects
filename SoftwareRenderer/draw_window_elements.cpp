@@ -1,8 +1,6 @@
-#include "types.h"
-#include "config.h"
 #include "draw_window_elements.h"
+#include "config.h"
 #include "draw_internal.h"
-#include "main.h"
 
 void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
 {
@@ -91,7 +89,7 @@ void DrawWindowElements::DrawGrid(int density, Vector<unsigned char, 3> color)
 
 void DrawWindowElements::ClearZBuffer()
 {
-	unsigned char* window_buffer = static_cast<unsigned char*>(config.zbackbuffer);
+	float* window_buffer = static_cast<float*>(config.zbackbuffer);
 
 	for (int current_height = 0; current_height != config.bufferSize[1]; current_height++) // (Outer) Height
 		for (int current_width = 0; current_width != config.bufferSize[0]; current_width++) *window_buffer++ = 0;

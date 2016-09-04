@@ -1,9 +1,7 @@
 #include "object_handler.h"
-// basic file operations
 #include <iostream>
 #include <fstream>
-#include <string>
-#include "types.h"
+#include "mymath.h"
 
 Vector<float, 3> ParsefloatFromObj(std::string line)
 {
@@ -16,7 +14,7 @@ Vector<float, 3> ParsefloatFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector<float, 3>({stof(buffer[0]), stof(buffer[1]), stof(buffer[2])});
+	return Vector<float, 3>({ stof(buffer[0]), stof(buffer[1]), stof(buffer[2]) });
 }
 
 Vector<int, 3> ParseIntFromObj(std::string line)
@@ -30,7 +28,7 @@ Vector<int, 3> ParseIntFromObj(std::string line)
 		line = line.substr(pos + 1, line.length());
 	}
 
-	return Vector<int, 3>({atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str())});
+	return Vector<int, 3>({ atoi(buffer[0].c_str()), atoi(buffer[1].c_str()), atoi(buffer[2].c_str()) });
 }
 
 int Model::LoadObject(std::string path)

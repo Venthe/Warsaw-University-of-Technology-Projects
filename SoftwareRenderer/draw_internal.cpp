@@ -1,8 +1,5 @@
-#include "types.h"
-#include "config.h"
 #include "draw_internal.h"
-#include "main.h"
-#include <iostream>
+#include "config.h"
 
 void DrawInternal::_PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
 {
@@ -16,18 +13,16 @@ void DrawInternal::_PutPixel(Vector<int, 2> a, Vector<unsigned char, 3> color)
 	*buffer = (color[0] << 16) + (color[1] << 8) + (color[2]);
 }
 
-void DrawInternal::_PutPixelWithZBuffer(Vector<int, 2> a, Vector<unsigned char, 3> color, unsigned char zcolor)
+void DrawInternal::_PutPixelWithZBuffer(Vector<int, 2> a, Vector<unsigned char, 3> color, float zValue)
 {
-	zcolor += 1;
 	// Out of bounds checking
 	if (a[0] < 0 || a[1] < 0) return;
 	if (a[0] >= config.bufferSize[0] || a[1] >= config.bufferSize[1]) return;
 
-
-	unsigned char* zbuffer = static_cast<unsigned char*>(config.zbackbuffer);
+	float* zbuffer = static_cast<float*>(config.zbackbuffer);
 	zbuffer += (a[1] * config.bufferSize[0]) + (a[0]);
-	if (*zbuffer != 0 && *zbuffer > zcolor) return;
-	*zbuffer = zcolor;
+	if (*zbuffer != 0 && *zbuffer < zValue) return;
+	*zbuffer = zValue;
 
 	int* buffer = static_cast<int*>(config.backbuffer);
 	buffer += (a[1] * config.bufferSize[0]) + (a[0]);
@@ -100,11 +95,6 @@ void DrawInternal::_DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned
 	}
 }
 
-float _normalizationToUnity(float value, float min = config.clipNear, float max = config.clipFar)
-{
-	return ((value - min) / (max - min));
-}
-
 struct Point3D
 {
 	int x, y, z;
@@ -123,28 +113,27 @@ int orient2d(const Point3D& a, const Point3D& b, const Point3D& c)
 	return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
 }
 
-void DrawInternal::_DrawPolygon(Vector<float, 3> input[3], Vector<unsigned char, 3> color, bool fill_polygon)
+void DrawInternal::_DrawPolygon(Vector<float, 3> input[3], Vector<unsigned char, 3> color, int drawMode)
 {
 
-	if (fill_polygon)
+	if (drawMode != 1)
 	{
 		Point3D point[3];
 		for (int i = 0; i < 3; i++)
 		{
-			point[i].x = input[i][0];
-			point[i].y = input[i][1];
-			point[i].z = _normalizationToUnity(input[i][2]) * 254;
+			point[i].x = static_cast<int>(input[i][0]);
+			point[i].y = static_cast<int>(input[i][1]);
+			point[i].z = static_cast<int>(input[i][2]);
 		}
 
 		// Bounding box
-		int minX = fmin(point[0].x, fmin(point[1].x, point[2].x));
-		int maxX = fmax(point[0].x, fmax(point[1].x, point[2].x));
-		int minY = fmin(point[0].y, fmin(point[1].y, point[2].y));
-		int maxY = fmax(point[0].y, fmax(point[1].y, point[2].y));
+		int minX = static_cast<int>(fmin(point[0].x, fmin(point[1].x, point[2].x)));
+		int maxX = static_cast<int>(fmax(point[0].x, fmax(point[1].x, point[2].x)));
+		int minY = static_cast<int>(fmin(point[0].y, fmin(point[1].y, point[2].y)));
+		int maxY = static_cast<int>(fmax(point[0].y, fmax(point[1].y, point[2].y)));
 
 		Point3D p;
 
-		/* spanning vectors of edge (v1,v2) and (v1,v3) */
 		Point3D vs1 = Point3D(point[1].x - point[0].x, point[1].y - point[0].y);
 		Point3D vs2 = Point3D(point[2].x - point[0].x, point[2].y - point[0].y);
 
@@ -159,8 +148,8 @@ void DrawInternal::_DrawPolygon(Vector<float, 3> input[3], Vector<unsigned char,
 
 				if ((s >= 0) && (t >= 0) && (s + t <= 1))
 				{
-					unsigned char ZCOLOR = ((1 - s - t)*point[0].z + s*point[1].z + t*point[2].z);
-					_PutPixelWithZBuffer(Vector<int, 2>({ p.x,p.y }), color, ZCOLOR);
+					float zValue = (1 - s - t)*input[0][2] + s*input[1][2] + t*input[2][2];
+					_PutPixelWithZBuffer(Vector<int, 2>({ p.x,p.y }), color, zValue);
 				}
 			}
 		}
@@ -170,43 +159,9 @@ void DrawInternal::_DrawPolygon(Vector<float, 3> input[3], Vector<unsigned char,
 		VerticiesIn2D[0] = Vector<int, 2>({ (int)input[0][0], (int)input[0][1] });
 		VerticiesIn2D[1] = Vector<int, 2>({ (int)input[1][0], (int)input[1][1] });
 		VerticiesIn2D[2] = Vector<int, 2>({ (int)input[2][0], (int)input[2][1] });
-		if (false)//bersenham
-		{
-			// Sort VerticiesIn2Dolygons by y
-			if (VerticiesIn2D[0][1] > VerticiesIn2D[1][1]) std::swap(VerticiesIn2D[1], VerticiesIn2D[0]);
-			if (VerticiesIn2D[0][1] > VerticiesIn2D[2][1]) std::swap(VerticiesIn2D[2], VerticiesIn2D[0]);
-			if (VerticiesIn2D[1][1] > VerticiesIn2D[2][1]) std::swap(VerticiesIn2D[1], VerticiesIn2D[2]);
 
-			int TotalHeight = VerticiesIn2D[2][1] - VerticiesIn2D[0][1];
-
-			for (int y = VerticiesIn2D[0][1]; y != VerticiesIn2D[2][1]; y++)
-			{
-				float CurrentLongx = static_cast<float>((y - VerticiesIn2D[0][1])) / TotalHeight;
-				Vector<int, 2> a;
-				Vector<int, 2> b;
-				if (y < VerticiesIn2D[1][1])
-				{
-					int SegmentHeight = VerticiesIn2D[1][1] - VerticiesIn2D[0][1];
-					if (SegmentHeight == 0) SegmentHeight++;
-					float CurrentShortx = static_cast<float>((y - VerticiesIn2D[0][1])) / SegmentHeight;
-					a({ VerticiesIn2D[0][0] + static_cast<int>((VerticiesIn2D[1][0] - VerticiesIn2D[0][0]) * CurrentShortx), y });
-					b({ VerticiesIn2D[0][0] + static_cast<int>((VerticiesIn2D[2][0] - VerticiesIn2D[0][0]) * CurrentLongx), y });
-				}
-				else
-				{
-					int SegmentHeight = VerticiesIn2D[2][1] - VerticiesIn2D[1][1];
-					if (SegmentHeight == 0) SegmentHeight++;
-					float CurrentShortx = static_cast<float>((y - VerticiesIn2D[1][1])) / SegmentHeight;
-					a({ VerticiesIn2D[1][0] + static_cast<int>((VerticiesIn2D[2][0] - VerticiesIn2D[1][0]) * CurrentShortx), y });
-					b({ VerticiesIn2D[0][0] + static_cast<int>((VerticiesIn2D[2][0] - VerticiesIn2D[0][0]) * CurrentLongx), y });
-				}
-				_DrawLine(a, b, color);
-			}
-		}
-		else {
-			_DrawLine(VerticiesIn2D[0], VerticiesIn2D[1], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
-			_DrawLine(VerticiesIn2D[1], VerticiesIn2D[2], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
-			_DrawLine(VerticiesIn2D[2], VerticiesIn2D[0], Vector<unsigned char, 3>({ 0xff, 0, 0 }));
-		}
+		_DrawLine(VerticiesIn2D[0], VerticiesIn2D[1], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
+		_DrawLine(VerticiesIn2D[1], VerticiesIn2D[2], Vector<unsigned char, 3>({ 0, 0xff, 0 }));
+		_DrawLine(VerticiesIn2D[2], VerticiesIn2D[0], Vector<unsigned char, 3>({ 0xff, 0, 0 }));
 	}
 }

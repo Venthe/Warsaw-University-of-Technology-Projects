@@ -1,29 +1,21 @@
-#include <iostream>
-#include "main.h"
-#include "config.h"
-#include "platform_specific.h"
-#include "draw.h"
-#include "object_handler.h"
-#include "draw_window_elements.h"
-#include "draw_internal.h"
-
-#ifdef _WIN32
 #include <windows.h>
+#include "config.h"
+#include "types.h"
 #include "window.h"
-
-_CONFIG config;
+#include "object_handler.h"
+#include "draw.h"
+#include "draw_window_elements.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
-	config = _CONFIG(800, 600);
-
+	config = _CONFIG(800, 600, Vector<float, 3>({ -5.8f,-1.6f,-5.8f }), Vector<float, 3>({ 35.f,0,0 }), 100.f, 0.2f, 50.f);
 	_WINDOW wnd = _WINDOW(hInstance, "Main Window");
 
 	if (wnd.isInitialized())
 	{
 		//load file
 		Model teapot((std::string(config.CurrentDirectory) + std::string("\\teapot.obj")).c_str(), Vector<float, 3>({ -0.0f, 0.0f, 0.0f }), Vector<float, 3>({ 0, 0, 0 }), Vector<float, 3>({ .2f, -.2f, .2f }));
-		Model ball((std::string(config.CurrentDirectory) + std::string("\\center.obj")).c_str(), Vector<float, 3>(), Vector<float, 3>(), Vector<float, 3>({ .1f,.1f,.1f }));
+		Model ball((std::string(config.CurrentDirectory) + std::string("\\sphere.obj")).c_str(), Vector<float, 3>(), Vector<float, 3>(), Vector<float, 3>({ .1f,.1f,.1f }));
 
 		DrawCommon::SetViewport();
 		while (GetMessage(&wnd.msg, nullptr, 0, 0))
@@ -53,12 +45,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 				DrawCommon::DrawModel(ball);
 			}
 
-			Draw(wnd.hwndMain);
+			DrawMyWindow(wnd.hwndMain);
 			OverlayHUD(wnd.hwndMain);
 		}
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
-
-#endif // _WIN32

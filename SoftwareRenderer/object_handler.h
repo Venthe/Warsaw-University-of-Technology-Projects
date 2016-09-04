@@ -1,20 +1,19 @@
 #pragma once
-#include <vector>
 #include <array>
+#include <vector>
 #include "types.h"
-#include "mymath.h"
 
 class Scalable
 {
 public:
-	Vector<float, 3> Scale = Vector<float, 3>({1.0, 1.0, 1.0});
+	Vector<float, 3> Scale = Vector<float, 3>({ 1.0, 1.0, 1.0 });
 };
 
 class ObjectData
 {
 public:
-	Vector<float, 3> Origin = Vector<float, 3>({0.0, 0.0, 0.0});
-	Vector<float, 3> Rotation = Vector<float, 3>({0.0, 0.0, 0.0});
+	Vector<float, 3> Origin = Vector<float, 3>({ 0.0, 0.0, 0.0 });
+	Vector<float, 3> Rotation = Vector<float, 3>({ 0.0, 0.0, 0.0 });
 };
 
 class Camera : public ObjectData
@@ -50,7 +49,7 @@ public:
 	std::vector<Vector<float, 3>> Vertex;
 	std::vector<Vector<int, 3>> Face;
 
-	Model(std::string path, Vector<float, 3> Loc = Vector<float, 3>(), Vector<float, 3> Rot = Vector<float, 3>(), Vector<float, 3> Sca = Vector<float, 3>({1,1,1}))
+	Model(std::string path, Vector<float, 3> Loc = Vector<float, 3>(), Vector<float, 3> Rot = Vector<float, 3>(), Vector<float, 3> Sca = Vector<float, 3>({ 1,1,1 }))
 	{
 		Origin = Loc;
 		Rotation = Rot;

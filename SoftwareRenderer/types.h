@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <initializer_list>
 
 //Base class for numerical Vectors
 template <typename T, size_t S>

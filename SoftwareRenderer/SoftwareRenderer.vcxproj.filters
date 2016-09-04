@@ -39,9 +39,6 @@
     <ClCompile Include="draw_window_elements.cpp">
       <Filter>Source Files\Draw</Filter>
     </ClCompile>
-    <ClCompile Include="platform_specific.cpp">
-      <Filter>Source Files\Window</Filter>
-    </ClCompile>
     <ClCompile Include="window.cpp">
       <Filter>Source Files\Window</Filter>
     </ClCompile>
@@ -60,12 +57,12 @@
     <ClCompile Include="draw_internal.cpp">
       <Filter>Source Files\Draw</Filter>
     </ClCompile>
+    <ClCompile Include="controller.cpp">
+      <Filter>Source Files\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
-      <Filter>Header Files\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="platform_specific.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
     <ClInclude Include="controller.h">
@@ -91,9 +88,6 @@
     </ClInclude>
     <ClInclude Include="draw_internal.h">
       <Filter>Header Files\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

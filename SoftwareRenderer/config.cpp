@@ -1,4 +1,8 @@
 #include "config.h"
+#include "mymath.h"
+#include <windows.h>
+
+_CONFIG config;
 
 _CONFIG::_CONFIG(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotation, float FocalLength, float _clipNear, float _clipFar)
 {
@@ -6,7 +10,7 @@ _CONFIG::_CONFIG(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotatio
 	bufferSize[0] = x;
 	bufferSize[1] = y;
 	backbuffer = malloc(x * y * intBytesize);
-	zbackbuffer = malloc(x * y * ucharBytesize);
+	zbackbuffer = malloc(x * y * floatBytesize);
 
 	camera.Origin = Origin;
 	camera.Rotation = Rotation;
@@ -22,4 +26,3 @@ _CONFIG::_CONFIG(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotatio
 
 	GetCurrentDirectory(DIRECTORY_LENGTH, CurrentDirectory);
 }
-

@@ -155,13 +155,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="config.cpp" />
+    <ClCompile Include="controller.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_internal.cpp" />
     <ClCompile Include="draw_window_elements.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mymath.cpp" />
     <ClCompile Include="object_handler.cpp" />
-    <ClCompile Include="platform_specific.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,10 +170,8 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="draw_internal.h" />
     <ClInclude Include="draw_window_elements.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="mymath.h" />
     <ClInclude Include="object_handler.h" />
-    <ClInclude Include="platform_specific.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>

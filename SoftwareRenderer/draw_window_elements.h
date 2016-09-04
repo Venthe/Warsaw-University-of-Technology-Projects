@@ -1,5 +1,5 @@
 #pragma once
-#include "object_handler.h"
+#include "types.h"
 
 namespace DrawWindowElements {
 	void FillRectangle(bool random); // Fills drawing area with noise

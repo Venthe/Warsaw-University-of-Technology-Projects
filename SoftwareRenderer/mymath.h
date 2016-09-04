@@ -1,11 +1,13 @@
 #pragma once
 #include <array>
 #include "types.h"
+#include "config.h"
 
 namespace MyMath
 {
 #define M_PI 3.14159
 
+	float NormalizationToUnity(float value, float min = config.clipNear, float max = config.clipFar);
 	float DegreesToRadians(float d);
 
 	template <typename T, size_t x>
@@ -122,29 +124,6 @@ namespace MyMath
 		return temp;
 	}
 
-	template <typename T, size_t x>
-	int transformVectorByArray(std::array<T, x> t, Vector<T, 3>& v, bool retroProject = false)
-	{
-		T result[4];
-
-		for (int i = 0; i < sqrt(x); i++)
-		{
-			result[i] = v[0] * t[i * 4] + v[1] * t[i * 4 + 1] + v[2] * t[i * 4 + 2] + 1 * t[i * 4 + 3];
-		}
-
-
-		for (int i = 0; i < 4 - 1; i++)
-		{
-			if (retroProject)
-			{
-				v[i] = result[i] / result[4 - 1];
-			}
-			else v[i] = result[i];
-		}
-		if (v[0] < -result[3] || v[0] > result[3])
-			if (v[1] < -result[3] || v[1] > result[3])
-				if (v[2] < -result[3] || v[2] > result[3]) return 1;
-		return 0;
-	}
+	bool transformVectorByArray(std::array<float, 16> t, Vector<float, 3>& v, bool retroProject = false);
 }
 
