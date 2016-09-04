@@ -5,10 +5,11 @@
 #include "object_handler.h"
 #include "draw.h"
 #include "draw_window_elements.h"
+#include "controller.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
 {
-	config = _CONFIG(800, 600, Vector<float, 3>({ -5.8f,-1.6f,-5.8f }), Vector<float, 3>({ 35.f,0,0 }), 100.f, 0.2f, 50.f);
+	config = _CONFIG(800, 600, Vector<float, 3>({ -0.0f,0.2f,-2.6f }), Vector<float, 3>(), 100.f, 0.15f, 50.f);
 	_WINDOW wnd = _WINDOW(hInstance, "Main Window");
 
 	if (wnd.isInitialized())
@@ -46,7 +47,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) // HINSTANCE hPre
 			}
 
 			DrawMyWindow(wnd.hwndMain);
-			OverlayHUD(wnd.hwndMain);
+			Controller::OverlayHUD(wnd.hwndMain);
 		}
 		return EXIT_SUCCESS;
 	}

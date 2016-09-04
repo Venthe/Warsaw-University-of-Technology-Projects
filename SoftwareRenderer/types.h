@@ -51,7 +51,7 @@ public:
 		return sqrt(mag);
 	}
 
-	Vector<T, S>& Normalize()
+	Vector<T, S> Normalize()
 	{
 		Vector<T, S> temp = Vector<T, S>();
 		for (size_t i = 0; i < S; i++) temp[i] = this->t[i] / this->Magnitude();
@@ -151,17 +151,30 @@ namespace Vector3
 	}
 }
 
-namespace Quaternion
-{
-	template <typename T>
-	Vector<T, 4> Multiplication(Vector<T, 4> a, Vector<T, 4> b)
+//namespace Quaternion
+//{
+//	template <typename T>
+//	Vector<T, 4> Multiplication(Vector<T, 4> a, Vector<T, 4> b)
+//	{
+//		Vector<T, 4> temp;
+//		temp[0] = a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3];
+//		temp[1] = a[0] * b[1] + a[1] * b[0] + a[2] * b[3] - a[3] * b[2];
+//		temp[2] = a[0] * b[2] - a[1] * b[3] + a[2] * b[0] + a[3] * b[1];
+//		temp[3] = a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + a[3] * b[0];
+//		return temp;
+//	}
+//}
+
+namespace Point2D {
+	struct Structure
 	{
-		Vector<T, 4> temp;
-		temp[0] = a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3];
-		temp[1] = a[0] * b[1] + a[1] * b[0] + a[2] * b[3] - a[3] * b[2];
-		temp[2] = a[0] * b[2] - a[1] * b[3] + a[2] * b[0] + a[3] * b[1];
-		temp[3] = a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + a[3] * b[0];
-		return temp;
+		int x, y;
+		Structure() {}
+		Structure(int a, int b) { x = a; y = b; }
+	};
+
+	inline float CrossProduct(Point2D::Structure v1, Point2D::Structure v2)
+	{
+		return static_cast<float>(v1.x * v2.y) - static_cast<float>(v1.y * v2.x);
 	}
 }
-

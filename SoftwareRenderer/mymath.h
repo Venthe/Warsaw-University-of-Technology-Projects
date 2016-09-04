@@ -7,6 +7,7 @@ namespace MyMath
 {
 #define M_PI 3.14159
 
+	bool transformVectorByArray(std::array<float, 16> t, Vector<float, 3>& v, bool retroProject = false);
 	float NormalizationToUnity(float value, float min = config.clipNear, float max = config.clipFar);
 	float DegreesToRadians(float d);
 
@@ -123,7 +124,5 @@ namespace MyMath
 		temp[11] = Origin[2];
 		return temp;
 	}
-
-	bool transformVectorByArray(std::array<float, 16> t, Vector<float, 3>& v, bool retroProject = false);
 }
 

@@ -60,7 +60,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='WindowsXP|Win32'">
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='WindowsXP|x64'">
@@ -157,7 +157,6 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="draw.cpp" />
-    <ClCompile Include="draw_internal.cpp" />
     <ClCompile Include="draw_window_elements.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mymath.cpp" />
@@ -168,7 +167,6 @@
     <ClInclude Include="controller.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="config.h" />
-    <ClInclude Include="draw_internal.h" />
     <ClInclude Include="draw_window_elements.h" />
     <ClInclude Include="mymath.h" />
     <ClInclude Include="object_handler.h" />

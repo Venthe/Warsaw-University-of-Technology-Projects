@@ -1,6 +1,6 @@
 #include "draw_window_elements.h"
 #include "config.h"
-#include "draw_internal.h"
+#include "draw.h"
 
 void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
 {
@@ -58,12 +58,6 @@ void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> co
 		}
 		if (!full_size) window_buffer += config.bufferSize[0] - delta_x;
 	}
-}
-
-void DrawWindowElements::FillRectangle(bool random) // Fill with random noise
-{
-	if (random) _MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), DrawInternal::_RandomPixelColor(), true, false);
-	else FillRectangle();
 }
 
 void DrawWindowElements::FillRectangle(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)

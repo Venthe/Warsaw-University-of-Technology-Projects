@@ -5,7 +5,6 @@
 void DrawMyWindow(HWND hwndMain);
 void TypeText(HWND hwndMain, std::string text);
 void PlatformSpecificInitialization();
-void OverlayHUD(HWND hwnd);
 
 LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 

@@ -1,5 +1,7 @@
 #pragma once
 #include <windows.h>
 
-void Controller(WPARAM wParam);
-
+namespace Controller {
+	void Keymap(WPARAM wParam);
+	void OverlayHUD(HWND hwnd);
+}

@@ -8,3 +8,7 @@ namespace DrawCommon
 	void LookAt(Vector<float, 3> up = Vector3::Up<float>(), Vector<float, 3> cameraOrigin = config.camera.Origin);
 	void SetViewport(int x = 0, int y = 0, int w = config.bufferSize[0], int h = config.bufferSize[1]);
 };
+
+namespace DrawInternal {
+	void _DrawLine(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color);
+}

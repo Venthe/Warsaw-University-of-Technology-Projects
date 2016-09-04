@@ -14,6 +14,17 @@ class _CONFIG
 {
 private:
 	unsigned short _drawMode = 0;
+
+	void changePerspective()
+	{
+		if (!Perspective)Perspective = true;
+		else Perspective = false;
+	}
+	void changeLookAt()
+	{
+		if (!LookAt) LookAt = true;
+		else LookAt = false;
+	}
 public:
 	Vector<int, 2> bufferSize;
 	void* backbuffer;
@@ -36,6 +47,12 @@ public:
 	void changeDrawMode()
 	{
 		if (++_drawMode > 1) _drawMode = 0;
+	}
+
+	void changeHudDisplay()
+	{
+		if (!hideHUD) hideHUD = true;
+		else hideHUD = false;
 	}
 
 	int getDrawMode()
