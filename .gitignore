@@ -215,5 +215,4 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 !teapot.obj
-!grid.obj
-!center.obj
+!sphere.obj

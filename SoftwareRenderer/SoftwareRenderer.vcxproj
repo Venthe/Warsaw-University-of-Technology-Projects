@@ -147,10 +147,12 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>Copy *.obj $(OutputPath) &amp;&amp; Copy *.dll $(OutputPath)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
