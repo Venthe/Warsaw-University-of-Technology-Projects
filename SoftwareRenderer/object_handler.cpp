@@ -73,3 +73,24 @@ std::array<float, 16> Model::GetModelTransformationMatrix()
 	return ModelTransformationMatrix;
 }
 
+void Camera::ShiftFocalLength(float change)
+{
+	FocalLength += change;
+}
+
+void Camera::ShiftLocation(Vector<float, 3> shift)
+{
+	std::array<float, 16> rotatedShift = MyMath::RotateMatrix<float, 16>(Rotation);
+	MyMath::transformVectorByArray(rotatedShift, shift);
+
+	Origin[0] += shift[0];
+	Origin[1] += shift[1];
+	Origin[2] += shift[2];
+}
+
+void Camera::ShiftRotation(Vector<float, 3> rotate)
+{
+	Rotation[0] += rotate[0];
+	Rotation[1] += rotate[1];
+	Rotation[2] += rotate[2];
+}
