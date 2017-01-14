@@ -9,7 +9,7 @@ Vector<float, 3> ParsefloatFromObj(std::string line)
 	int pos;
 	for (int i = 0; i < 3; i++)
 	{
-		pos = static_cast<int>(line.find(' '));
+		pos = int(line.find(' '));
 		buffer[i] = line.substr(0, pos);
 		line = line.substr(pos + 1, line.length());
 	}
@@ -23,7 +23,7 @@ Vector<int, 3> ParseIntFromObj(std::string line)
 	int pos;
 	for (int i = 0; i < 3; i++)
 	{
-		pos = static_cast<int>(line.find(' '));
+		pos = int(line.find(' '));
 		buffer[i] = line.substr(0, pos);
 		line = line.substr(pos + 1, line.length());
 	}
@@ -93,4 +93,12 @@ void Camera::ShiftRotation(Vector<float, 3> rotate)
 	Rotation[0] += rotate[0];
 	Rotation[1] += rotate[1];
 	Rotation[2] += rotate[2];
+}
+
+Model::Model(std::string path, Vector<float, 3> Loc, Vector<float, 3> Rot, Vector<float, 3> Sca)
+{
+	Origin = Loc;
+	Rotation = Rot;
+	Scale = Sca;
+	this->LoadObject(path);
 }

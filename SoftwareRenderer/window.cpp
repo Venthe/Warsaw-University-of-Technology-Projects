@@ -17,6 +17,8 @@ LRESULT CALLBACK WndProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		Controller::Keymap(wParam);
 		break;
+	default:
+		break;
 	}
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
@@ -104,7 +106,7 @@ void TypeText(HWND hwndMain, std::string text)
 	HDC hdc = GetDC(hwndMain);
 	RECT rect;
 	GetClientRect(hwndMain, &rect);
-	DrawTextEx(hdc, txt, static_cast<int>(text.length()), &rect, 0, nullptr);
+	DrawTextEx(hdc, txt, int(text.length()), &rect, 0, nullptr);
 	DeleteDC(hdc);
 }
 

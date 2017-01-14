@@ -1,6 +1,7 @@
 #include "draw_window_elements.h"
 #include "config.h"
 #include "draw.h"
+#include "draw_internal.h"
 
 void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
 {

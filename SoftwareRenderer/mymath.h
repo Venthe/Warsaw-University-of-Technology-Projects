@@ -1,14 +1,13 @@
 #pragma once
 #include <array>
 #include "types.h"
-#include "config.h"
 
 namespace MyMath
 {
 #define M_PI 3.14159
 
 	bool transformVectorByArray(std::array<float, 16> t, Vector<float, 3>& v, bool retroProject = false);
-	float NormalizationToUnity(float value, float min = config.clipNear, float max = config.clipFar);
+	float NormalizationToUnity(float value, float min, float max);
 	float DegreesToRadians(float d);
 
 	template <typename T, size_t x>
@@ -16,7 +15,7 @@ namespace MyMath
 	{
 		std::array<T, x> result;
 		result.fill(0);
-		if (static_cast<int>(sqrt(x)) % 2 != 0) return result;
+		if (int(sqrt(x)) % 2 != 0) return result;
 
 		for (int i = 0; i != sqrt(x); i++)
 		{
@@ -34,10 +33,10 @@ namespace MyMath
 		{
 			for (int c = 0; c < sqrt(x); c++)
 			{
-				for (int inner = 0; inner < sqrt(static_cast<int>(x)); inner++)
-					result[r * static_cast<int>(sqrt(x)) + c]
-					+= a[r * static_cast<int>(sqrt(x)) + inner]
-					* b[inner * static_cast<int>(sqrt(x)) + c];
+				for (int inner = 0; inner < sqrt(int(x)); inner++)
+					result[r * int(sqrt(x)) + c]
+					+= a[r * int(sqrt(x)) + inner]
+					* b[inner * int(sqrt(x)) + c];
 			}
 		}
 

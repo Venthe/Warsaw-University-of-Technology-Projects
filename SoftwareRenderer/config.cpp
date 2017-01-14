@@ -15,10 +15,10 @@ _CONFIG::_CONFIG(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotatio
 	camera.Origin = Origin;
 	camera.Rotation = Rotation;
 	camera.FocalLength = FocalLength;
-	defaultCamera = camera;
+	camera.clipFar = _clipFar;
+	camera.clipNear = _clipNear;
 
-	clipFar = _clipFar;
-	clipNear = _clipNear;
+	defaultCamera = camera;
 
 	ViewMatrix = MyMath::IdentityMatrix<float, 16>();
 	ViewportMatrix = MyMath::IdentityMatrix<float, 16>();
@@ -26,3 +26,12 @@ _CONFIG::_CONFIG(int x, int y, Vector<float, 3> Origin, Vector<float, 3> Rotatio
 
 	GetCurrentDirectory(DIRECTORY_LENGTH, CurrentDirectory);
 }
+
+void _CONFIG::changePerspective() { Perspective = !Perspective; }
+void _CONFIG::changeLookAt() { LookAt = !LookAt; }
+
+void _CONFIG::changeDrawMode() { if (++_drawMode > 1) _drawMode = 0; }
+
+void _CONFIG::changeHudDisplay() { hideHUD = !hideHUD; }
+
+int _CONFIG::getDrawMode() const { return _drawMode; }

@@ -1,8 +1,9 @@
 #include "mymath.h"
+#include "config.h"
 
 float MyMath::DegreesToRadians(float d)
 {
-	return d * (static_cast<float>(M_PI) / 180.0f);
+	return d * (float(M_PI) / 180.0f);
 }
 float MyMath::NormalizationToUnity(float value, float min, float max)
 {
@@ -28,7 +29,7 @@ bool MyMath::transformVectorByArray(std::array<float, 16> t, Vector<float, 3>& v
 	}
 	if (retroProject)
 	{
-		if (result[2] < config.clipNear || result[2] > config.clipFar) rtrn = false;
+		if (result[2] < config.camera.clipNear || result[2] > config.camera.clipFar) rtrn = false;
 		if ((v[0]<-1.f || v[0]>1.f) && (v[1]<-1.f || v[1]>1.f)) rtrn = false;
 	}
 	return rtrn;

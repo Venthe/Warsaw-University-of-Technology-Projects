@@ -57,6 +57,9 @@
     <ClCompile Include="controller.cpp">
       <Filter>Source Files\Window</Filter>
     </ClCompile>
+    <ClCompile Include="dtaw_internal.cpp">
+      <Filter>Source Files\Draw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="config.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_internal.h">
+      <Filter>Header Files\Draw</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
