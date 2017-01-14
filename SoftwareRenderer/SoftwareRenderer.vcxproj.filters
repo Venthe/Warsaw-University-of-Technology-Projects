@@ -48,9 +48,6 @@
     <ClCompile Include="config.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="object_handler.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="draw.cpp">
       <Filter>Source Files\Draw</Filter>
     </ClCompile>
@@ -59,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="dtaw_internal.cpp">
       <Filter>Source Files\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="draw_internal.h">
       <Filter>Header Files\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="linalg.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

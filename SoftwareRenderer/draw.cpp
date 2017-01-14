@@ -7,8 +7,8 @@
 void DrawCommon::LookAt(Vector<float, 3> up, Vector<float, 3> cameraOrigin)
 {
 	config.ViewMatrix = MyMath::IdentityMatrix<float, 16>();
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<float, 16>(config.camera.Rotation));
-	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<float, 16>(config.camera.Origin));
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::RotateMatrix<float>(config.camera.Rotation));
+	config.ViewMatrix = MyMath::ArrayMultiplication(config.ViewMatrix, MyMath::TranslateMatrix<float>(config.camera.Origin));
 }
 
 void DrawCommon::SetProjection(float fov, float aspectW, float aspectH, float clippingNear, float clippingFar)

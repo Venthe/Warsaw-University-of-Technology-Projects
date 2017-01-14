@@ -5,6 +5,7 @@
 #include <array>
 #include "types.h"
 #include "object_handler.h"
+#include "camera.h"
 
 const int intBytesize = sizeof(int);
 const unsigned char ucharBytesize = sizeof(unsigned char);

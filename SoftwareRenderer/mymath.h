@@ -1,6 +1,9 @@
 #pragma once
 #include <array>
 #include "types.h"
+#include "linalg.h"
+
+using namespace linalg;
 
 namespace MyMath
 {
@@ -43,65 +46,61 @@ namespace MyMath
 		return result;
 	}
 
-	template <typename T, size_t x>
-	std::array<T, x> ScaleMatrix(Vector<T, 3> Scale)
+	template <typename T>
+	std::array<T, 16> ScaleMatrix(Vector<T, 3> Scale)
 	{
-		std::array<T, x> temp = IdentityMatrix<T, x>();
+		std::array<T, 16> temp = IdentityMatrix<T, 16>();
 		temp[0] = Scale[0];
 		temp[5] = Scale[1];
 		temp[10] = Scale[2];
 		return temp;
 	}
 
-	template <typename T, size_t x>
-	std::array<T, x> RotateMatrix(Vector<T, 3> v)
+	template <typename T>
+	std::array<T, 16> fromLinalgMat4ToArray16(mat<T, 4,4> matrix)
 	{
-		auto temp = IdentityMatrix<T, x>();
-
-		temp = ArrayMultiplication(temp, RotateMatrixX<T, x>(v[0]));
-		temp = ArrayMultiplication(temp, RotateMatrixY<T, x>(v[1]));
-		temp = ArrayMultiplication(temp, RotateMatrixZ<T, x>(v[2]));
-
-		return temp;
+		std::array<T, 16> result;
+		for(int row=0; row<4; row++)
+		{
+			for (int col = 0; col<4; col++)
+			{
+				result[row * 4 + col] = matrix[row][col];
+			}
+		}
+		return result;
 	}
 
-	template <typename T, size_t x>
-	std::array<T, x> RotateMatrixZ(T d)
+	template <typename T>
+	mat<T, 4, 4> fromArray16ToLinalgMat4(std::array<T, 16> matrix)
 	{
-		std::array<T, x> temp = IdentityMatrix<T, x>();
-		temp[5] = std::cos(DegreesToRadians(d));
-		temp[6] = -std::sin(DegreesToRadians(d));
-		temp[9] = std::sin(DegreesToRadians(d));
-		temp[10] = std::cos(DegreesToRadians(d));
-		return temp;
+		std::array<T, 16> result;
+		for (int row = 0; row<4; row++)
+		{
+			for (int col = 0; col<4; col++)
+			{
+				result[row][col] = matrix[row * 4 + col];
+			}
+		}
+		return result;
 	}
 
-	template <typename T, size_t x>
-	std::array<T, x> RotateMatrixY(T d)
+	template <typename T>
+	std::array<T, 16> RotateMatrix(Vector<T, 3> v)
 	{
-		std::array<T, x> temp = IdentityMatrix<T, x>();
-		temp[0] = std::cos(DegreesToRadians(d));
-		temp[1] = -std::sin(DegreesToRadians(d));
-		temp[4] = std::sin(DegreesToRadians(d));
-		temp[5] = std::cos(DegreesToRadians(d));
-		return temp;
+		auto quaternionX = rotation_quat(vec<float,3>(1, 0, 0), DegreesToRadians(v[0]));
+		auto quaternionY = rotation_quat(vec<float, 3>(0, 1, 0), DegreesToRadians(v[1]));
+		auto quaternionZ = rotation_quat(vec<float, 3>(0, 0, 1), DegreesToRadians(v[2]));
+		auto quaternion = qmul(qmul(quaternionX, quaternionY), quaternionZ);
+
+		auto rotationMatrix = linalg::rotation_matrix(quaternion);
+
+		return fromLinalgMat4ToArray16(rotationMatrix);
 	}
 
-	template <typename T, size_t x>
-	std::array<T, x> RotateMatrixX(T d)
+	template <typename T>
+	std::array<T, 16> TranslateMatrix(Vector<T, 3> Origin)
 	{
-		std::array<T, x> temp = IdentityMatrix<T, x>();
-		temp[0] = std::cos(DegreesToRadians(d));
-		temp[2] = std::sin(DegreesToRadians(d));
-		temp[8] = -std::sin(DegreesToRadians(d));
-		temp[10] = std::cos(DegreesToRadians(d));
-		return temp;
-	}
-
-	template <typename T, size_t x>
-	std::array<T, x> TranslateMatrix(Vector<T, 3> Origin)
-	{
-		std::array<T, x> temp = IdentityMatrix<T, x>();
+		std::array<T, 16> temp = IdentityMatrix<T, 16>();
 		temp[3] = Origin[0];
 		temp[7] = Origin[1];
 		temp[11] = Origin[2];

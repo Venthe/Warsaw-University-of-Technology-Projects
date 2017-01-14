@@ -1,7 +1,15 @@
-#include "object_handler.h"
 #include <iostream>
 #include <fstream>
 #include "mymath.h"
+#include "model.h"
+
+Model::Model(std::string path, Vector<float, 3> Loc, Vector<float, 3> Rot, Vector<float, 3> Sca)
+{
+	Origin = Loc;
+	Rotation = Rot;
+	Scale = Sca;
+	this->LoadObject(path);
+}
 
 Vector<float, 3> ParsefloatFromObj(std::string line)
 {
@@ -61,9 +69,9 @@ int Model::LoadObject(std::string path)
 
 std::array<float, 16> Model::GetModelTransformationMatrix()
 {
-	std::array<float, 16> ScaleM = MyMath::ScaleMatrix<float, 16>(Scale);
-	std::array<float, 16> TranslateM = MyMath::TranslateMatrix<float, 16>(Origin);
-	std::array<float, 16> Rotate = MyMath::RotateMatrix<float, 16>(Rotation);
+	std::array<float, 16> ScaleM = MyMath::ScaleMatrix<float>(Scale);
+	std::array<float, 16> TranslateM = MyMath::TranslateMatrix<float>(Origin);
+	std::array<float, 16> Rotate = MyMath::RotateMatrix<float>(Rotation);
 
 	ModelTransformationMatrix = MyMath::IdentityMatrix<float, 16>();
 	ModelTransformationMatrix = MyMath::ArrayMultiplication(ModelTransformationMatrix, Rotate);
@@ -71,34 +79,4 @@ std::array<float, 16> Model::GetModelTransformationMatrix()
 	ModelTransformationMatrix = MyMath::ArrayMultiplication(ModelTransformationMatrix, TranslateM);
 
 	return ModelTransformationMatrix;
-}
-
-void Camera::ShiftFocalLength(float change)
-{
-	FocalLength += change;
-}
-
-void Camera::ShiftLocation(Vector<float, 3> shift)
-{
-	std::array<float, 16> rotatedShift = MyMath::RotateMatrix<float, 16>(Rotation);
-	MyMath::transformVectorByArray(rotatedShift, shift);
-
-	Origin[0] += shift[0];
-	Origin[1] += shift[1];
-	Origin[2] += shift[2];
-}
-
-void Camera::ShiftRotation(Vector<float, 3> rotate)
-{
-	Rotation[0] += rotate[0];
-	Rotation[1] += rotate[1];
-	Rotation[2] += rotate[2];
-}
-
-Model::Model(std::string path, Vector<float, 3> Loc, Vector<float, 3> Rot, Vector<float, 3> Sca)
-{
-	Origin = Loc;
-	Rotation = Rot;
-	Scale = Sca;
-	this->LoadObject(path);
 }

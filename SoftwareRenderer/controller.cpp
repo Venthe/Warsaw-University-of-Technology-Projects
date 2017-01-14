@@ -56,10 +56,6 @@ void Controller::OverlayHUD(HWND hwnd)
 	{
 		//Overlaying data
 		std::string str = "Camera:\no:" + config.camera.Origin.ToString() + "\nr:" + config.camera.Rotation.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
-		//if (config.LookAt) str.append("\n").append("Looking at center");
-		//else str.append("\n").append("Looking in front");
-		//if (config.Perspective) str.append("\n").append("Perspective");
-		//else str.append("\n").append("Ortho");
 
 		//Keybindings
 		str.append("\n");
