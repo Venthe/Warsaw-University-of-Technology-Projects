@@ -92,10 +92,10 @@ void DrawMyWindow(HWND hwndMain)
 {
 	HDC dc = GetDC(hwndMain);
 	StretchDIBits(dc,
-		0, 0, config.bufferSize[0], config.bufferSize[1],
-		0, 0, config.bufferSize[0], config.bufferSize[1],
-		config.backbuffer, &bmi,
-		DIB_RGB_COLORS, SRCCOPY
+	              0, 0, config.bufferSize[0], config.bufferSize[1],
+	              0, 0, config.bufferSize[0], config.bufferSize[1],
+	              config.backbuffer, &bmi,
+	              DIB_RGB_COLORS, SRCCOPY
 	);
 	DeleteDC(dc);
 }

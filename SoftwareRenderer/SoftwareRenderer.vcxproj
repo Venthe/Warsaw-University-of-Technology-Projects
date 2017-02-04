@@ -163,22 +163,22 @@
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_window_elements.cpp" />
-    <ClCompile Include="dtaw_internal.cpp" />
+    <ClCompile Include="draw_internal.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="mymath.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="controller.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="draw_internal.h" />
     <ClInclude Include="draw_window_elements.h" />
-    <ClInclude Include="linalg.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="model.h" />
-    <ClInclude Include="mymath.h" />
+    <ClInclude Include="my_math.h" />
     <ClInclude Include="object_handler.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="window.h" />

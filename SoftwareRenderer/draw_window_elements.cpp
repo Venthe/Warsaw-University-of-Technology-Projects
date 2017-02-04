@@ -1,9 +1,8 @@
 #include "draw_window_elements.h"
 #include "config.h"
-#include "draw.h"
 #include "draw_internal.h"
 
-void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color, bool full_size, bool fillMarked)
+void _MyFillRect(Vector2i a, Vector2i b, Vector3uc color, bool full_size, bool fillMarked)
 {
 	int* window_buffer = static_cast<int*>(config.backbuffer);
 
@@ -61,24 +60,24 @@ void _MyFillRect(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> co
 	}
 }
 
-void DrawWindowElements::FillRectangle(Vector<int, 2> a, Vector<int, 2> b, Vector<unsigned char, 3> color)
+void DrawWindowElements::FillRectangle(Vector2i a, Vector2i b, Vector3uc color)
 {
 	_MyFillRect(a, b, color, false, false);
 } // Fill a rect with a color
-void DrawWindowElements::FillRectangle(Vector<unsigned char, 3> color)
+void DrawWindowElements::FillRectangle(Vector3uc color)
 {
-	_MyFillRect(Vector<int, 2>({ 0, 0 }), Vector<int, 2>({ 0, 0 }), color, true, false);
+	_MyFillRect(Vector2i({0, 0}), Vector2i({0, 0}), color, true, false);
 } // Fill whole drawing space with a color
 
-void DrawWindowElements::DrawGrid(int density, Vector<unsigned char, 3> color)
+void DrawWindowElements::DrawGrid(int density, Vector3uc color)
 {
 	for (int i = 0; i < ((config.bufferSize[0]) / density) + 1; i++)
 	{
-		DrawInternal::_DrawLine(Vector<int, 2>({ i * density, 0 }), Vector<int, 2>({ i * density, config.bufferSize[1] }), color);
+		DrawInternal::DrawLine(Vector2i({i * density, 0}), Vector2i({i * density, config.bufferSize[1]}), color);
 	}
 	for (int i = 0; i < ((config.bufferSize[1]) / density) + 1; i++)
 	{
-		DrawInternal::_DrawLine(Vector<int, 2>({ 0, i * density }), Vector<int, 2>({ config.bufferSize[0], i * density }), color);
+		DrawInternal::DrawLine(Vector2i({0, i * density}), Vector2i({config.bufferSize[0], i * density}), color);
 	}
 }
 
@@ -89,4 +88,3 @@ void DrawWindowElements::ClearZBuffer()
 	for (int current_height = 0; current_height != config.bufferSize[1]; current_height++) // (Outer) Height
 		for (int current_width = 0; current_width != config.bufferSize[0]; current_width++) *window_buffer++ = 0;
 }
-

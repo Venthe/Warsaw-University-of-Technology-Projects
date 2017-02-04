@@ -1,20 +1,22 @@
 #include "camera.h"
 #include "types.h"
-#include "mymath.h"
+#include "my_math.h"
+#include "config.h"
 
-void Camera::ShiftFocalLength(float change)
+float Camera::getFov() const { return tanf(ArcDegreesToRadians(focalLength) / 2.0f); }
+void Camera::ShiftFocalLength(float change) { focalLength += change; }
+
+void Camera::ShiftLocation(Vector3f shift)
 {
-	FocalLength += change;
+	Vector4f vectorAdjustedForRotation = Vector3::toVector4(shift, 0.f);
+	transformVectorByArray(constructRotationMatrix<float>(config.camera.Rotation), vectorAdjustedForRotation);
+
+	Origin[0] += vectorAdjustedForRotation[0];
+	Origin[1] += vectorAdjustedForRotation[1];
+	Origin[2] += vectorAdjustedForRotation[2];
 }
 
-void Camera::ShiftLocation(Vector<float, 3> shift)
-{
-	Origin[0] += shift[0];
-	Origin[1] += shift[1];
-	Origin[2] += shift[2];
-}
-
-void Camera::ShiftRotation(Vector<float, 3> rotate)
+void Camera::ShiftRotation(Vector3f rotate)
 {
 	Rotation[0] += rotate[0];
 	Rotation[1] += rotate[1];

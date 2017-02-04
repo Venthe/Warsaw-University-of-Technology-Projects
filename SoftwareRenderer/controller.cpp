@@ -4,49 +4,58 @@
 
 void Controller::Keymap(WPARAM wParam)
 {
+	float translateMultiplier = 4.f;
+	float rotationMultiplier = 4.f;
 	switch (wParam)
 	{
 		//Focal length
+
 	case 'Z': config.camera.ShiftFocalLength(2.5);
 		break;
 	case 'X': config.camera.ShiftFocalLength(-2.5);
 		break;
+
 		//Translation
-	case 'A': config.camera.ShiftLocation(Vector<float, 3>({ -0.2f,0,0 }));
+	case 'A': config.camera.ShiftLocation(Vector3f({-0.2f * translateMultiplier,0,0}));
 		break;
-	case 'D': config.camera.ShiftLocation(Vector<float, 3>({ 0.2f,0,0 }));
+	case 'D': config.camera.ShiftLocation(Vector3f({0.2f * translateMultiplier,0,0}));
 		break;
-	case 'E': config.camera.ShiftLocation(Vector<float, 3>({ 0,0.2f,0 }));
+	case 'E': config.camera.ShiftLocation(Vector3f({0,0.2f * translateMultiplier,0}));
 		break;
-	case 'Q': config.camera.ShiftLocation(Vector<float, 3>({ 0,-0.2f,0 }));
+	case 'Q': config.camera.ShiftLocation(Vector3f({0,-0.2f * translateMultiplier,0}));
 		break;
-	case 'W': config.camera.ShiftLocation(Vector<float, 3>({ 0,0,0.2f }));
+	case 'W': config.camera.ShiftLocation(Vector3f({0,0,-0.2f * translateMultiplier}));
 		break;
-	case 'S': config.camera.ShiftLocation(Vector<float, 3>({ 0,0,-0.2f }));
+	case 'S': config.camera.ShiftLocation(Vector3f({0,0,0.2f * translateMultiplier}));
 		break;
+
 		//Pitch, Yaw,Roll
-	case 'Y': config.camera.ShiftRotation(Vector<float, 3>({ -2.5f, 0, 0 }));
+	case 'Y': config.camera.ShiftRotation(Vector3f({-2.5f * rotationMultiplier, 0, 0}));
 		break;
-	case 'U': config.camera.ShiftRotation(Vector<float, 3>({ 2.5f, 0, 0 }));
+	case 'U': config.camera.ShiftRotation(Vector3f({2.5f * rotationMultiplier, 0, 0}));
 		break;
-	case 'H': config.camera.ShiftRotation(Vector<float, 3>({ 0, 2.5f, 0 }));
+	case 'H': config.camera.ShiftRotation(Vector3f({0, 2.5f * rotationMultiplier, 0}));
 		break;
-	case 'J': config.camera.ShiftRotation(Vector<float, 3>({ 0, -2.5f, 0 }));
+	case 'J': config.camera.ShiftRotation(Vector3f({0, -2.5f * rotationMultiplier, 0}));
 		break;
-	case 'N': config.camera.ShiftRotation(Vector<float, 3>({ 0, 0, 2.5f }));
+	case 'N': config.camera.ShiftRotation(Vector3f({0, 0, 2.5f * rotationMultiplier}));
 		break;
-	case 'M': config.camera.ShiftRotation(Vector<float, 3>({ 0, 0, -2.5f }));
+	case 'M': config.camera.ShiftRotation(Vector3f({0, 0, -2.5f * rotationMultiplier}));
 		break;
+
 		//Misc
-	case 'R': //Reset camera
-		config.camera = config.defaultCamera;
+	case 'R': config.camera = config.defaultCamera; //Reset camera
 		break;
-	case 'C': //change camera
-		config.changeHudDisplay();
+	case 'C': config.changeHudDisplay(); //change camera
 		break;
-	case 'F':
-		config.changeDrawMode();
-	default: break;
+	case 'F': config.changeDrawMode();
+		break;
+	case 'V':
+		config.changePerspective();
+		break;
+
+	default:
+		break;
 	}
 }
 
@@ -55,7 +64,7 @@ void Controller::OverlayHUD(HWND hwnd)
 	if (!config.hideHUD)
 	{
 		//Overlaying data
-		std::string str = "Camera:\no:" + config.camera.Origin.ToString() + "\nr:" + config.camera.Rotation.ToString() + "\nCamera focal length: " + std::to_string(config.camera.FocalLength);
+		std::string str = "Camera:\no:" + config.camera.Origin.ToString() + "\nr:" + config.camera.Rotation.ToString() + "\nCamera focal length: " + std::to_string(config.camera.focalLength);
 
 		//Keybindings
 		str.append("\n");
@@ -83,6 +92,7 @@ void Controller::OverlayHUD(HWND hwnd)
 		str.append("\n").append("R: Reset camera");
 		str.append("\n").append("C: Hide the HUD: ").append(std::to_string(config.hideHUD));
 		str.append("\n").append("F: Change drawing mode, current: ").append(std::to_string(config.getDrawMode()));
+		str.append("\n").append("V: Change perspective, current: ").append(std::to_string(config.getPerspective()));
 
 		TypeText(hwnd, str);
 	}

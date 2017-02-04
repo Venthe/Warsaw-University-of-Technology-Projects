@@ -1,10 +1,11 @@
 #pragma once
-#include "types.h"
+
+using namespace MyMath;
 
 class ObjectData
 {
 public:
-	Vector<float, 3> Origin = Vector<float, 3>({ 0.0, 0.0, 0.0 });
-	Vector<float, 3> Rotation = Vector<float, 3>({ 0.0, 0.0, 0.0 });
-	Vector<float, 3> Scale = Vector<float, 3>({ 1.0, 1.0, 1.0 });
+	Vector3f Origin = Vector3f({0.0, 0.0, 0.0});
+	Vector3f Rotation = Vector3f({0.0, 0.0, 0.0});
+	Vector3f Scale = Vector3f({1.0, 1.0, 1.0});
 };

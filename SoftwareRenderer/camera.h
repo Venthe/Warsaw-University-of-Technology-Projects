@@ -5,11 +5,13 @@
 class Camera : public ObjectData
 {
 public:
-	float FocalLength;
+	float focalLength;
 	float clipNear;
 	float clipFar;
 
 	void ShiftFocalLength(float change);
-	void ShiftLocation(Vector<float, 3> shift);
-	void ShiftRotation(Vector<float, 3> rotate);
+	void ShiftLocation(Vector3f shift);
+	void ShiftRotation(Vector3f rotate);
+
+	float getFov() const;
 };
