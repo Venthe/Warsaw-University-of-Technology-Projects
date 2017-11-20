@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSI_U1_MLP", "MSI_U1_MLP\MSI_U1_MLP.csproj", "{F25482FE-931F-4DBB-BD5C-AFE427B4CC61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiLayeredPerceptron", "MultiLayeredPerceptron.csproj", "{F25482FE-931F-4DBB-BD5C-AFE427B4CC61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
