@@ -2,8 +2,8 @@
 
 namespace MultiLayeredPerceptron.Training {
    public interface ITrainingEntry {
-      IEnumerable<double> GetInputs();
-
-      string ToString();
+      IList<double> Inputs { get; }
+      IList<double> Labels { get; }
+      IList<double> CalculateError(IList<double> results);
    }
 }
