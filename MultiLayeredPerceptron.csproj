@@ -49,6 +49,8 @@
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Network\ActivationFunctions\ActivationFunctions.cs" />
     <Compile Include="Network\ActivationFunctions\IActivationFunction.cs" />
+    <Compile Include="Network\ILayersDefinition.cs" />
+    <Compile Include="Network\LayersDefinition.cs" />
     <Compile Include="Network\Result.cs" />
     <Compile Include="Network\Perceptron\IPerceptron.cs" />
     <Compile Include="Network\Layer\Layer.cs" />

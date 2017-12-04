@@ -1,5 +1,7 @@
-﻿namespace MultiLayeredPerceptron {
-   public interface IPerceptron {
+﻿namespace MultiLayeredPerceptron
+{
+   public interface IPerceptron
+   {
 //      double Result { get; }
 //
 //      double CalculateError(double expectedValue);

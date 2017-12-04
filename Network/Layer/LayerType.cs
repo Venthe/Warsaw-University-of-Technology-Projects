@@ -1,6 +1,9 @@
-namespace MultiLayeredPerceptron {
-   public enum LayerType {
-      First,
-      Hidden
+namespace MultiLayeredPerceptron
+{
+   public enum LayerType
+   {
+      Input,
+      Hidden,
+      Output
    }
 }

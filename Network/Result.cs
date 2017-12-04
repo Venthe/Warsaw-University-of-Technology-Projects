@@ -1,9 +1,11 @@
-namespace MultiLayeredPerceptron {
-   public class Result {
+namespace MultiLayeredPerceptron
+{
+   public class Result
+   {
       public Result(double value, double error)
       {
-         this.Value = value;
-         this.Error = error;
+         Value = value;
+         Error = error;
       }
 
       public double Value { get; }
