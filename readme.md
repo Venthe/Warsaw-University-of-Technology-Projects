@@ -1,4 +1,8 @@
-﻿# Projekt U1. MLP
+﻿# Legacy
+
+No longer developed
+
+# Projekt U1. MLP
 Wykonać program do badania wpływu ilości neuronów perceptronu na jakość aproksymacji
 w sieciach neuronowych typu MLP uczonych algorytmem wstecznej propagacji błędu.   
 a) Zaimplementować algorytm działania sieci MLP i algorytm uczenia tej sieci.   
