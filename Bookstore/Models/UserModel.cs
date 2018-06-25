@@ -36,6 +36,10 @@ namespace Bookstore.Models
       [Display(Name = "Education")]
       public String Education { get; set; }
 
+      [Display(Name = "Address")]
+      [Required]
+      public Address Address { get; set; }
+
       // TODO: Add detailed address
    }
 }
