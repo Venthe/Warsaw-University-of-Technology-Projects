@@ -7,6 +7,8 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using Bookstore.App_Start;
+using System.Web.Optimization;
 
 namespace Bookstore
 {
@@ -18,6 +20,8 @@ namespace Bookstore
          AreaRegistration.RegisterAllAreas();
 
          RegisterRoutes(RouteTable.Routes);
+
+         BundleConfig.RegisterBundles(BundleTable.Bundles);
       }
 
       public static void RegisterRoutes(RouteCollection routes)

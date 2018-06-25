@@ -4,17 +4,25 @@
     <title>@ViewBag.Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link href="~/Styles/Main.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Bookstore/css")
+
 </head>
 <body class="container-fluid">
     <header>
         @Html.Action("Index", "Header")
     </header>
-    <main class="row">
-        <article class="col-md-12">
-            @RenderBody()
-        </article>
-    </main>
+    <div class="row justify-content-md-center">
+        <main class="col-md-8">
+            <div class="row">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bookstore")
+    @RenderSection("scripts", required: false)
 </body>
 </html>

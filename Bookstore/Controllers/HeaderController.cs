@@ -14,6 +14,7 @@ namespace Bookstore.Controllers
          var model = new List<NavigationModel>
          {
             new NavigationModel() { Action = "Index", Controller = "Login", Title = "Login" },
+            new NavigationModel() { Action = "Index", Controller = "Register", Title = "Register" },
             new NavigationModel() { Action = "Index", Controller = "Dashboard", Title = "Dashboard" }
          };
 

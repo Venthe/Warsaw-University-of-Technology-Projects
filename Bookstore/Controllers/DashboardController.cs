@@ -9,7 +9,6 @@ namespace Bookstore.Controllers
 {
    public class DashboardController : Controller
    {
-      // GET: Dashboard
       public ActionResult Index()
       {
          var userModel = new UserModel();

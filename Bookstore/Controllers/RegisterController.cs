@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Bookstore.Controllers
 {
-   public class LoginController : Controller
+   public class RegisterController : Controller
    {
       public ActionResult Index()
       {
@@ -16,8 +16,7 @@ namespace Bookstore.Controllers
       }
 
       [HttpPost]
-      public ActionResult Index(UserLogin userLogin)
-      {
+      public ActionResult Index(UserModel userModel) {
          if (ModelState.IsValid)
          {
             return RedirectToAction("Index", "Dashboard");

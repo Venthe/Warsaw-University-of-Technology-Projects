@@ -1,18 +1,27 @@
-﻿@{
-   ViewBag.Title = "Login";
-   Layout = "~/Views/Shared/_Main-layout.cshtml";
+﻿@model Bookstore.Models.User.UserLogin
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Main-layout.cshtml";
 }
 
-<form method="post" action="/Login">
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" placeholder="Enter Username" name="username" class="form-control" required />
-    </div>
+<article class="col-md-8">
+    @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-control" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Username)
+            @Html.TextBoxFor(Model => Model.Username, null, new { @class = "form-control", @placeholder = "Please enter username" })
+            @Html.ValidationMessageFor(Model => Model.Username)
+        </div>
 
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" placeholder="Enter Password" name="password" class="form-control" required />
-    </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Password)
+            @Html.PasswordFor(Model => Model.Password, new { @class = "form-control", @placeholder = "Please enter password" })
+            @Html.ValidationMessageFor(Model => Model.Password)
+        </div>
 
-    <button type="submit" class="btn btn-default">Login</button>
-</form> 
+        <button type="submit" class="btn btn-default">Login</button>
+    }
+</article>
+<aside class="col-md-4">
+    @Html.ValidationSummary()
+</aside>
