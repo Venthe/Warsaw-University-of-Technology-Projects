@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
 
 namespace Bookstore.Models
@@ -9,7 +10,8 @@ namespace Bookstore.Models
    public class User
    {
       [Key]
-      public String UserId { get; set; }
+      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+      public int UserId { get; set; }
 
       [Display(Name = "Username")]
       [Required(ErrorMessage = "The username is required")]
@@ -34,8 +36,7 @@ namespace Bookstore.Models
       [Required(ErrorMessage = "The email address is required")]
       [EmailAddress(ErrorMessage = "Invalid Email Address")]
       public String Email { get; set; }
-      
-      // TODO: Add hobbies
+
       // TODO: Add education
       // TODO: Add detailed address
    }
