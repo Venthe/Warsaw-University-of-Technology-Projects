@@ -1,5 +1,4 @@
-﻿using Bookstore.Models.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
@@ -35,11 +34,7 @@ namespace Bookstore.Models
 
       [Display(Name = "Education")]
       public String Education { get; set; }
-
-      [Display(Name = "Address")]
-      [Required]
-      public Address Address { get; set; }
-
+      
       // TODO: Add detailed address
    }
 }

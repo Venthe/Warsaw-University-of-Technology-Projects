@@ -1,5 +1,4 @@
 ﻿using Bookstore.Models;
-using Bookstore.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

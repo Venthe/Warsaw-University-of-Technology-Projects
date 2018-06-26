@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Bookstore.Models.User
+namespace Bookstore.Models
 {
    public static class Hobbies
    {

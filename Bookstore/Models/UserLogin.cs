@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Bookstore.Models.User
+namespace Bookstore.Models
 {
    public class UserLogin
    {

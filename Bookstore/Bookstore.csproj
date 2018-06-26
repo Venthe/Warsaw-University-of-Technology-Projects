@@ -184,9 +184,9 @@
     </Compile>
     <Compile Include="Models\NavigationModel.cs" />
     <Compile Include="Models\UserModel.cs" />
-    <Compile Include="Models\User\Education.cs" />
-    <Compile Include="Models\User\Hobbies.cs" />
-    <Compile Include="Models\User\UserLogin.cs" />
+    <Compile Include="Models\Education.cs" />
+    <Compile Include="Models\Hobbies.cs" />
+    <Compile Include="Models\UserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,9 @@
-﻿@model Bookstore.Models.UserModel
+﻿@using Bookstore.Models
+@model UserModel
 @{
     ViewBag.Title = "Register";
-    ViewBag.Education = new SelectList(Bookstore.Models.User.Education.List, "Value", "Text");
-    ViewBag.Hobbies = new MultiSelectList(Bookstore.Models.User.Hobbies.List, "Value", "Text");
+    ViewBag.Education = new SelectList(Education.List, "Value", "Text");
+    ViewBag.Hobbies = new MultiSelectList(Hobbies.List, "Value", "Text");
     Layout = "~/Views/Shared/_Main-layout.cshtml";
 }
 
