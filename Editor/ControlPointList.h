@@ -4,20 +4,7 @@
 
 #include "ControlPoint.h"
 
-class ControlPointList {
-public:
-	std::list<ControlPoint> List;
+std::string serialize(std::list<ControlPoint> list);
 
-	std::string toString() {
-		std::string result = "";
-
-		for (std::list<ControlPoint>::iterator it = List.begin(); it != List.end() ; it++)
-		{
-			result.append(it->toString()).append("\n");
-		}
-
-		return result;
-	}
-};
-
-ControlPointList controlPointList;
+// globally accessible control point list
+static std::list<ControlPoint> controlPointList;

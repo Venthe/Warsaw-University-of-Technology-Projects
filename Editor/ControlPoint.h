@@ -26,7 +26,7 @@ public:
 		return _weight;
 	}
 
-	std::string toString() {
-		return "[" + std::to_string(_x) + "|" + std::to_string(_y) + "|" + std::to_string(_weight) + "]";
+	std::string to_string() {
+		return std::to_string(_x) + " " + std::to_string(_y) + " " + std::to_string(_weight);
 	}
 };

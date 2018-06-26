@@ -27,12 +27,21 @@
     <ClInclude Include="ControlPointList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Io.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlPointList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
