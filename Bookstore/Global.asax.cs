@@ -9,6 +9,9 @@ using System.Web.SessionState;
 using System.Web.Http;
 using Bookstore.App_Start;
 using System.Web.Optimization;
+using System.Data.Entity;
+using Bookstore.DataAccessLayer;
+using System.Diagnostics;
 
 namespace Bookstore
 {
@@ -16,11 +19,11 @@ namespace Bookstore
    {
       void Application_Start(object sender, EventArgs e)
       {
+         Database.SetInitializer(new BookstoreDBInitializer());
+
          // Code that runs on application startup
          AreaRegistration.RegisterAllAreas();
-
          RegisterRoutes(RouteTable.Routes);
-
          BundleConfig.RegisterBundles(BundleTable.Bundles);
       }
 

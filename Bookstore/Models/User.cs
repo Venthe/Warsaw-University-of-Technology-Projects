@@ -6,11 +6,9 @@ using System.Web;
 
 namespace Bookstore.Models
 {
-   // TODO: Move to DB
    public class User
    {
-      [Key]
-      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+      [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
       public int UserId { get; set; }
 
       [Display(Name = "Username")]
@@ -28,16 +26,19 @@ namespace Bookstore.Models
       [Required(ErrorMessage = "The name is required")]
       public String Name { get; set; }
 
-      [Display(Name = "Surname")]
-      [Required(ErrorMessage = "The surname is required")]
+      [Display(Name = "Surname"), Required(ErrorMessage = "The surname is required")]
       public String Surname { get; set; }
 
-      [Display(Name = "Email address")]
-      [Required(ErrorMessage = "The email address is required")]
-      [EmailAddress(ErrorMessage = "Invalid Email Address")]
+      [Display(Name = "Email address"), Required(ErrorMessage = "The email address is required"), EmailAddress(ErrorMessage = "Invalid Email Address")]
       public String Email { get; set; }
 
-      // TODO: Add education
-      // TODO: Add detailed address
+      public int EducationId { get; set; }
+      public Education Education { get; set; }
+
+      [Index("IX_UniqueAddressId", IsUnique = true)]
+      public int AddressId { get; set; }
+      public Address Address { get; set; }
+
+      public ICollection<Hobby> Hobbies { get; set; } = new HashSet<Hobby>();
    }
 }

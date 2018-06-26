@@ -178,16 +178,19 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\HeaderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="DataAccessLayer\BookstoreDBContext.cs" />
+    <Compile Include="DataAccessLayer\BookstoreDBInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\NavigationModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Education.cs" />
-    <Compile Include="Models\Hobbies.cs" />
+    <Compile Include="Models\Hobby.cs" />
     <Compile Include="Models\UserLogin.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -209,9 +212,12 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Header\_Navigation.cshtml" />
     <Content Include="Views\Header\_Index.cshtml" />
-    <Content Include="Views\Register\Index.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\AdminDashboard\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\User\List.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Success.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
