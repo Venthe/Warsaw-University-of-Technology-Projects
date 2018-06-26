@@ -183,7 +183,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\NavigationModel.cs" />
-    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\Education.cs" />
     <Compile Include="Models\Hobbies.cs" />
     <Compile Include="Models\UserLogin.cs" />
@@ -210,7 +210,7 @@
     <Content Include="Views\Header\_Index.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\AdminDashboard\Index.cshtml" />
-    <Content Include="Views\Product\Product.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -15,7 +15,7 @@ namespace Bookstore.Controllers
       }
 
       [HttpPost]
-      public ActionResult Index(UserModel userModel) {
+      public ActionResult Index(User user) {
          if (ModelState.IsValid)
          {
             return RedirectToAction("Index", "Dashboard");

@@ -1,5 +1,5 @@
 ﻿@using Bookstore.Models
-@model UserModel
+@model User
 @{
     ViewBag.Title = "Register";
     ViewBag.Education = new SelectList(Education.List, "Value", "Text");
@@ -38,18 +38,6 @@
             @Html.LabelFor(Model => Model.Email)
             @Html.TextBoxFor(Model => Model.Email, null, new { @class = "form-control", @placeholder = "example@address.org", @type = "email" })
             @Html.ValidationMessageFor(Model => Model.Email)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(Model => Model.Hobbies)
-            @Html.ListBoxFor(Model => Model.Hobbies, (IEnumerable<SelectListItem>)ViewBag.Hobbies, new { @class = "form-control" })
-            @Html.ValidationMessageFor(Model => Model.Hobbies)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(Model => Model.Education)
-            @Html.DropDownListFor(Model => Model.Education, (IEnumerable<SelectListItem>)ViewBag.Education, new { @class = "form-control" })
-            @Html.ValidationMessageFor(Model => Model.Education)
         </div>
 
         <button type="submit" class="btn btn-default">Register</button>

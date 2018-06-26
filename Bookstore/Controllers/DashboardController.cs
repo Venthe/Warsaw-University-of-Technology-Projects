@@ -11,9 +11,9 @@ namespace Bookstore.Controllers
    {
       public ActionResult Index()
       {
-         var userModel = new UserModel();
+         var user = new User();
 
-         return View(userModel);
+         return View(user);
       }
    }
 }
