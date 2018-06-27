@@ -1,21 +1,16 @@
-﻿using Bookstore.DataAccessLayer;
-using Bookstore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace Bookstore.Controllers
+﻿namespace Bookstore.Controllers
 {
+   using System.Collections.Generic;
+   using System.Linq;
+   using System.Web.Mvc;
+   using Bookstore.DataAccessLayer;
+   using Bookstore.Models;
+
    public class UserController : Controller
    {
       private readonly BookstoreDBContext dbContext;
 
-      public UserController()
-      {
-         dbContext = new BookstoreDBContext();
-      }
+      public UserController() => dbContext = new BookstoreDBContext();
 
       public ActionResult Create()
       {
@@ -31,8 +26,8 @@ namespace Bookstore.Controllers
       [HttpPost]
       public ActionResult Create(User user, FormCollection form)
       {
-         updateHobbies(user, form);
-         updateEducation(user, form);
+         UpdateHobbies(user, form);
+         UpdateEducation(user, form);
 
          if (ModelState.IsValid)
          {
@@ -53,12 +48,25 @@ namespace Bookstore.Controllers
          return View(model);
       }
 
-      private void updateHobbies(User user, FormCollection form)
+      public ActionResult List() => View(dbContext.Users.ToList());
+
+      public ActionResult Success() => View();
+
+      public ActionResult Index()
+      {
+         return View();
+      }
+
+      private ICollection<Education> PrepareEducationItems() => (from education in dbContext.Education select education).ToList();
+
+      private ICollection<Hobby> PrepareHobbies() => (from hobby in dbContext.Hobby select hobby).ToList();
+
+      private void UpdateHobbies(User user, FormCollection form)
       {
          string userHobbies = form.Get("User.Hobbies");
          if (userHobbies != null)
          {
-            List<String> hobbyCodes = userHobbies.Split(',').ToList();
+            List<string> hobbyCodes = userHobbies.Split(',').ToList();
             if (hobbyCodes.Count != 0)
             {
                user.Hobbies = dbContext.Hobby.Where(hobby => hobbyCodes.Contains(hobby.Code)).ToList<Hobby>();
@@ -67,7 +75,7 @@ namespace Bookstore.Controllers
          }
       }
 
-      private void updateEducation(User user, FormCollection form)
+      private void UpdateEducation(User user, FormCollection form)
       {
          var educationCode = form.Get("User.Education");
          if (educationCode != null)
@@ -75,30 +83,6 @@ namespace Bookstore.Controllers
             user.Education = (from e in dbContext.Education where e.Code.Equals(educationCode) select e).First() as Education;
             ModelState["User.Education"].Errors.Clear();
          }
-      }
-
-      public ActionResult List() {
-         return View(dbContext.Users.ToList());
-      }
-
-      public ActionResult Success()
-      {
-         return View();
-      }
-
-      public ActionResult Index()
-      {
-         return View();
-      }
-
-      private ICollection<Education> PrepareEducationItems()
-      {
-         return (from education in dbContext.Education select education).ToList();
-      }
-
-      private ICollection<Hobby> PrepareHobbies()
-      {
-         return (from hobby in dbContext.Hobby select hobby).ToList();
       }
    }
 }

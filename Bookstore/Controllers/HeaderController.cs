@@ -1,12 +1,9 @@
-﻿using Bookstore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace Bookstore.Controllers
+﻿namespace Bookstore.Controllers
 {
+   using System.Collections.Generic;
+   using System.Web.Mvc;
+   using Bookstore.Models;
+
    public class HeaderController : Controller
    {
       public ActionResult Navigation()

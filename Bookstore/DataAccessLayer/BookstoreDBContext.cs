@@ -1,25 +1,22 @@
-﻿using Bookstore.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Diagnostics;
-using System.Linq;
-using System.Web;
-
-namespace Bookstore.DataAccessLayer
+﻿namespace Bookstore.DataAccessLayer
 {
+   using System.Data.Entity;
+   using Bookstore.Models;
+
    public class BookstoreDBContext : DbContext
    {
-
-      public BookstoreDBContext() : base("name=BookstoreDBContext")
+      public BookstoreDBContext()
+         : base("name=BookstoreDBContext")
       {
          Database.SetInitializer(new BookstoreDBInitializer());
       }
 
       public DbSet<Hobby> Hobby { get; set; }
+
       public DbSet<Education> Education { get; set; }
+
       public DbSet<User> Users { get; set; }
+
       public DbSet<Address> Addresses { get; set; }
 
       protected override void OnModelCreating(DbModelBuilder modelBuilder)

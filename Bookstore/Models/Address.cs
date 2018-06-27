@@ -1,34 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
-
-namespace Bookstore.Models
+﻿namespace Bookstore.Models
 {
+   using System.Collections.Generic;
+   using System.ComponentModel.DataAnnotations;
+   using System.ComponentModel.DataAnnotations.Schema;
+
    public class Address
    {
-      [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+      [Key]
+      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
       public int AddressId { get; set; }
 
-      [Display(Name = "Country"), Required]
-      public String Country { get; set; }
+      [Display(Name = "Country")]
+      [Required]
+      public string Country { get; set; }
 
       [Display(Name = "County")]
-      public String County { get; set; }
+      public string County { get; set; }
 
-      [Display(Name = "City"), Required]
-      public String City { get; set; }
+      [Display(Name = "City")]
+      [Required]
+      public string City { get; set; }
 
-      [Display(Name = "Street"), Required]
-      public String Street { get; set; }
+      [Display(Name = "Street")]
+      [Required]
+      public string Street { get; set; }
 
-      [Display(Name = "Flat number"), Required]
-      public String FlatNumber { get; set; }
+      [Display(Name = "Flat number")]
+      [Required]
+      public string FlatNumber { get; set; }
 
       [Display(Name = "Apartment number")]
-      public String ApartamentNumber { get; set; }
+      public string ApartamentNumber { get; set; }
 
       public ICollection<User> Users { get; set; } = new HashSet<User>();
    }

@@ -1,18 +1,14 @@
-﻿using Bookstore.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
-using System.Web;
-
-namespace Bookstore.DataAccessLayer
+﻿namespace Bookstore.DataAccessLayer
 {
+   using System.Collections.Generic;
+   using System.Diagnostics;
+   using Bookstore.Models;
+
    public class BookstoreDBInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<BookstoreDBContext>
    {
       protected override void Seed(BookstoreDBContext context)
       {
-         base.InitializeDatabase(context);
+         this.InitializeDatabase(context);
 
          Debug.WriteLine("Seeding...");
          InitializeHobbies(context);
@@ -21,7 +17,8 @@ namespace Bookstore.DataAccessLayer
 
       private static void InitializeEducation(BookstoreDBContext context)
       {
-         IEnumerable<Education> education = new List<Education>() {
+         IEnumerable<Education> education = new List<Education>()
+         {
             new Education { Code = "primary" },
             new Education { Code = "highschool" },
             new Education { Code = "university" }
@@ -34,7 +31,8 @@ namespace Bookstore.DataAccessLayer
 
       private static void InitializeHobbies(BookstoreDBContext context)
       {
-         IEnumerable<Hobby> hobbies = new List<Hobby>() {
+         IEnumerable<Hobby> hobbies = new List<Hobby>()
+         {
             new Hobby { Code = "kayaking" },
             new Hobby { Code = "swimming" },
             new Hobby { Code = "dancing" },

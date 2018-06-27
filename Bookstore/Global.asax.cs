@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
-using System.Web.Http;
-using Bookstore.App_Start;
-using System.Web.Optimization;
-using System.Data.Entity;
-using Bookstore.DataAccessLayer;
-using System.Diagnostics;
-
-namespace Bookstore
+﻿namespace Bookstore
 {
+   using System;
+   using System.Data.Entity;
+   using System.Web;
+   using System.Web.Http;
+   using System.Web.Mvc;
+   using System.Web.Optimization;
+   using System.Web.Routing;
+   using Bookstore.App_Start;
+   using Bookstore.DataAccessLayer;
+
    public class Global : HttpApplication
    {
-      void Application_Start(object sender, EventArgs e)
+      public void Application_Start(object sender, EventArgs e)
       {
          Database.SetInitializer(new BookstoreDBInitializer());
 
@@ -27,16 +22,15 @@ namespace Bookstore
          BundleConfig.RegisterBundles(BundleTable.Bundles);
       }
 
-      public static void RegisterRoutes(RouteCollection routes)
+      public void RegisterRoutes(RouteCollection routes)
       {
          routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
          routes.MapRoute(
-             "Default",                                              // Route name 
-             "{controller}/{action}/{id}",                           // URL with parameters 
-             new { controller = "Dashboard", action = "Index", id = "" }  // Parameter defaults
-         );
-
+             "Default",                                              // Route name
+             "{controller}/{action}/{id}",                           // URL with parameters
+             new { controller = "Dashboard", action = "Index", id = string.Empty }) // Parameter defaults
+         ;
       }
    }
 }
