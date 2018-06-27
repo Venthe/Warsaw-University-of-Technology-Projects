@@ -6,10 +6,7 @@
    public class BookstoreDBContext : DbContext
    {
       public BookstoreDBContext()
-         : base("name=BookstoreDBContext")
-      {
-         Database.SetInitializer(new BookstoreDBInitializer());
-      }
+         : base("name=BookstoreDBContext") => Database.SetInitializer(new BookstoreDBInitializer());
 
       public DbSet<Hobby> Hobby { get; set; }
 

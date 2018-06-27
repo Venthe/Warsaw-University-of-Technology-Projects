@@ -4,10 +4,7 @@
 
    public class AdminDashboardController : Controller
     {
-        // GET: AdminDashboard
-        public ActionResult Index()
-        {
-            return View();
-        }
-    }
+      // GET: AdminDashboard
+      public ActionResult Index() => View();
+   }
 }

@@ -12,17 +12,7 @@
 
    public class Global : HttpApplication
    {
-      public void Application_Start(object sender, EventArgs e)
-      {
-         Database.SetInitializer(new BookstoreDBInitializer());
-
-         // Code that runs on application startup
-         AreaRegistration.RegisterAllAreas();
-         RegisterRoutes(RouteTable.Routes);
-         BundleConfig.RegisterBundles(BundleTable.Bundles);
-      }
-
-      public void RegisterRoutes(RouteCollection routes)
+      public static void RegisterRoutes(RouteCollection routes)
       {
          routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
@@ -31,6 +21,16 @@
              "{controller}/{action}/{id}",                           // URL with parameters
              new { controller = "Dashboard", action = "Index", id = string.Empty }) // Parameter defaults
          ;
+      }
+
+      public void Application_Start(object sender, EventArgs e)
+      {
+         Database.SetInitializer(new BookstoreDBInitializer());
+
+         // Code that runs on application startup
+         AreaRegistration.RegisterAllAreas();
+         RegisterRoutes(RouteTable.Routes);
+         BundleConfig.RegisterBundles(BundleTable.Bundles);
       }
    }
 }

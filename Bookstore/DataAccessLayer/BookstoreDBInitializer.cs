@@ -17,7 +17,7 @@
 
       private static void InitializeEducation(BookstoreDBContext context)
       {
-         IEnumerable<Education> education = new List<Education>()
+         IEnumerable<Education> education = new List<Education>
          {
             new Education { Code = "primary" },
             new Education { Code = "highschool" },
@@ -31,7 +31,7 @@
 
       private static void InitializeHobbies(BookstoreDBContext context)
       {
-         IEnumerable<Hobby> hobbies = new List<Hobby>()
+         IEnumerable<Hobby> hobbies = new List<Hobby>
          {
             new Hobby { Code = "kayaking" },
             new Hobby { Code = "swimming" },

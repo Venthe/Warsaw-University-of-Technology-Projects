@@ -10,7 +10,7 @@
       public string Username
       {
          get => HttpContext.Current.Application["username"] as string;
-         set { HttpContext.Current.Application["username"] = value; }
+         set => HttpContext.Current.Application["username"] = value;
       }
 
       // TODO Crypto
@@ -21,7 +21,7 @@
       public string Password
       {
          get => HttpContext.Current.Application["password"] as string;
-         set { HttpContext.Current.Application["password"] = value; }
+         set => HttpContext.Current.Application["password"] = value;
       }
    }
 }

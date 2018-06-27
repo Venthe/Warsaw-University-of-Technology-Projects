@@ -14,7 +14,7 @@
 
       public ActionResult Create()
       {
-         var userViewModel = new UserViewModel()
+         var userViewModel = new UserViewModel
          {
             Hobby = PrepareHobbies(),
             Education = PrepareEducationItems()
@@ -35,10 +35,10 @@
             dbContext.Users.Add(user);
             dbContext.SaveChanges();
 
-            return RedirectToAction("Success");
+            return RedirectToAction(nameof(Success));
          }
 
-         var model = new UserViewModel()
+         var model = new UserViewModel
          {
             User = user,
             Hobby = PrepareHobbies(),
@@ -52,10 +52,7 @@
 
       public ActionResult Success() => View();
 
-      public ActionResult Index()
-      {
-         return View();
-      }
+      public ActionResult Index() => View();
 
       private ICollection<Education> PrepareEducationItems() => (from education in dbContext.Education select education).ToList();
 
@@ -63,10 +60,10 @@
 
       private void UpdateHobbies(User user, FormCollection form)
       {
-         string userHobbies = form.Get("User.Hobbies");
+         var userHobbies = form.Get("User.Hobbies");
          if (userHobbies != null)
          {
-            List<string> hobbyCodes = userHobbies.Split(',').ToList();
+            var hobbyCodes = userHobbies.Split(',').ToList();
             if (hobbyCodes.Count != 0)
             {
                user.Hobbies = dbContext.Hobby.Where(hobby => hobbyCodes.Contains(hobby.Code)).ToList<Hobby>();

@@ -10,10 +10,10 @@
       {
          var model = new List<NavigationModel>
          {
-            new NavigationModel() { Action = "Index", Controller = "Login", Title = "Login" },
-            new NavigationModel() { Action = "Index", Controller = "User", Title = "Register" },
-            new NavigationModel() { Action = "Index", Controller = "Dashboard", Title = "Dashboard" },
-            new NavigationModel() { Action = "Index", Controller = "Product", Title = "Product" }
+            new NavigationModel { Action = nameof(Index), Controller = "Login", Title = "Login" },
+            new NavigationModel { Action = nameof(Index), Controller = "User", Title = "Register" },
+            new NavigationModel { Action = nameof(Index), Controller = "Dashboard", Title = "Dashboard" },
+            new NavigationModel { Action = nameof(Index), Controller = "Product", Title = "Product" }
          };
 
          return PartialView("_Navigation", model);
@@ -21,7 +21,7 @@
 
       public ActionResult Index()
       {
-         var model = "Bookstore";
+         var model = nameof(Bookstore);
 
          return PartialView("_Index", model);
       }
