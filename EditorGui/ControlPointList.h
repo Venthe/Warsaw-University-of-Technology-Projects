@@ -10,6 +10,3 @@ std::vector<QPoint> toQPoints(std::vector<ControlPoint> list);
 
 QPoint toQPoint(ControlPoint point);
 ControlPoint toControlPoint(QPoint point, double weight = 0.0);
-
-// globally accessible control point list
-static std::vector<ControlPoint> controlPointList;

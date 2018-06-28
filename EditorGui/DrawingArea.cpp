@@ -34,7 +34,7 @@ QSize DrawingArea::minimumSizeHint() const
 void DrawingArea::mouseMoveEvent(QMouseEvent *event) {
 	mouseX = event->pos().x();
 	mouseY = event->pos().y();
-	this->parentWidget()->repaint();
+	emit mousePositionChanged(mousePosition());
 }
 
 void DrawingArea::mousePressEvent(QMouseEvent *event) {
@@ -50,11 +50,18 @@ void DrawingArea::mousePressEvent(QMouseEvent *event) {
 	}
 
 	update();
+	emit controlPointListChanged(controlPointList);
 }
 
-std::string DrawingArea::mousePosition()
+QString DrawingArea::mousePosition()
 {
-	return "(" + std::to_string(mouseX) + ", " + std::to_string(mouseY) + ")";
+	return		QString(("(" + std::to_string(mouseX) + ", " + std::to_string(mouseY) + ")").c_str());
+}
+
+void DrawingArea::controlPointListUpdated(std::vector<ControlPoint> points)
+{
+	controlPointList = points;
+	update();
 }
 
 void DrawingArea::paintEvent(QPaintEvent *event) {
@@ -62,7 +69,7 @@ void DrawingArea::paintEvent(QPaintEvent *event) {
 	painter.setWindow(canvasMinX, canvasMinY, canvasMaxX, canvasMaxY);
 	painter.setViewport(canvasMinX, canvasMinY, canvasMaxX, canvasMaxY);
 
-	drawBackgroundBox(painter);
+	//drawBackgroundBox(painter);
 	drawPath(painter, toQPoints(controlPointList));
 }
 
@@ -72,10 +79,9 @@ void DrawingArea::drawPath(QPainter &painter, std::vector<QPoint> points)
 
 	if (points.size() >= 4) {
 		path.moveTo(points.at(0));
-		qDebug() << points.at(0);
 		for (int i = 1; i < points.size() && points.size() - i >= 3; i += 3) {
 			path.cubicTo(points.at(i), points.at(i + 1), points.at(i + 2));
-			qDebug() << i << " " << points.at(i) << " " << points.at(i + 1) << " " << points.at(i + 2);
+			//qDebug() << i << " " << points.at(i) << " " << points.at(i + 1) << " " << points.at(i + 2);
 		}
 	}
 

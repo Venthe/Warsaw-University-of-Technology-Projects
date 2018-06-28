@@ -2,8 +2,6 @@
 #include "EditorGui.h"
 #include <QtWidgets/QApplication>
 
-#include "ControlPointList.h"
-
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);

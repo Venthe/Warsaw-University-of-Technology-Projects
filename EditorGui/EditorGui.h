@@ -9,9 +9,17 @@ class EditorGui : public QMainWindow
 
 public:
 	EditorGui(QWidget *parent = Q_NULLPTR);
-	
-	QWidget renderArea;
 
+	QWidget renderArea;
+signals:
+	void controlPointListUpdated(std::vector<ControlPoint> controlPointList);
+public slots:
+	void mousePositionUpdated(QString text);
+	void controlPointChanged(std::vector<ControlPoint> points);
+	void updateTable();
+	void exportToFile();
+	void importFromFile();
 private:
 	Ui::EditorGuiClass ui;
+	std::vector<ControlPoint> controlPointList;
 };

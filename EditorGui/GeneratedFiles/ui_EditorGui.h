@@ -21,7 +21,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableView>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -40,7 +40,7 @@ public:
     DrawingArea *drawingArea;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
-    QTableView *pointsList;
+    QTableWidget *pointsList;
     QHBoxLayout *horizontalLayout;
     QPushButton *exportPointsButton;
     QPushButton *importPointsButton;
@@ -79,7 +79,7 @@ public:
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        pointsList = new QTableView(verticalLayoutWidget);
+        pointsList = new QTableWidget(verticalLayoutWidget);
         pointsList->setObjectName(QStringLiteral("pointsList"));
 
         verticalLayout->addWidget(pointsList);
