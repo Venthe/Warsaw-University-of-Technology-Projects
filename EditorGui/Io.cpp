@@ -21,13 +21,17 @@ std::vector<ControlPoint> readFromFile(std::string filename) {
 
 	std::string line;
 	while (std::getline(file, line)) {
-		std::istringstream iss(line);
-		long x, y;
-		double w;
-		iss >> x >> y >> w;
-
-		newList.push_back(ControlPoint(x, y, w));
+		newList.push_back(controlPointFrom(line));
 	}
 
 	return newList;
+}
+
+ControlPoint controlPointFrom(std::string line) {
+	std::istringstream iss(line);
+	long x, y;
+	double w;
+	iss >> x >> y >> w;
+
+	return ControlPoint(x, y, w);
 }

@@ -19,6 +19,7 @@ public slots:
 	void updateTable();
 	void exportToFile();
 	void importFromFile();
+	void addPointClicked();
 private:
 	Ui::EditorGuiClass ui;
 	std::vector<ControlPoint> controlPointList;
