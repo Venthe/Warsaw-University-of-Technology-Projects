@@ -25,8 +25,6 @@
 
       public void Application_Start(object sender, EventArgs e)
       {
-         Database.SetInitializer(new BookstoreDBInitializer());
-
          // Code that runs on application startup
          AreaRegistration.RegisterAllAreas();
          RegisterRoutes(RouteTable.Routes);

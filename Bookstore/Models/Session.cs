@@ -1,20 +1,19 @@
 ﻿namespace Bookstore.Models
 {
-   using System.Collections.Generic;
    using System.ComponentModel.DataAnnotations;
    using System.ComponentModel.DataAnnotations.Schema;
 
-   public class Hobby
+   public class Session
    {
       [Key]
       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-      public int HobbyId { get; set; }
+      public int SessionId { get; set; }
 
       [Required]
       [StringLength(450)]
       [Index("IX_UniqueHobbyCode", IsUnique = true)]
-      public string Code { get; set; }
+      public string Key { get; set; }
 
-      public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
+      public virtual User User { get; set; }
    }
 }

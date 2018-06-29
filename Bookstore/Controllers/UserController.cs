@@ -1,16 +1,23 @@
 ﻿namespace Bookstore.Controllers
 {
+   using System;
    using System.Collections.Generic;
    using System.Linq;
    using System.Web.Mvc;
    using Bookstore.DataAccessLayer;
    using Bookstore.Models;
+   using Bookstore.Services;
 
    public class UserController : Controller
    {
       private readonly BookstoreDBContext dbContext;
+      private readonly AuthorizationService authorizationService;
 
-      public UserController() => dbContext = new BookstoreDBContext();
+      public UserController()
+      {
+         dbContext = new BookstoreDBContext();
+         authorizationService = new AuthorizationService();
+      }
 
       public ActionResult Create()
       {
@@ -53,6 +60,50 @@
       public ActionResult Success() => View();
 
       public ActionResult Index() => View();
+
+      public ActionResult Logout()
+      {
+         Response.Cookies["BookstoreSession"]["SessionKey"] = null;
+
+         return View();
+      }
+
+      public ActionResult Login()
+      {
+         if (authorizationService.IsLoggedIn(Response))
+         {
+            return RedirectToAction(nameof(List));
+         }
+
+         return View();
+      }
+
+      [HttpPost]
+      public ActionResult Login(LoginViewModel model)
+      {
+         if (!ModelState.IsValid)
+         {
+            return View(model);
+         }
+
+         var user = (from u in dbContext.Users where u.Username.Equals(model.Username, StringComparison.OrdinalIgnoreCase) && u.Password.Equals(model.Password) select u).Single();
+
+         if (user == null)
+         {
+            // unauthorized
+            return View(model);
+         }
+
+         var sessionHash = Guid.NewGuid().ToString();
+
+         dbContext.Session.Add(new Session() { Key = sessionHash, User = user });
+         dbContext.SaveChanges();
+
+         Response.Cookies["BookstoreSession"]["SessionKey"] = sessionHash;
+         Response.Cookies["BookstoreSession"].Expires = DateTime.Now.AddHours(1);
+
+         return RedirectToAction(nameof(List));
+      }
 
       private ICollection<Education> PrepareEducationItems() => (from education in dbContext.Education select education).ToList();
 

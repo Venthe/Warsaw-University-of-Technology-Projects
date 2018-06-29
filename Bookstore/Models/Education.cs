@@ -15,6 +15,6 @@
       [Index("IX_UniqueEducationCode", IsUnique = true)]
       public string Code { get; set; }
 
-      public ICollection<User> Users { get; set; } = new HashSet<User>();
+      public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
    }
 }

@@ -32,6 +32,6 @@
       [Display(Name = "Apartment number")]
       public string ApartamentNumber { get; set; }
 
-      public ICollection<User> Users { get; set; } = new HashSet<User>();
+      public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
    }
 }

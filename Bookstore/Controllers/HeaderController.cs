@@ -3,17 +3,23 @@
    using System.Collections.Generic;
    using System.Web.Mvc;
    using Bookstore.Models;
+   using Bookstore.Services;
 
    public class HeaderController : Controller
    {
+      private readonly AuthorizationService authorizationService;
+
+      public HeaderController() => authorizationService = new AuthorizationService();
+
       public ActionResult Navigation()
       {
          var model = new List<NavigationModel>
          {
-            new NavigationModel { Action = nameof(Index), Controller = "Login", Title = "Login" },
             new NavigationModel { Action = nameof(Index), Controller = "User", Title = "Register" },
             new NavigationModel { Action = nameof(Index), Controller = "Dashboard", Title = "Dashboard" },
-            new NavigationModel { Action = nameof(Index), Controller = "Product", Title = "Product" }
+            new NavigationModel { Action = nameof(Index), Controller = "Product", Title = "Product" },
+            new NavigationModel { Action = "Login", Controller = "User", Title = "Login" },
+            new NavigationModel { Action = "Logout", Controller = "User", Title = "Logout" }
          };
 
          return PartialView("_Navigation", model);
@@ -25,5 +31,7 @@
 
          return PartialView("_Index", model);
       }
+
+      public ActionResult CurrentUser() => PartialView("_CurrentUser", authorizationService.GetCurrentUser(Response));
    }
 }

@@ -6,7 +6,7 @@
    public class BookstoreDBContext : DbContext
    {
       public BookstoreDBContext()
-         : base("name=BookstoreDBContext") => Database.SetInitializer(new BookstoreDBInitializer());
+         : base("name=BookstoreDBContext") { }
 
       public DbSet<Hobby> Hobby { get; set; }
 
@@ -15,6 +15,10 @@
       public DbSet<User> Users { get; set; }
 
       public DbSet<Address> Addresses { get; set; }
+
+      public DbSet<Session> Session { get; set; }
+
+      public DbSet<UserRole> Roles { get; set; }
 
       protected override void OnModelCreating(DbModelBuilder modelBuilder)
       {
@@ -37,6 +41,8 @@
           .HasRequired<Education>(s => s.Education)
           .WithMany(g => g.Users)
           .HasForeignKey<int>(s => s.EducationId);
+
+         // TODO: Add unique constraints to 1-1
 
          base.OnModelCreating(modelBuilder);
       }
