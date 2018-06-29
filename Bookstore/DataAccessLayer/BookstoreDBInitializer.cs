@@ -27,7 +27,7 @@
             context.Roles.AddRange(roles);
             context.SaveChanges();
 
-            var users = PrepareUsers(education, roles);
+            var users = PrepareUsers(education, roles, hobbies);
             context.Users.AddRange(users);
             context.SaveChanges();
          }
@@ -76,16 +76,16 @@
          };
       }
 
-      private static IList<User> PrepareUsers(IList<Education> education, IList<UserRole> roles)
+      private static IList<User> PrepareUsers(IList<Education> education, IList<UserRole> roles, IList<Hobby> hobbies)
       {
          IList<Address> address = new List<Address> {
-               new Address { ApartamentNumber = "a", City = "a", FlatNumber = "a", Country = "a", County = "a", Street = "a" },
-               new Address { ApartamentNumber = "b", City = "b", FlatNumber = "a", Country = "a", County = "a", Street = "b" }
+               new Address { City = "Warsaw", FlatNumber = "5a", Country = "Poland", County = "Mazowsze", Street = "Krucza" },
+               new Address { ApartamentNumber = "5", City = "Cracow", FlatNumber = "13", Country = "Poland", Street = "Wilcza" }
             };
 
          IList<User> admin = new List<User> {
-               new User { Password = "aaaaaaaa", Username = "admin", Email = "admin@admin.ad", Name = "Test", Surname = "Test2", Address = address[0], Education = education[0], Role = roles[0] },
-               new User { Password = "aaaaaaaa", Username = "user", Email = "user@admin.ad", Name = "user__name", Surname = "user__password", Address = address[1], Education = education[1] }
+               new User { Password = "aaaaaaaa", Username = "admin", Email = "admin@bookstore.temp", Name = "Andrzej", Surname = "Kowalski", Address = address[0], Education = education[2], Role = roles[0], Hobbies = new List<Hobby>{hobbies[1], hobbies[2] } },
+               new User { Password = "aaaaaaaa", Username = "user", Email = "user@bookstore.temp", Name = "Wojciech", Surname = "Pietrzyński", Address = address[1], Education = education[1], Hobbies = new List<Hobby>{hobbies[0], hobbies[3] } }
             };
          return admin;
       }

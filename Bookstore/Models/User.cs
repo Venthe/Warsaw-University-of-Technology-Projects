@@ -12,6 +12,7 @@
       [Index("IX_UniqueAddressId", IsUnique = true)]
       public virtual int AddressId { get; set; }
 
+      [Display(Name = "Education")]
       public virtual Education Education { get; set; }
 
       public virtual int EducationId { get; set; }
@@ -21,6 +22,7 @@
       [EmailAddress(ErrorMessage = "Invalid Email Address")]
       public string Email { get; set; }
 
+      [Display(Name = "Hobbies")]
       public virtual ICollection<Hobby> Hobbies { get; set; } = new HashSet<Hobby>();
 
       [Display(Name = "Name")]
@@ -34,6 +36,7 @@
       [Required(ErrorMessage = "The password is required")]
       public string Password { get; set; }
 
+      [Display(Name = "User role")]
       public virtual UserRole Role { get; set; }
 
       [Display(Name = "Surname")]
