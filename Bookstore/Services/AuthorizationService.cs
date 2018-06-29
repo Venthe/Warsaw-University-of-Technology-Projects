@@ -11,19 +11,6 @@
 
       public AuthorizationService() => dbContext = new BookstoreDBContext();
 
-      public bool IsLoggedIn(HttpRequestBase request) => GetCurrentUser(request) != null;
-
-      public bool IsAdmin(HttpRequestBase request)
-      {
-         var currentUser = GetCurrentUser(request);
-
-         if (currentUser == null) {
-            return false;
-         }
-
-         return currentUser.Role.RoleName.Equals("admin");
-      }
-
       public User GetCurrentUser(HttpRequestBase request)
       {
          var sessionKey = request.Cookies["BookstoreSession"]?["SessionKey"];
@@ -32,7 +19,29 @@
             return null;
          }
 
-         return (from s in dbContext.Session where s.Key.Equals(sessionKey) select s.User).Single();
+         var users = from s in dbContext.Session where s.Key.Equals(sessionKey) select s.User;
+
+         if (users.Count() != 1) {
+            return null;
+         }
+
+         return users.Single();
       }
+
+      public bool IsAdmin(HttpRequestBase request)
+      {
+         var currentUser = GetCurrentUser(request);
+
+         if (currentUser == null)
+         {
+            return false;
+         }
+
+         var role = currentUser.Role?.RoleName.Equals("admin");
+
+         return role != null;
+      }
+
+      public bool IsLoggedIn(HttpRequestBase request) => GetCurrentUser(request) != null;
    }
 }

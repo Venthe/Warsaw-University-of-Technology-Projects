@@ -8,17 +8,17 @@
       public BookstoreDBContext()
          : base("name=BookstoreDBContext") { }
 
-      public DbSet<Hobby> Hobby { get; set; }
+      public DbSet<Address> Addresses { get; set; }
 
       public DbSet<Education> Education { get; set; }
 
-      public DbSet<User> Users { get; set; }
+      public DbSet<Hobby> Hobby { get; set; }
 
-      public DbSet<Address> Addresses { get; set; }
+      public DbSet<UserRole> Roles { get; set; }
 
       public DbSet<Session> Session { get; set; }
 
-      public DbSet<UserRole> Roles { get; set; }
+      public DbSet<User> Users { get; set; }
 
       protected override void OnModelCreating(DbModelBuilder modelBuilder)
       {

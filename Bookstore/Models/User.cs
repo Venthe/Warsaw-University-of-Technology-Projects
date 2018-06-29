@@ -6,13 +6,26 @@
 
    public class User
    {
-      [Key]
-      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-      public int UserId { get; set; }
 
-      [Display(Name = "Username")]
-      [Required(ErrorMessage = "The username is required")]
-      public string Username { get; set; }
+      public virtual Address Address { get; set; }
+
+      [Index("IX_UniqueAddressId", IsUnique = true)]
+      public virtual int AddressId { get; set; }
+
+      public virtual Education Education { get; set; }
+
+      public virtual int EducationId { get; set; }
+
+      [Display(Name = "Email address")]
+      [Required(ErrorMessage = "The email address is required")]
+      [EmailAddress(ErrorMessage = "Invalid Email Address")]
+      public string Email { get; set; }
+
+      public virtual ICollection<Hobby> Hobbies { get; set; } = new HashSet<Hobby>();
+
+      [Display(Name = "Name")]
+      [Required(ErrorMessage = "The name is required")]
+      public string Name { get; set; }
 
       // TODO Crypto
       [Display(Name = "Password")]
@@ -21,30 +34,17 @@
       [Required(ErrorMessage = "The password is required")]
       public string Password { get; set; }
 
-      [Display(Name = "Name")]
-      [Required(ErrorMessage = "The name is required")]
-      public string Name { get; set; }
+      public virtual UserRole Role { get; set; }
 
       [Display(Name = "Surname")]
       [Required(ErrorMessage = "The surname is required")]
       public string Surname { get; set; }
+      [Key]
+      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+      public int UserId { get; set; }
 
-      [Display(Name = "Email address")]
-      [Required(ErrorMessage = "The email address is required")]
-      [EmailAddress(ErrorMessage = "Invalid Email Address")]
-      public string Email { get; set; }
-
-      public virtual int EducationId { get; set; }
-
-      public virtual Education Education { get; set; }
-
-      [Index("IX_UniqueAddressId", IsUnique = true)]
-      public virtual int AddressId { get; set; }
-
-      public virtual Address Address { get; set; }
-
-      public virtual ICollection<Hobby> Hobbies { get; set; } = new HashSet<Hobby>();
-
-      public virtual UserRole Role { get; set; }
+      [Display(Name = "Username")]
+      [Required(ErrorMessage = "The username is required")]
+      public string Username { get; set; }
    }
 }

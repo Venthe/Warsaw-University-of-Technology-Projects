@@ -11,6 +11,13 @@
 
       public HeaderController() => authorizationService = new AuthorizationService();
 
+      public ActionResult Index()
+      {
+         var model = nameof(Bookstore);
+
+         return PartialView("_Index", model);
+      }
+
       public ActionResult Navigation()
       {
          var model = new List<NavigationModel>
@@ -21,13 +28,6 @@
          };
 
          return PartialView("_Navigation", model);
-      }
-
-      public ActionResult Index()
-      {
-         var model = nameof(Bookstore);
-
-         return PartialView("_Index", model);
       }
    }
 }

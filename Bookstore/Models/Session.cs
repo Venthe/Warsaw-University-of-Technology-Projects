@@ -5,14 +5,14 @@
 
    public class Session
    {
-      [Key]
-      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-      public int SessionId { get; set; }
 
       [Required]
       [StringLength(450)]
       [Index("IX_UniqueHobbyCode", IsUnique = true)]
       public string Key { get; set; }
+      [Key]
+      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+      public int SessionId { get; set; }
 
       public virtual User User { get; set; }
    }

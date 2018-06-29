@@ -10,8 +10,8 @@
 
    public class UserController : Controller
    {
-      private readonly BookstoreDBContext dbContext;
       private readonly AuthorizationService authorizationService;
+      private readonly BookstoreDBContext dbContext;
 
       public UserController()
       {
@@ -55,9 +55,13 @@
          return View(model);
       }
 
+      public ActionResult Denied() => View();
+
+      public ActionResult Index() => View();
+
       public ActionResult List()
       {
-         if (authorizationService.IsAdmin(Response))
+         if (authorizationService.IsAdmin(Request))
          {
             return View(dbContext.Users.ToList());
          }
@@ -65,22 +69,9 @@
          return RedirectToAction(nameof(Denied));
       }
 
-      public ActionResult Success() => View();
-
-      public ActionResult Index() => View();
-
-      public ActionResult Denied() => View();
-
-      public ActionResult Logout()
-      {
-         Response.Cookies["BookstoreSession"]["SessionKey"] = null;
-
-         return RedirectToAction(nameof(Login));
-      }
-
       public ActionResult Login()
       {
-         if (authorizationService.IsLoggedIn(Response))
+         if (authorizationService.IsLoggedIn(Request))
          {
             return RedirectToAction(nameof(List));
          }
@@ -115,9 +106,28 @@
          return RedirectToAction(nameof(List));
       }
 
+      public ActionResult Logout()
+      {
+         Response.Cookies["BookstoreSession"]["SessionKey"] = null;
+
+         return RedirectToAction(nameof(Login));
+      }
+
+      public ActionResult Success() => View();
+
       private ICollection<Education> PrepareEducationItems() => (from education in dbContext.Education select education).ToList();
 
       private ICollection<Hobby> PrepareHobbies() => (from hobby in dbContext.Hobby select hobby).ToList();
+
+      private void UpdateEducation(User user, FormCollection form)
+      {
+         var educationCode = form.Get("User.Education");
+         if (educationCode != null)
+         {
+            user.Education = (from e in dbContext.Education where e.Code.Equals(educationCode) select e).First() as Education;
+            ModelState["User.Education"].Errors.Clear();
+         }
+      }
 
       private void UpdateHobbies(User user, FormCollection form)
       {
@@ -130,16 +140,6 @@
                user.Hobbies = dbContext.Hobby.Where(hobby => hobbyCodes.Contains(hobby.Code)).ToList<Hobby>();
                ModelState["User.Hobbies"].Errors.Clear();
             }
-         }
-      }
-
-      private void UpdateEducation(User user, FormCollection form)
-      {
-         var educationCode = form.Get("User.Education");
-         if (educationCode != null)
-         {
-            user.Education = (from e in dbContext.Education where e.Code.Equals(educationCode) select e).First() as Education;
-            ModelState["User.Education"].Errors.Clear();
          }
       }
    }
