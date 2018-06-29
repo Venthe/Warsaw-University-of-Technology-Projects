@@ -6,7 +6,7 @@
    using System.Diagnostics;
    using Bookstore.Models;
 
-   public class BookstoreDBInitializer : System.Data.Entity.DropCreateDatabaseAlways<BookstoreDBContext>
+   public class BookstoreDBInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<BookstoreDBContext>
    {
       protected override void Seed(BookstoreDBContext context)
       {

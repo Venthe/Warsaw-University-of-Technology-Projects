@@ -177,10 +177,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AdminDashboardController.cs" />
-    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HeaderController.cs" />
-    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DataAccessLayer\BookstoreDBContext.cs" />
     <Compile Include="DataAccessLayer\BookstoreDBInitializer.cs" />
@@ -203,7 +200,6 @@
     <Content Include="Views\web.config" />
     <None Include="packages.config" />
     <Content Include="Views\Shared\_Main-layout.cshtml" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.0.0.min.map" />
     <Content Include="Scripts\umd\popper.min.js.map" />
@@ -219,13 +215,10 @@
     <Content Include="Views\Header\_Navigation.cshtml" />
     <Content Include="Views\Header\_Index.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
-    <Content Include="Views\AdminDashboard\Index.cshtml" />
-    <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\User\List.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Success.cshtml" />
     <Content Include="Views\User\Logout.cshtml" />
-    <Content Include="Views\Header\_CurrentUser.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -16,8 +16,6 @@
          var model = new List<NavigationModel>
          {
             new NavigationModel { Action = nameof(Index), Controller = "User", Title = "Register" },
-            new NavigationModel { Action = nameof(Index), Controller = "Dashboard", Title = "Dashboard" },
-            new NavigationModel { Action = nameof(Index), Controller = "Product", Title = "Product" },
             new NavigationModel { Action = "Login", Controller = "User", Title = "Login" },
             new NavigationModel { Action = "Logout", Controller = "User", Title = "Logout" }
          };
@@ -31,7 +29,5 @@
 
          return PartialView("_Index", model);
       }
-
-      public ActionResult CurrentUser() => PartialView("_CurrentUser", authorizationService.GetCurrentUser(Response));
    }
 }
