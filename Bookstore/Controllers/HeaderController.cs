@@ -36,6 +36,5 @@
 
          return PartialView("_UserDetails", model);
       }
-
    }
 }

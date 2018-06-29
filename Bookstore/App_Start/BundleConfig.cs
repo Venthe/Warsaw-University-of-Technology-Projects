@@ -18,9 +18,9 @@
 
          bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/bootstrap.css"));
 
-         bundles.Add(new StyleBundle("~/Bookstore/css").Include("~/Content/Bookstore.css"));
+         bundles.Add(new StyleBundle("~/Bookstore/css").Include("~/BookstoreCss/bookstore.css"));
 
-         bundles.Add(new ScriptBundle("~/bundles/bookstore").Include("~/Scripts/bookstore.*"));
+         bundles.Add(new ScriptBundle("~/Bookstore/js").Include("~/BookstoreJs/bookstore.*"));
       }
    }
 }

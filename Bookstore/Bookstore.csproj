@@ -129,7 +129,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\bookstore.js" />
+    <Content Include="BookstoreJs\bookstore.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -169,7 +169,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Content\Bookstore.css" />
+    <Content Include="BookstoreCss\bookstore.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>

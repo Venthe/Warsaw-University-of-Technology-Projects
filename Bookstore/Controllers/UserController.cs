@@ -97,7 +97,7 @@
 
          var sessionHash = Guid.NewGuid().ToString();
 
-         dbContext.Session.Add(new Session() { Key = sessionHash, User = user });
+         dbContext.Session.Add(new Session { Key = sessionHash, User = user });
          dbContext.SaveChanges();
 
          Response.Cookies["BookstoreSession"]["SessionKey"] = sessionHash;

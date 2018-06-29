@@ -330,3 +330,7 @@ ASALocalRun/
 
 # Visual Studio Code
 .vscode/
+
+# Solution directories
+Content/
+Scripts/
