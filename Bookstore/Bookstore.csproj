@@ -185,6 +185,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\HeaderUserModelView.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\NavigationModel.cs" />
     <Compile Include="Models\Session.cs" />
@@ -219,6 +220,7 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Success.cshtml" />
     <Content Include="Views\User\Denied.cshtml" />
+    <Content Include="Views\Header\_UserDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

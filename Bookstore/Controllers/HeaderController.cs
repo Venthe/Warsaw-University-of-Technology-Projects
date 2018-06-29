@@ -29,5 +29,13 @@
 
          return PartialView("_Navigation", model);
       }
+
+      public ActionResult UserDetails()
+      {
+         var model = new HeaderUserModelView { Username = authorizationService.GetCurrentUser(Request)?.Username, IsAdmin = authorizationService.IsAdmin(Request) };
+
+         return PartialView("_UserDetails", model);
+      }
+
    }
 }
