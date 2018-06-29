@@ -21,7 +21,8 @@
 
          var users = from s in dbContext.Session where s.Key.Equals(sessionKey) select s.User;
 
-         if (users.Count() != 1) {
+         if (users.Count() != 1)
+         {
             return null;
          }
 

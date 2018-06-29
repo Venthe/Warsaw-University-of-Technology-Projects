@@ -72,20 +72,22 @@
       {
          return new List<UserRole>
          {
-            new UserRole{ RoleName = "admin"}
+            new UserRole { RoleName = "admin"}
          };
       }
 
       private static IList<User> PrepareUsers(IList<Education> education, IList<UserRole> roles, IList<Hobby> hobbies)
       {
-         IList<Address> address = new List<Address> {
+         IList<Address> address = new List<Address>
+         {
                new Address { City = "Warsaw", FlatNumber = "5a", Country = "Poland", County = "Mazowsze", Street = "Krucza" },
                new Address { ApartamentNumber = "5", City = "Cracow", FlatNumber = "13", Country = "Poland", Street = "Wilcza" }
             };
 
-         IList<User> admin = new List<User> {
-               new User { Password = "aaaaaaaa", Username = "admin", Email = "admin@bookstore.temp", Name = "Andrzej", Surname = "Kowalski", Address = address[0], Education = education[2], Role = roles[0], Hobbies = new List<Hobby>{hobbies[1], hobbies[2] } },
-               new User { Password = "aaaaaaaa", Username = "user", Email = "user@bookstore.temp", Name = "Wojciech", Surname = "Pietrzyński", Address = address[1], Education = education[1], Hobbies = new List<Hobby>{hobbies[0], hobbies[3] } }
+         IList<User> admin = new List<User>
+         {
+               new User { Password = "aaaaaaaa", Username = "admin", Email = "admin@bookstore.temp", Name = "Andrzej", Surname = "Kowalski", Address = address[0], Education = education[2], Role = roles[0], Hobbies = new List<Hobby>{ hobbies[1], hobbies[2] } },
+               new User { Password = "aaaaaaaa", Username = "user", Email = "user@bookstore.temp", Name = "Wojciech", Surname = "Pietrzyński", Address = address[1], Education = education[1], Hobbies = new List<Hobby>{ hobbies[0], hobbies[3] } }
             };
          return admin;
       }

@@ -6,7 +6,6 @@
 
    public class User
    {
-
       public virtual Address Address { get; set; }
 
       [Index("IX_UniqueAddressId", IsUnique = true)]
@@ -42,6 +41,7 @@
       [Display(Name = "Surname")]
       [Required(ErrorMessage = "The surname is required")]
       public string Surname { get; set; }
+
       [Key]
       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
       public int UserId { get; set; }

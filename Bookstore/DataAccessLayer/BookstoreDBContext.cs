@@ -6,7 +6,9 @@
    public class BookstoreDBContext : DbContext
    {
       public BookstoreDBContext()
-         : base("name=BookstoreDBContext") { }
+         : base("name=BookstoreDBContext")
+      {
+      }
 
       public DbSet<Address> Addresses { get; set; }
 
@@ -43,7 +45,6 @@
           .HasForeignKey<int>(s => s.EducationId);
 
          // TODO: Add unique constraints to 1-1
-
          base.OnModelCreating(modelBuilder);
       }
    }
