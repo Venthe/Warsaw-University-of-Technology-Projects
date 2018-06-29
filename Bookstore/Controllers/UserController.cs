@@ -55,17 +55,27 @@
          return View(model);
       }
 
-      public ActionResult List() => View(dbContext.Users.ToList());
+      public ActionResult List()
+      {
+         if (authorizationService.IsAdmin(Response))
+         {
+            return View(dbContext.Users.ToList());
+         }
+
+         return RedirectToAction(nameof(Denied));
+      }
 
       public ActionResult Success() => View();
 
       public ActionResult Index() => View();
 
+      public ActionResult Denied() => View();
+
       public ActionResult Logout()
       {
          Response.Cookies["BookstoreSession"]["SessionKey"] = null;
 
-         return View();
+         return RedirectToAction(nameof(Login));
       }
 
       public ActionResult Login()

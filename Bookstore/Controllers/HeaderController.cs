@@ -15,7 +15,7 @@
       {
          var model = new List<NavigationModel>
          {
-            new NavigationModel { Action = nameof(Index), Controller = "User", Title = "Register" },
+            new NavigationModel { Action = nameof(Index), Controller = "User", Title = "User action index" },
             new NavigationModel { Action = "Login", Controller = "User", Title = "Login" },
             new NavigationModel { Action = "Logout", Controller = "User", Title = "Logout" }
          };

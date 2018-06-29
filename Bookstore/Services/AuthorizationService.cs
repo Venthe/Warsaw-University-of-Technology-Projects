@@ -11,22 +11,22 @@
 
       public AuthorizationService() => dbContext = new BookstoreDBContext();
 
-      public bool IsLoggedIn(HttpResponseBase response) => GetCurrentUser(response) != null;
+      public bool IsLoggedIn(HttpRequestBase request) => GetCurrentUser(request) != null;
 
-      public bool IsAdmin(HttpResponseBase response)
+      public bool IsAdmin(HttpRequestBase request)
       {
-         var currentUser = GetCurrentUser(response);
+         var currentUser = GetCurrentUser(request);
 
          if (currentUser == null) {
             return false;
          }
 
-         return true;
+         return currentUser.Role.RoleName.Equals("admin");
       }
 
-      public User GetCurrentUser(HttpResponseBase response)
+      public User GetCurrentUser(HttpRequestBase request)
       {
-         var sessionKey = response.Cookies["BookstoreSession"]?["SessionKey"];
+         var sessionKey = request.Cookies["BookstoreSession"]?["SessionKey"];
          if (sessionKey == null)
          {
             return null;

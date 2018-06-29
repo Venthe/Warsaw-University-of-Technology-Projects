@@ -218,7 +218,7 @@
     <Content Include="Views\User\List.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Success.cshtml" />
-    <Content Include="Views\User\Logout.cshtml" />
+    <Content Include="Views\User\Denied.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
