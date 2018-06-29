@@ -13,6 +13,23 @@
          Debug.WriteLine("Seeding...");
          InitializeHobbies(context);
          InitializeEducation(context);
+         InitializeUserRoles(context);
+
+         var admin = new User { Password = "aaaaaaaa", Username = "admin", Email = "admin@admin.ad", Name = "Test", Surname = "Test2" };
+         context.Users.Add(admin);
+         context.SaveChanges();
+      }
+
+      private static void InitializeUserRoles(BookstoreDBContext context)
+      {
+         IEnumerable<UserRole> roles = new List<UserRole>
+         {
+            new UserRole{ RoleName = "admin"}
+         };
+
+         context.Roles.AddRange(roles);
+
+         context.SaveChanges();
       }
 
       private static void InitializeEducation(BookstoreDBContext context)

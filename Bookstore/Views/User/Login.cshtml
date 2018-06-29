@@ -1,11 +1,11 @@
-﻿@model Bookstore.Models.UserLogin
+﻿@model Bookstore.Models.LoginViewModel
 @{
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_Main-layout.cshtml";
 }
 
 <article class="col-md-8">
-    @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-control" }))
+    @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @class = "form-control" }))
     {
         <div class="form-group">
             @Html.LabelFor(Model => Model.Username)

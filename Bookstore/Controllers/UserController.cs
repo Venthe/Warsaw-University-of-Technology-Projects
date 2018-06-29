@@ -1,5 +1,6 @@
 ﻿namespace Bookstore.Controllers
 {
+   using System;
    using System.Collections.Generic;
    using System.Linq;
    using System.Web.Mvc;
@@ -53,6 +54,63 @@
       public ActionResult Success() => View();
 
       public ActionResult Index() => View();
+
+      public ActionResult Logout()
+      {
+         Response.Cookies["BookstoreSession"]["SessionKey"] = null;
+
+         return View();
+      }
+
+      public ActionResult Login()
+      {
+         if (IsLoggedIn())
+         {
+            return RedirectToAction(nameof(List));
+         }
+
+         return View();
+      }
+
+      private bool IsLoggedIn()
+      {
+         var sessionKey = Request.Cookies["BookstoreSession"]?["SessionKey"];
+         if (sessionKey == null)
+         {
+            return false;
+         }
+
+         var loggedInUser = (from s in dbContext.Session where s.Key.Equals(sessionKey) select s.User).Single();
+
+         return loggedInUser != null;
+      }
+
+      [HttpPost]
+      public ActionResult Login(LoginViewModel model)
+      {
+         if (!ModelState.IsValid)
+         {
+            return View(model);
+         }
+
+         var user = (from u in dbContext.Users where u.Username.ToLower().Equals(model.Username.ToLower()) && u.Password.Equals(model.Password) select u).Single();
+
+         if (user == null)
+         {
+            // unauthorized
+            return View(model);
+         }
+
+         var sessionHash = Guid.NewGuid().ToString();
+
+         dbContext.Session.Add(new Session() { Key = sessionHash, User = user });
+         dbContext.SaveChanges();
+
+         Response.Cookies["BookstoreSession"]["SessionKey"] = sessionHash;
+         Response.Cookies["BookstoreSession"].Expires = DateTime.Now.AddHours(1);
+
+         return RedirectToAction(nameof(List));
+      }
 
       private ICollection<Education> PrepareEducationItems() => (from education in dbContext.Education select education).ToList();
 

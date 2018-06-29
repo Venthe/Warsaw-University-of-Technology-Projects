@@ -4,11 +4,11 @@
    using System.ComponentModel.DataAnnotations;
    using System.ComponentModel.DataAnnotations.Schema;
 
-   public class User
+   public class UserDetails
    {
       [Key]
       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-      public int UserId { get; set; }
+      public int UserDetailsId { get; set; }
 
       [Display(Name = "Username")]
       [Required(ErrorMessage = "The username is required")]
@@ -44,7 +44,5 @@
       public Address Address { get; set; }
 
       public ICollection<Hobby> Hobbies { get; set; } = new HashSet<Hobby>();
-
-      public virtual ICollection<UserRole> Users { get; set; } = new HashSet<UserRole>();
    }
 }
