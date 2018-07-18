@@ -4,8 +4,6 @@
 #include "DrawingArea.h"
 #include "Io.h"
 
-#include "AddDialog.h"
-
 EditorGui::EditorGui(QWidget *parent)
 	: QMainWindow(parent)
 {
