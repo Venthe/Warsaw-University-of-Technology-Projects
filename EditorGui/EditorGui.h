@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMainWindow> // NOLINT
 #include "ui_EditorGui.h"
 
 class EditorGui : public QMainWindow

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "EditorGui.h"
-#include <QtWidgets/QApplication>
+#include <QtWidgets/QApplication> // NOLINT
 
 int main(int argc, char *argv[])
 {

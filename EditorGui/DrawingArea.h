@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QWidget>
+#include <QWidget> // NOLINT
 #include "ControlPoint.h"
 
 class DrawingArea : public QWidget
@@ -9,14 +9,14 @@ class DrawingArea : public QWidget
 
 public:
 	DrawingArea(QWidget *parent = Q_NULLPTR);
-	~DrawingArea();
+	~DrawingArea() final;
 
 	QSize minimumSizeHint() const override;
 	QSize sizeHint() const override;
 
-	void DrawingArea::paintEvent(QPaintEvent *event);
-	void DrawingArea::mouseMoveEvent(QMouseEvent *event);
-	void DrawingArea::mousePressEvent(QMouseEvent *event);
+	void paintEvent(QPaintEvent *event) override;
+	void mouseMoveEvent(QMouseEvent *event) override;
+	void mousePressEvent(QMouseEvent *event) override;
 
 	QString mousePosition();
 signals:
@@ -29,7 +29,7 @@ public slots:
 private:
 	int canvasMinX, canvasMinY, canvasMaxX, canvasMaxY;
 	void drawBackgroundBox(QPainter &painter);
-	void DrawingArea::drawPath(QPainter &painter, std::vector<QPoint> points);
+	void drawPath(QPainter &painter, std::vector<QPoint> points);
 	int mouseX, mouseY;
 	std::vector<esl::ControlPoint> controlPointList;
 };

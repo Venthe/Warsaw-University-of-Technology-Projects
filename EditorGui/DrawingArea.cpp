@@ -8,9 +8,7 @@ esl::ControlPoint to_control_point(QPoint point, double weight = 0.0);
 QColor black = QColor(0, 0, 0);
 QColor white = QColor(255, 255, 255);
 
-DrawingArea::~DrawingArea()
-{
-}
+DrawingArea::~DrawingArea() = default;
 
 DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 {
@@ -26,12 +24,12 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 
 QSize DrawingArea::sizeHint() const
 {
-	return QSize(canvasMaxX, canvasMaxY);
+	return { canvasMaxX, canvasMaxY };
 }
 
 QSize DrawingArea::minimumSizeHint() const
 {
-	return QSize(canvasMaxX, canvasMaxY);
+	return { canvasMaxX, canvasMaxY };
 }
 
 void DrawingArea::mouseMoveEvent(QMouseEvent *event) {
@@ -46,10 +44,12 @@ void DrawingArea::mousePressEvent(QMouseEvent *event) {
 		controlPointList.push_back(to_control_point(event->pos()));
 		break;
 	case 2: //rmb
-		if (controlPointList.size() >= 1) {
+		if (!controlPointList.empty()) {
 			controlPointList.pop_back();
 		}
 		break;
+	default:
+		return;
 	}
 
 	update();
@@ -58,7 +58,7 @@ void DrawingArea::mousePressEvent(QMouseEvent *event) {
 
 QString DrawingArea::mousePosition()
 {
-	return		QString(("(" + std::to_string(mouseX) + ", " + std::to_string(mouseY) + ")").c_str());
+	return { ("(" + std::to_string(mouseX) + ", " + std::to_string(mouseY) + ")").c_str() };
 }
 
 void DrawingArea::controlPointListUpdated(std::vector<esl::ControlPoint> points)
@@ -108,18 +108,18 @@ void DrawingArea::drawBackgroundBox(QPainter &painter)
 std::vector<QPoint> to_qpoints(std::vector<esl::ControlPoint> list) {
 	std::vector<QPoint> result;
 
-	for (std::vector<esl::ControlPoint>::iterator it = list.begin(); it != list.end(); it++) {
-		result.push_back(to_qpoint(*it));
+	for (auto controlPoint : list) {
+		result.push_back(to_qpoint(controlPoint));
 	}
 
 	return result;
 }
 
 QPoint to_qpoint(esl::ControlPoint point) {
-	return QPoint(point.get_x(), point.get_y());
+	return { point.get_x(), point.get_y() };
 }
 
 esl::ControlPoint to_control_point(QPoint point, double weight) {
-	return esl::ControlPoint(point.x(), point.y(), weight);
+	return { point.x(), point.y(), weight };
 }
 

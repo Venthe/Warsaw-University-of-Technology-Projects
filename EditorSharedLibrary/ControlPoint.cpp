@@ -23,4 +23,4 @@ namespace esl {
 	inline std::string ControlPoint::to_string() {
 		return std::to_string(_x) + " " + std::to_string(_y) + " " + std::to_string(_weight);
 	}
-}
+} // namespace esl

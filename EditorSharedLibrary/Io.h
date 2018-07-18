@@ -1,6 +1,6 @@
 #pragma once
-#include <String>
-#include <Vector>
+#include <string>
+#include <vector>
 
 #include "ControlPoint.h"
 
@@ -14,9 +14,8 @@ namespace esl {
 	namespace io {
 		IO void write_to_file(std::string filename, std::vector<esl::ControlPoint> &list);
 		IO std::vector<esl::ControlPoint> read_from_file(std::string filename);
-
-		esl::ControlPoint control_point_from(std::string line);
-		std::vector<esl::ControlPoint> deserialize(std::ifstream &file);
-		std::string serialize(std::vector<esl::ControlPoint> &list);
-	}
-}
+		static esl::ControlPoint control_point_from(std::string line);
+		static std::vector<esl::ControlPoint> deserialize(std::ifstream &file);
+		static std::string serialize(std::vector<esl::ControlPoint> &list);
+	}; // namespace io
+} // namespace esl

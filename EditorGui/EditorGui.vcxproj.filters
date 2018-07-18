@@ -41,10 +41,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="DrawingArea.hpp">
+    <QtMoc Include="EditorGui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="EditorGui.hpp">
+    <QtMoc Include="DrawingArea.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -67,11 +67,11 @@
     <Image Include="Resources\EditorGui.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
