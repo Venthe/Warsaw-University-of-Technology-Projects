@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "DrawingArea.h"
-#include "ControlPointList.h"
+
+std::vector<QPoint> to_qpoints(std::vector<esl::ControlPoint> list);
+QPoint to_qpoint(esl::ControlPoint point);
+esl::ControlPoint to_control_point(QPoint point, double weight = 0.0);
 
 QColor black = QColor(0, 0, 0);
 QColor white = QColor(255, 255, 255);
@@ -40,7 +43,7 @@ void DrawingArea::mouseMoveEvent(QMouseEvent *event) {
 void DrawingArea::mousePressEvent(QMouseEvent *event) {
 	switch (event->button()) {
 	case 1: //lmb
-		controlPointList.push_back(toControlPoint(event->pos()));
+		controlPointList.push_back(to_control_point(event->pos()));
 		break;
 	case 2: //rmb
 		if (controlPointList.size() >= 1) {
@@ -58,7 +61,7 @@ QString DrawingArea::mousePosition()
 	return		QString(("(" + std::to_string(mouseX) + ", " + std::to_string(mouseY) + ")").c_str());
 }
 
-void DrawingArea::controlPointListUpdated(std::vector<ControlPoint> points)
+void DrawingArea::controlPointListUpdated(std::vector<esl::ControlPoint> points)
 {
 	controlPointList = points;
 	update();
@@ -70,7 +73,7 @@ void DrawingArea::paintEvent(QPaintEvent *event) {
 	painter.setViewport(canvasMinX, canvasMinY, canvasMaxX, canvasMaxY);
 
 	//drawBackgroundBox(painter);
-	drawPath(painter, toQPoints(controlPointList));
+	drawPath(painter, to_qpoints(controlPointList));
 }
 
 void DrawingArea::drawPath(QPainter &painter, std::vector<QPoint> points)
@@ -101,3 +104,22 @@ void DrawingArea::drawBackgroundBox(QPainter &painter)
 	painter.setBrush(white);
 	painter.drawRect(background);
 }
+
+std::vector<QPoint> to_qpoints(std::vector<esl::ControlPoint> list) {
+	std::vector<QPoint> result;
+
+	for (std::vector<esl::ControlPoint>::iterator it = list.begin(); it != list.end(); it++) {
+		result.push_back(to_qpoint(*it));
+	}
+
+	return result;
+}
+
+QPoint to_qpoint(esl::ControlPoint point) {
+	return QPoint(point.get_x(), point.get_y());
+}
+
+esl::ControlPoint to_control_point(QPoint point, double weight) {
+	return esl::ControlPoint(point.x(), point.y(), weight);
+}
+

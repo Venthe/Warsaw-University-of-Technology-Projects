@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QWidget>
-
-#include "ControlPointList.h"
+#include "ControlPoint.h"
 
 class DrawingArea : public QWidget
 {
@@ -22,15 +21,15 @@ public:
 	QString mousePosition();
 signals:
 	void mousePositionChanged(QString position);
-	void controlPointListChanged(std::vector<ControlPoint> points);
+	void controlPointListChanged(std::vector<esl::ControlPoint> points);
 
 public slots:
-	void controlPointListUpdated(std::vector<ControlPoint> points);
+	void controlPointListUpdated(std::vector<esl::ControlPoint> points);
 
 private:
 	int canvasMinX, canvasMinY, canvasMaxX, canvasMaxY;
 	void drawBackgroundBox(QPainter &painter);
 	void DrawingArea::drawPath(QPainter &painter, std::vector<QPoint> points);
 	int mouseX, mouseY;
-	std::vector<ControlPoint> controlPointList;
+	std::vector<esl::ControlPoint> controlPointList;
 };

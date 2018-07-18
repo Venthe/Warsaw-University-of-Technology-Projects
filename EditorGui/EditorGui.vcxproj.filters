@@ -15,18 +15,6 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="ControlPoint">
-      <UniqueIdentifier>{3a93b8fa-e216-4765-9c08-877cf75a229d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DrawingArea">
-      <UniqueIdentifier>{7d5da594-a381-48e2-8f9b-0ce06ec36ca1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO">
-      <UniqueIdentifier>{94d34feb-44d2-4c76-aaa2-eb8331309e4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="EditorGui">
-      <UniqueIdentifier>{93fe4b1a-2a9f-4e53-b9b1-b5955e120a76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -39,39 +27,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ControlPointList.cpp">
-      <Filter>ControlPoint</Filter>
-    </ClCompile>
     <ClCompile Include="DrawingArea.cpp">
-      <Filter>DrawingArea</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Io.cpp">
-      <Filter>IO</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="EditorGui.cpp">
-      <Filter>EditorGui</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ControlPointList.h">
-      <Filter>ControlPoint</Filter>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ControlPoint.h">
-      <Filter>ControlPoint</Filter>
-    </ClInclude>
-    <ClInclude Include="Io.h">
-      <Filter>IO</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="DrawingArea.h">
-      <Filter>DrawingArea</Filter>
-    </QtMoc>
     <QtMoc Include="EditorGui.h">
-      <Filter>EditorGui</Filter>
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DrawingArea.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -81,12 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EditorGui.rc">
-      <Filter>EditorGui</Filter>
+      <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="EditorGui.qrc">
-      <Filter>EditorGui</Filter>
+      <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
 </Project>

@@ -12,15 +12,15 @@ public:
 
 	QWidget renderArea;
 signals:
-	void controlPointListUpdated(std::vector<ControlPoint> controlPointList);
+	void controlPointListUpdated(std::vector<esl::ControlPoint> controlPointList);
 public slots:
 	void mousePositionUpdated(QString text);
-	void controlPointChanged(std::vector<ControlPoint> points);
+	void controlPointChanged(std::vector<esl::ControlPoint> points);
 	void updateTable();
 	void exportToFile();
 	void importFromFile();
 	void addPointClicked();
 private:
 	Ui::EditorGuiClass ui;
-	std::vector<ControlPoint> controlPointList;
+	std::vector<esl::ControlPoint> controlPointList;
 };
