@@ -17,19 +17,31 @@ public:
 	void paintEvent(QPaintEvent *event) override;
 	void mouseMoveEvent(QMouseEvent *event) override;
 	void mousePressEvent(QMouseEvent *event) override;
-
-	QString mousePosition();
 signals:
-	void mousePositionChanged(QString position);
-	void controlPointListChanged(std::vector<esl::ControlPoint> points);
+	void mousePositionChanged(QPoint mousePosition);
+	void controlPointListChanged();
 
 public slots:
-	void controlPointListUpdated(std::vector<esl::ControlPoint> points);
+	void controlPointListUpdated();
 
 private:
+	std::vector<esl::ControlPoint> * controlPointList;
+	double * controlPointWeight;
 	int canvasMinX, canvasMinY, canvasMaxX, canvasMaxY;
+
 	void drawBackgroundBox(QPainter &painter);
 	void drawPath(QPainter &painter, std::vector<QPoint> points);
-	int mouseX, mouseY;
-	std::vector<esl::ControlPoint> controlPointList;
+
+	// TODO: Split into helper methods?
+	std::vector<QPoint> toQPoints(std::vector<esl::ControlPoint> list);
+	QPoint toQPoint(esl::ControlPoint point);
+	esl::ControlPoint toControlPoint(QPoint point);
+public:
+	void setControlPointList(std::vector<esl::ControlPoint> * cpl) {
+		controlPointList = cpl;
+	}
+
+	void setControlPointWeight(double * cpw) {
+		controlPointWeight = cpw;
+	}
 };

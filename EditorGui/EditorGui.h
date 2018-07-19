@@ -10,17 +10,23 @@ class EditorGui : public QMainWindow
 public:
 	EditorGui(QWidget *parent = Q_NULLPTR);
 
-	QWidget renderArea;
+	QWidget drawing_area;
 signals:
-	void controlPointListUpdated(std::vector<esl::ControlPoint> controlPointList);
+	void updatePoints();
 public slots:
-	void mousePositionUpdated(QString text);
-	void controlPointChanged(std::vector<esl::ControlPoint> points);
-	void updateTable();
-	void exportToFile();
-	void importFromFile();
-	void addPointClicked();
+	void mousePositionChanged(QPoint mousePosition);
+	void controlPointsChanged();
+
+	void exportPoints();
+	void importPoints();
 private:
 	Ui::EditorGuiClass ui;
-	std::vector<esl::ControlPoint> controlPointList;
+	// TODO: Extend control point to include control point type - ignoring weight?
+	std::vector<esl::ControlPoint> controlPointsList;
+	double controlPointWeight = 0.0;
+
+	void updatePointListTable();
+
+	void connectDrawingArea();
+	void connectPointList();
 };

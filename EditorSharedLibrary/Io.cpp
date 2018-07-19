@@ -5,18 +5,18 @@
 #include <fstream>
 
 namespace esl {
-	inline void io::write_to_file(std::string filename, std::vector<esl::ControlPoint> &list) {
+	inline void io::writeToFile(std::string filename, std::vector<esl::ControlPoint> &list) {
 		std::ofstream file(filename);
 		file << serialize(list);
 		file.close();
 	}
 
-	inline std::vector<esl::ControlPoint> io::read_from_file(std::string filename) {
+	inline std::vector<esl::ControlPoint> io::readFromFile(std::string filename) {
 		std::ifstream file(filename);
 		return io::deserialize(file);
 	}
 
-	inline esl::ControlPoint io::control_point_from(std::string line) {
+	inline esl::ControlPoint io::controlPointFrom(std::string line) {
 		std::istringstream iss(line);
 		long x, y;
 		double w;
@@ -30,7 +30,7 @@ namespace esl {
 
 		for (auto controlPoint : list)
 		{
-			result.append(controlPoint.to_string()).append("\n");
+			result.append(controlPoint.toString()).append("\n");
 		}
 
 		return result;
@@ -42,7 +42,7 @@ namespace esl {
 
 		std::string line;
 		while (std::getline(file, line)) {
-			newList.push_back(io::control_point_from(line));
+			newList.push_back(io::controlPointFrom(line));
 		}
 
 		return newList;

@@ -17,9 +17,9 @@ namespace esl {
 
 	public:
 		ControlPoint(long x, long y, double weight);
-		long get_x();
-		long get_y();
-		double get_weight();
-		std::string to_string();
+		long getX();
+		long getY();
+		double getWeight();
+		std::string toString();
 	};
 } // namespace esl

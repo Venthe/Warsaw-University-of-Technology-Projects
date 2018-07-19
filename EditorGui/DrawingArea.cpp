@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "DrawingArea.h"
 
-std::vector<QPoint> to_qpoints(std::vector<esl::ControlPoint> list);
-QPoint to_qpoint(esl::ControlPoint point);
-esl::ControlPoint to_control_point(QPoint point, double weight = 0.0);
-
 QColor black = QColor(0, 0, 0);
 QColor white = QColor(255, 255, 255);
 
@@ -14,8 +10,6 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 {
 	canvasMinY = canvasMinX = 0;
 	canvasMaxX = canvasMaxY = 300;
-
-	mouseX = mouseY = 0;
 
 	setBackgroundRole(QPalette::Base);
 	setAutoFillBackground(false);
@@ -33,37 +27,30 @@ QSize DrawingArea::minimumSizeHint() const
 }
 
 void DrawingArea::mouseMoveEvent(QMouseEvent *event) {
-	mouseX = event->pos().x();
-	mouseY = event->pos().y();
-	emit mousePositionChanged(mousePosition());
+	emit mousePositionChanged(event->pos());
 }
 
 void DrawingArea::mousePressEvent(QMouseEvent *event) {
+	// TODO: Move to service?
+	// TODO: Introduce enums
 	switch (event->button()) {
 	case 1: //lmb
-		controlPointList.push_back(to_control_point(event->pos()));
+		controlPointList->push_back(toControlPoint(event->pos()));
 		break;
 	case 2: //rmb
-		if (!controlPointList.empty()) {
-			controlPointList.pop_back();
+		if (!controlPointList->empty()) {
+			controlPointList->pop_back();
 		}
 		break;
 	default:
 		return;
 	}
 
-	update();
-	emit controlPointListChanged(controlPointList);
+	emit controlPointListChanged();
 }
 
-QString DrawingArea::mousePosition()
+void DrawingArea::controlPointListUpdated()
 {
-	return { ("(" + std::to_string(mouseX) + ", " + std::to_string(mouseY) + ")").c_str() };
-}
-
-void DrawingArea::controlPointListUpdated(std::vector<esl::ControlPoint> points)
-{
-	controlPointList = points;
 	update();
 }
 
@@ -72,24 +59,24 @@ void DrawingArea::paintEvent(QPaintEvent *event) {
 	painter.setWindow(canvasMinX, canvasMinY, canvasMaxX, canvasMaxY);
 	painter.setViewport(canvasMinX, canvasMinY, canvasMaxX, canvasMaxY);
 
-	//drawBackgroundBox(painter);
-	drawPath(painter, to_qpoints(controlPointList));
+	drawPath(painter, toQPoints(*controlPointList));
 }
 
 void DrawingArea::drawPath(QPainter &painter, std::vector<QPoint> points)
 {
 	QPainterPath path;
 
+	// TODO: Clean code
 	if (points.size() >= 4) {
 		path.moveTo(points.at(0));
 		for (int i = 1; i < points.size() && points.size() - i >= 3; i += 3) {
 			path.cubicTo(points.at(i), points.at(i + 1), points.at(i + 2));
-			//qDebug() << i << " " << points.at(i) << " " << points.at(i + 1) << " " << points.at(i + 2);
 		}
 	}
 
 	painter.setRenderHint(QPainter::Antialiasing, true);
-
+	
+	// TODO: SetPenWidth in relation to current weight? Ignore weight of control points?
 	QPen pen = Qt::SolidLine;
 	pen.setWidth(3);
 	painter.setPen(pen);
@@ -105,21 +92,21 @@ void DrawingArea::drawBackgroundBox(QPainter &painter)
 	painter.drawRect(background);
 }
 
-std::vector<QPoint> to_qpoints(std::vector<esl::ControlPoint> list) {
+std::vector<QPoint> DrawingArea::toQPoints(std::vector<esl::ControlPoint> list) {
 	std::vector<QPoint> result;
 
 	for (auto controlPoint : list) {
-		result.push_back(to_qpoint(controlPoint));
+		result.push_back(toQPoint(controlPoint));
 	}
 
 	return result;
 }
 
-QPoint to_qpoint(esl::ControlPoint point) {
-	return { point.get_x(), point.get_y() };
+QPoint DrawingArea::toQPoint(esl::ControlPoint point) {
+	return { point.getX(), point.getY() };
 }
 
-esl::ControlPoint to_control_point(QPoint point, double weight) {
-	return { point.x(), point.y(), weight };
+esl::ControlPoint DrawingArea::toControlPoint(QPoint point) {
+	return { static_cast<long>(point.x()), static_cast<long>(point.y()), *controlPointWeight };
 }
 

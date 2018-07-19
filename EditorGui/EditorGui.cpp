@@ -5,84 +5,78 @@
 #include "Io.h"
 
 EditorGui::EditorGui(QWidget *parent) : QMainWindow(parent) {
-  ui.setupUi(this);
+	ui.setupUi(this);
+	ui.drawingArea->setControlPointList(&controlPointsList);
+	ui.drawingArea->setControlPointWeight(&controlPointWeight);
+	ui.centralWidget->setLayout(ui.mainGrid);
 
-  ui.centralWidget->setLayout(ui.mainGrid);
+	connectDrawingArea();
+	connectPointList();
 
-  connect(ui.exportPointsButton, SIGNAL(clicked()), this, SLOT(exportToFile()));
-  connect(ui.importPointsButton, SIGNAL(clicked()), this,
-          SLOT(importFromFile()));
-  connect(ui.drawingArea, SIGNAL(mousePositionChanged(QString)), this,
-          SLOT(mousePositionUpdated(QString)));
-  connect(ui.drawingArea,
-          SIGNAL(controlPointListChanged(std::vector<ControlPoint>)), this,
-          SLOT(controlPointChanged(std::vector<ControlPoint>)));
-
-  connect(this, SIGNAL(controlPointListUpdated(std::vector<ControlPoint>)),
-          ui.drawingArea,
-          SLOT(controlPointListUpdated(std::vector<ControlPoint>)));
-
-  connect(ui.addPointButton, SIGNAL(clicked()), this, SLOT(addPointClicked()));
-
-  emit controlPointListUpdated(controlPointList);
+	controlPointsChanged();
 }
 
-void EditorGui::addPointClicked() {
-  qDebug() << "Point clicked";
-  // esl::ControlPoint newControlPoint =
-  // esl::controlPointFrom(ui.newPointText->toPlainText().toStdString());
-  // controlPointList.push_back(newControlPoint);
+void EditorGui::connectDrawingArea() {
+	connect(ui.drawingArea, SIGNAL(mousePositionChanged(QPoint)), this, SLOT(mousePositionChanged(QPoint)));
+	connect(ui.drawingArea, SIGNAL(controlPointListChanged()), this, SLOT(controlPointsChanged()));
 
-  // qDebug() << "Point clicked" << newControlPoint.to_string().c_str() <<
-  // ui.newPointText->toPlainText();
-  controlPointChanged(controlPointList);
+	connect(this, SIGNAL(updatePoints()), ui.drawingArea, SLOT(controlPointListUpdated()));
 }
 
-void EditorGui::mousePositionUpdated(QString text) {
-  statusBar()->showMessage(text);
+void EditorGui::connectPointList() {
+	connect(ui.exportPointsButton, SIGNAL(clicked()), this, SLOT(exportPoints()));
+	connect(ui.importPointsButton, SIGNAL(clicked()), this, SLOT(importPoints()));
 }
 
-void EditorGui::controlPointChanged(std::vector<esl::ControlPoint> points) {
-  qDebug() << "Control point changed";
-  controlPointList = points;
-  emit controlPointListUpdated(controlPointList);
+// TODO:: Split into signal/slot pair on main gui
+void EditorGui::controlPointsChanged() {
+	updatePointListTable();
 
-  updateTable();
+	emit updatePoints();
 }
 
-void EditorGui::updateTable() {
-  ui.pointsList->setColumnCount(3);
-  ui.pointsList->setRowCount(controlPointList.size());
-
-  QStringList header;
-  header.push_back(QString("X"));
-  header.push_back(QString("Y"));
-  header.push_back(QString("Weight"));
-  ui.pointsList->setHorizontalHeaderLabels(header);
-
-  for (int i = 0; i < controlPointList.size(); i++) {
-    ui.pointsList->setItem(
-        i, 0,
-        new QTableWidgetItem(
-            QString(std::to_string(controlPointList.at(i).get_x()).c_str())));
-    ui.pointsList->setItem(
-        i, 1,
-        new QTableWidgetItem(
-            QString(std::to_string(controlPointList.at(i).get_y()).c_str())));
-    ui.pointsList->setItem(
-        i, 2,
-        new QTableWidgetItem(QString(
-            std::to_string(controlPointList.at(i).get_weight()).c_str())));
-  }
+void EditorGui::mousePositionChanged(QPoint mousePosition) {
+	// TODO: To function
+	statusBar()->showMessage(QString((std::to_string(mousePosition.x()) + " " + std::to_string(mousePosition.y()) + " " + std::to_string(controlPointWeight)).c_str()));
 }
 
-void EditorGui::exportToFile() {
-  qDebug() << "Export to file";
-  esl::io::write_to_file("./points.pli", EditorGui::controlPointList);
+void EditorGui::updatePointListTable() {
+	ui.pointsList->setColumnCount(3);
+	ui.pointsList->setRowCount(controlPointsList.size());
+
+	QStringList header;
+	header.push_back(QString("X"));
+	header.push_back(QString("Y"));
+	header.push_back(QString("Weight"));
+	ui.pointsList->setHorizontalHeaderLabels(header);
+
+	for (int i = 0; i < controlPointsList.size(); i++) {
+		ui.pointsList->setItem(
+			i, 0,
+			new QTableWidgetItem(
+				QString(std::to_string(controlPointsList.at(i).getX()).c_str())));
+		ui.pointsList->setItem(
+			i, 1,
+			new QTableWidgetItem(
+				QString(std::to_string(controlPointsList.at(i).getY()).c_str())));
+		ui.pointsList->setItem(
+			i, 2,
+			new QTableWidgetItem(QString(
+				std::to_string(controlPointsList.at(i).getWeight()).c_str())));
+	}
 }
 
-void EditorGui::importFromFile() {
-  qDebug() << "import from file";
-  EditorGui::controlPointList = esl::io::read_from_file("./points.pli");
-  controlPointChanged(controlPointList);
+void EditorGui::exportPoints() {
+	// TODO: Make file name changeable
+	esl::io::writeToFile("./points.pli", EditorGui::controlPointsList);
 }
+
+void EditorGui::importPoints() {
+	// TODO: Make file name changeable
+	EditorGui::controlPointsList = esl::io::readFromFile("./points.pli");
+	controlPointsChanged();
+}
+
+// TODO: Restore Add Point functionality, maybe as modal?
+// TODO: Add weight change via scroll/buttons?
+// TODO: Edit list table inline

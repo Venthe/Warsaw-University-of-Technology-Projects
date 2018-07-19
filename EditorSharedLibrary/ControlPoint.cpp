@@ -8,19 +8,19 @@ namespace esl {
 		_weight = weight;
 	}
 
-	inline long ControlPoint::get_x() {
+	inline long ControlPoint::getX() {
 		return _x;
 	}
 
-	inline long ControlPoint::get_y() {
+	inline long ControlPoint::getY() {
 		return _y;
 	}
 
-	inline double ControlPoint::get_weight() {
+	inline double ControlPoint::getWeight() {
 		return _weight;
 	}
 
-	inline std::string ControlPoint::to_string() {
+	inline std::string ControlPoint::toString() {
 		return std::to_string(_x) + " " + std::to_string(_y) + " " + std::to_string(_weight);
 	}
 } // namespace esl
