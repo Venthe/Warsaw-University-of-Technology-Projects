@@ -66,14 +66,25 @@ void EditorGui::updatePointListTable() {
 	}
 }
 
+
 void EditorGui::exportPoints() {
-	// TODO: Make file name changeable
-	esl::io::writeToFile("./points.pli", EditorGui::controlPointsList);
+	QString path = QFileDialog::getSaveFileName(this, tr("Save points"));
+
+	if (path.isEmpty()) {
+		return;
+	}
+
+	esl::io::writeToFile(path.toStdString(), EditorGui::controlPointsList);
 }
 
 void EditorGui::importPoints() {
-	// TODO: Make file name changeable
-	EditorGui::controlPointsList = esl::io::readFromFile("./points.pli");
+	QString path = QFileDialog::getOpenFileName(this, tr("Import points"));
+
+	if (path.isEmpty()) {
+		return;
+	}
+
+	EditorGui::controlPointsList = esl::io::readFromFile(path.toStdString());
 	controlPointsChanged();
 }
 
