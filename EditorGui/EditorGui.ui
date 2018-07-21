@@ -78,6 +78,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="clearPointsButton">
+         <property name="text">
+          <string>Clear all points</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="exportPointsButton">
@@ -113,7 +120,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>518</width>
+          <width>519</width>
           <height>483</height>
          </rect>
         </property>
@@ -135,7 +142,7 @@
      <x>0</x>
      <y>0</y>
      <width>873</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

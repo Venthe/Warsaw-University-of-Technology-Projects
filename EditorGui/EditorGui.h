@@ -19,11 +19,12 @@ public slots:
 
 	void exportPoints();
 	void importPoints();
+	void deleteAllPoints();
 private:
 	Ui::EditorGuiClass ui;
 	// TODO: Extend control point to include control point type - ignoring weight?
-	std::vector<esl::ControlPoint> controlPointsList;
-	double controlPointWeight = 0.0;
+        std::vector<esl::ControlPoint> controlPointsList;
+        double controlPointWeight = 0.0;
 
 	void updatePointListTable();
 

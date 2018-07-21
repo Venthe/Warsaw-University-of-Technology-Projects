@@ -13,6 +13,8 @@ EditorGui::EditorGui(QWidget *parent) : QMainWindow(parent) {
 	connectDrawingArea();
 	connectPointList();
 
+	connect(ui.clearPointsButton, SIGNAL(clicked()), this, SLOT(deleteAllPoints()));
+
 	controlPointsChanged();
 }
 
@@ -74,7 +76,7 @@ void EditorGui::exportPoints() {
 		return;
 	}
 
-	esl::io::writeToFile(path.toStdString(), EditorGui::controlPointsList);
+	esl::io::writeToFile(path.toStdString(), controlPointsList);
 }
 
 void EditorGui::importPoints() {
@@ -84,7 +86,12 @@ void EditorGui::importPoints() {
 		return;
 	}
 
-	EditorGui::controlPointsList = esl::io::readFromFile(path.toStdString());
+	controlPointsList = esl::io::readFromFile(path.toStdString());
+	controlPointsChanged();
+}
+
+void EditorGui::deleteAllPoints() {
+	controlPointsList.clear();
 	controlPointsChanged();
 }
 
