@@ -1,1 +1,1 @@
-#include <QtWidgets> // NOLINT
+#include <QtWidgets>  // NOLINT

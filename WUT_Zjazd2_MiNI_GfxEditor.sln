@@ -5,6 +5,7 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C49D385-AAD4-4666-A526-63413D540D65}"
 	ProjectSection(SolutionItems) = preProject
+		.clang-format = .clang-format
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
