@@ -1,5 +1,6 @@
-package eu.venthe.project;
+package eu.venthe.project.gui;
 
+import eu.venthe.project.ImageManipulation;
 import eu.venthe.project.model.ImageCombinationMethod;
 import eu.venthe.project.model.ImageExtension;
 import eu.venthe.project.model.ImageManipulationMethod;
@@ -82,8 +83,8 @@ public class Window {
   private final String STRING_DEFAULT_DIRECTORY_LIST_ITEM = "Browse for directories from right panel";
   private final String STRING_DEFAULT_DIRECTORY_CONTENT_ITEM = "No folder selected";
   private final String STRING_DIRECTORIES = "Directories";
-  private final String[] STRING_ARRAY_METHOD = new String[]{"Center images", "Resize (enlarge)",
-      "Resize (shrink)", "Cut out"};
+  private final String[] STRING_ARRAY_METHOD = new String[]{"CENTER", "ENLARGE",
+      "SHRINK", "CUTOUT"};
   private final String[] STRING_ARRAY_TYPE = new String[]{"AND", "OR", "XOR"};
   private final String[] STRING_ARRAY_FILE_FORMATS = new String[]{".bmp", ".png", ".jpg", ".jpeg",
       ".tiff", ".tif"};
@@ -380,8 +381,8 @@ public class Window {
         //TODO: If not saved, prompt about it
         mergeDirectories(
             ImageCombinationMethod
-                .returnTypeFromString(operationsMergeTypeJComboBox.getSelectedItem().toString()),
-            ImageManipulationMethod.returnMethodFromString(
+                .valueOf(operationsMergeTypeJComboBox.getSelectedItem().toString()),
+            ImageManipulationMethod.valueOf(
                 operationsMergeMethodJComboBox.getSelectedItem().toString()));
         promptDoYouWantToSave();
       }
@@ -845,10 +846,12 @@ public class Window {
     }
   }
 
-  private void mergeDirectories(ImageCombinationMethod imageCombinationMethod, ImageManipulationMethod imageManipulationMethod) {
+  private void mergeDirectories(ImageCombinationMethod imageCombinationMethod,
+      ImageManipulationMethod imageManipulationMethod) {
     if (isDirectoriesValidToMerge()) {
       cachedMergeResult = ImageManipulation
-          .mergeDirectories(cachedImagesFromDirectories, imageCombinationMethod, imageManipulationMethod);
+          .mergeDirectories(cachedImagesFromDirectories, imageCombinationMethod,
+              imageManipulationMethod);
       currentPreview = 1;
       updateImagePreview();
       updateImagesNumbers();
