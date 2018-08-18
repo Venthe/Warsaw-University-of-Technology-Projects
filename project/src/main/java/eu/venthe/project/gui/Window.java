@@ -1,13 +1,13 @@
 package eu.venthe.project.gui;
 
-import eu.venthe.project.ImageManipulation;
+import eu.venthe.project.ImageManipulation.ImageManipulation;
+import eu.venthe.project.io.IO;
 import eu.venthe.project.model.ImageCombinationMethod;
 import eu.venthe.project.model.ImageExtension;
 import eu.venthe.project.model.ImageManipulationMethod;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -38,7 +39,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -93,7 +93,6 @@ public class Window {
       Window.class.getResource("/null-image.jpg"));
 
   private final int NUMBER_OF_DIRECTORIES = 5;
-  private final int THUMBNAIL_HEIGHT = 200;
   private int currentPreview = 1;
 
   private ArrayList<ArrayList<BufferedImage>> cachedImagesFromDirectories = new ArrayList<>();
@@ -200,7 +199,7 @@ public class Window {
     directoryListingJComboBox.addActionListener(e -> {
       if (directoryListingJComboBox.getSelectedItem() != null) {
         if (directoryListingJComboBox.getItemCount() != 1) {
-          actionDirectoryListingChanged();
+          updateDirectoryListing();
         }
       }
     });
@@ -335,9 +334,9 @@ public class Window {
         //TODO: If not saved, prompt about it
         mergeDirectories(
             ImageCombinationMethod
-                .valueOf(operationsMergeTypeJComboBox.getSelectedItem().toString()),
+                .valueOf(Objects.requireNonNull(operationsMergeTypeJComboBox.getSelectedItem()).toString()),
             ImageManipulationMethod.valueOf(
-                operationsMergeMethodJComboBox.getSelectedItem().toString()));
+                Objects.requireNonNull(operationsMergeMethodJComboBox.getSelectedItem()).toString()));
         promptDoYouWantToSave();
       }
     });
@@ -564,16 +563,12 @@ public class Window {
     }
   }
 
-  private void actionDirectoryListingChanged() {
-    updateDirectoryListing();
-  }
-
   private void browseForDirectory(int id, JButton parent, JTextField target) {
-
     //TODO: Deny setting empty folder (Without images)
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     int returnVal = chooser.showOpenDialog(parent);
+
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       target.setText(chooser.getSelectedFile().getPath());
       cachedDirectories[id] = chooser.getSelectedFile().getPath();
@@ -608,7 +603,7 @@ public class Window {
     for (File file : filesList) {
       if (file.isFile()) {
         cachedImagesFromDirectories.get(id)
-            .add((BufferedImage) ImageManipulation.loadImageAsImage(path + "\\" + file.getName()));
+            .add((BufferedImage) IO.loadImageAsImage(path + "\\" + file.getName()));
       }
     }
     System.out.println(
@@ -622,17 +617,17 @@ public class Window {
         directoryListingJComboBox.addItem(cachedDirectories[i]);
       }
     }
-    if (directoryListingJComboBox.getSelectedItem() == null) {
-      directoryListingJComboBox.addItem(STRING_DEFAULT_DIRECTORY_LIST_ITEM);
-      directoryListingJEditorPane.setText(STRING_DEFAULT_DIRECTORY_CONTENT_ITEM);
-    } else {
-      //cachedSelectedThumbnailDirectory =;
+
+    if (directoryListingJComboBox.getSelectedItem() != null) {
       if (!cachedSelectedThumbnailDirectory
           .equals(directoryListingJComboBox.getSelectedItem().toString())) {
         cachedSelectedThumbnailDirectory = directoryListingJComboBox.getSelectedItem().toString();
         updateThumbnails(cachedSelectedThumbnailDirectory);
         updateDirectoryListing(cachedSelectedThumbnailDirectory);
       }
+    } else {
+      directoryListingJComboBox.addItem(STRING_DEFAULT_DIRECTORY_LIST_ITEM);
+      directoryListingJEditorPane.setText(STRING_DEFAULT_DIRECTORY_CONTENT_ITEM);
     }
   }
 
@@ -641,7 +636,9 @@ public class Window {
     thumbnailJPanel.removeAll();
     thumbnailJPanel.revalidate();
     thumbnailJPanel.repaint();
-    if (directoryListingJComboBox.getItemCount() > 0 && !directoryListingJComboBox.getSelectedItem()
+
+    if (directoryListingJComboBox.getItemCount() > 0 && !Objects
+        .requireNonNull(directoryListingJComboBox.getSelectedItem())
         .toString().equals(STRING_DEFAULT_DIRECTORY_LIST_ITEM)) {
       updateThumbnails(directoryListingJComboBox.getSelectedItem().toString());
     }
@@ -657,37 +654,41 @@ public class Window {
 
   private void updateThumbnails(ArrayList<BufferedImage> image) {
     // TODO: Cache thumbnails
-    JLabel buffer = null;
+    JLabel buffer;
     thumbnailImages.clear();
     thumbnailJPanel.removeAll();
     thumbnailJPanel.revalidate();
     thumbnailJPanel.repaint();
-    if (image.size() > 0) {
-      for (int i = 0; i < image.size(); i++) {
-        buffer = new JLabel("");
-        float aspectRatio = (float) image.get(i).getWidth() / (float) image.get(i).getHeight();
-        int newWidth = (int) (THUMBNAIL_HEIGHT * aspectRatio);
-        ImageIcon newIcon = new ImageIcon(ImageManipulation
-            .resizeImage(image.get(i), newWidth, THUMBNAIL_HEIGHT));
-        buffer.setPreferredSize(new Dimension(newWidth, THUMBNAIL_HEIGHT));
-        buffer.setIcon(newIcon);
-        thumbnailImages.add(buffer);
-
-      }
-      System.out.println("Thumbnails loaded: " + thumbnailImages.size());
-      for (int i = 0; i < thumbnailImages.size(); i++) {
-        thumbnailJPanel.add(thumbnailImages.get(i));
-
-      }
-
-      thumbnailJPanel.validate();
-      thumbnailJPanel.repaint();
+    if (image.size() <= 0) {
+      return;
     }
+
+    for (BufferedImage anImage : image) {
+      buffer = new JLabel("");
+      float aspectRatio = (float) anImage.getWidth() / (float) anImage.getHeight();
+      int THUMBNAIL_HEIGHT = 200;
+      int newWidth = (int) (THUMBNAIL_HEIGHT * aspectRatio);
+      ImageIcon newIcon = new ImageIcon(ImageManipulation
+          .resizeImage(anImage, newWidth, THUMBNAIL_HEIGHT));
+      buffer.setPreferredSize(new Dimension(newWidth, THUMBNAIL_HEIGHT));
+      buffer.setIcon(newIcon);
+      thumbnailImages.add(buffer);
+
+    }
+
+    System.out.println("Thumbnails loaded: " + thumbnailImages.size());
+
+    for (JLabel thumbnailImage : thumbnailImages) {
+      thumbnailJPanel.add(thumbnailImage);
+    }
+
+    thumbnailJPanel.validate();
+    thumbnailJPanel.repaint();
 
   }
 
   private void updateDirectoryListing() {
-    updateDirectoryListing(directoryListingJComboBox.getSelectedItem().toString());
+    updateDirectoryListing(Objects.requireNonNull(directoryListingJComboBox.getSelectedItem()).toString());
     updateCachedImages();
     updateThumbnails(directoryListingJComboBox.getSelectedItem().toString());
   }
@@ -696,13 +697,15 @@ public class Window {
     boolean result = false;
     boolean firstOne = false;
     for (int i = 0; i < NUMBER_OF_DIRECTORIES; i++) {
-      if (cachedImagesFromDirectories.get(i).size() > 0) {
-        if (firstOne) {
-          result = true;
-          break;
-        }
-        firstOne = true;
+      if (cachedImagesFromDirectories.get(i).size() <= 0) {
+        continue;
       }
+
+      if (firstOne) {
+        result = true;
+        break;
+      }
+      firstOne = true;
     }
     return result;
   }
@@ -723,22 +726,24 @@ public class Window {
   }
 
   private void previewMove(int direction) {
-    if (cachedMergeResult.size() > 0) {
-      if (direction == 0) {
-        currentPreview--;
-        if (currentPreview < 1) {
-          currentPreview = cachedMergeResult.size();
-        }
-      } else {
-        currentPreview++;
-        if (currentPreview > cachedMergeResult.size()) {
-          currentPreview = 1;
-        }
-      }
-      updateImagesNumbers();
-      setImagePreview(adjustSizeByPreviewSize(cachedMergeResult.get(currentPreview - 1)));
-      System.out.println(currentPreview + " out of " + (cachedMergeResult.size()));
+    if (cachedMergeResult.size() <= 0) {
+      return;
     }
+
+    if (direction == 0) {
+      currentPreview--;
+      if (currentPreview < 1) {
+        currentPreview = cachedMergeResult.size();
+      }
+    } else {
+      currentPreview++;
+      if (currentPreview > cachedMergeResult.size()) {
+        currentPreview = 1;
+      }
+    }
+    updateImagesNumbers();
+    setImagePreview(adjustSizeByPreviewSize(cachedMergeResult.get(currentPreview - 1)));
+    System.out.println(currentPreview + " out of " + (cachedMergeResult.size()));
   }
 
   private void setImagePreview() {
@@ -749,19 +754,7 @@ public class Window {
   private ImageIcon adjustSizeByPreviewSize(BufferedImage img) {
     int maxWidth = previewJTabbedPane.getWidth() - btnRight.getWidth() - btnLeft.getWidth();
     int maxHeight = previewJTabbedPane.getHeight();
-    int imgWidth = img.getWidth();
-    int imgHeight = img.getHeight();
 
-    float aspectRatio = (float) imgWidth / (float) imgHeight;
-    if (aspectRatio < 1) {
-      imgWidth = maxWidth;
-      imgHeight = (int) (maxWidth / aspectRatio);
-    } else {
-      imgHeight = maxHeight;
-      imgWidth = (int) (maxHeight / aspectRatio);
-    }
-
-    //return new ImageIcon(ImageManipulation.resizeImage((BufferedImage) img, imgWidth, imgHeight));
     return new ImageIcon(ImageManipulation.resizeImage(img, maxWidth, maxHeight));
 
   }
@@ -773,51 +766,53 @@ public class Window {
   }
 
   private void updateImagePreview() {
-    if (cachedMergeResult.size() > 0) {
-      //TODO: Switchable preview
-      cachedImagePreview = cachedMergeResult.get(0);
-      setImagePreview(adjustSizeByPreviewSize(cachedMergeResult.get(0)));
+    if (cachedMergeResult.size() <= 0) {
+      return;
     }
+
+    //TODO: Switchable preview
+    cachedImagePreview = cachedMergeResult.get(0);
+    setImagePreview(adjustSizeByPreviewSize(cachedMergeResult.get(0)));
   }
 
   private void updateImagesNumbers() {
-    if (cachedMergeResult.size() < 1) {
-      lblImagesLoaded.setText(STRING_DEFAULT_DIR_NUMBERS);
-    } else {
-      lblImagesLoaded
-          .setText(currentPreview + "/" + cachedMergeResult.size() + " images loaded after merge");
-    }
+    String text = cachedMergeResult.size() < 1 ? STRING_DEFAULT_DIR_NUMBERS
+        : (currentPreview + "/" + cachedMergeResult.size() + " images loaded after merge");
+
+    lblImagesLoaded.setText(text);
   }
 
   private void mergeDirectories(ImageCombinationMethod imageCombinationMethod,
       ImageManipulationMethod imageManipulationMethod) {
-    if (isDirectoriesValidToMerge()) {
-      cachedMergeResult = ImageManipulation
-          .mergeDirectories(cachedImagesFromDirectories, imageCombinationMethod,
-              imageManipulationMethod);
-      currentPreview = 1;
-      updateImagePreview();
-      updateImagesNumbers();
-    } else {
+    if (!isDirectoriesValidToMerge()) {
       System.out.println("You need to have at least 2 out of " + NUMBER_OF_DIRECTORIES
           + " directories with files to merge");
+      return;
     }
+
+    cachedMergeResult = ImageManipulation
+        .mergeDirectories(cachedImagesFromDirectories, imageCombinationMethod,
+            imageManipulationMethod);
+    currentPreview = 1;
+    updateImagePreview();
+    updateImagesNumbers();
+
   }
 
   private void updateDirectoryListing(String path) {
-    ArrayList<String> currentDirectoryListing = new ArrayList<>();
-    String buffer = "";
+    ArrayList<String> currentDirectoryListing;
+    StringBuilder buffer = new StringBuilder();
 
     File[] filesList = getImagesListFromPath(path);
     currentDirectoryListing = new ArrayList<>();
     for (File file : filesList) {
       if (file.isFile()) {
-        currentDirectoryListing.add(directoryListingJComboBox
-            .getSelectedItem().toString() + "\\" + file.getName());
-        buffer += file.getName() + "\n";
+        currentDirectoryListing.add(Objects.requireNonNull(directoryListingJComboBox
+            .getSelectedItem()).toString() + "\\" + file.getName());
+        buffer.append(file.getName()).append("\n");
       }
     }
-    directoryListingJEditorPane.setText(buffer);
+    directoryListingJEditorPane.setText(buffer.toString());
     System.out.println("Files found: " + currentDirectoryListing.size());
   }
 
@@ -837,7 +832,6 @@ public class Window {
     directorySelection5JTextField.setText("");
     cachedMergeResult = new ArrayList<>();
     currentPreview = 1;
-    //cachedImagePreview = ImageManipulation.bufferedImageFromImageIcon(IMAGEICON_PREVIEW_DEFAULT);
     updateImagesNumbers();
     initVariables();
     updateDirectoriesList();
@@ -846,15 +840,17 @@ public class Window {
   }
 
   private void promptDoYouWantToSave() {
-    if (cachedMergeResult.size() > 0) {
-      int PromptResult = JOptionPane.showOptionDialog(null,
-          "Do you want to save?", STRING_PROGRAM_TITLE,
-          JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
-          STRING_ARRAY_DIALOG_BUTTONS, STRING_ARRAY_DIALOG_BUTTONS[1]);
-      if (PromptResult == 0) {
-        ImageManipulation.saveArrayOfImages(cachedMergeResult,
-            System.getProperty("user.home") + "\\Desktop\\" + "Result", ImageExtension.PNG);
-      }
+    if (cachedMergeResult.size() <= 0) {
+      return;
+    }
+
+    int PromptResult = JOptionPane.showOptionDialog(null,
+        "Do you want to save?", STRING_PROGRAM_TITLE,
+        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+        STRING_ARRAY_DIALOG_BUTTONS, STRING_ARRAY_DIALOG_BUTTONS[1]);
+    if (PromptResult == 0) {
+      IO.saveArrayOfImages(cachedMergeResult,
+          System.getProperty("user.home") + "\\Desktop\\" + "Result", ImageExtension.PNG);
     }
   }
 

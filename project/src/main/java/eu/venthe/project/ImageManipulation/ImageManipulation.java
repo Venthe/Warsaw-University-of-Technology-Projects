@@ -1,22 +1,14 @@
-package eu.venthe.project;
+package eu.venthe.project.ImageManipulation;
 
-import com.sun.media.jai.codec.FileSeekableStream;
-import com.sun.media.jai.codec.TIFFDecodeParam;
 import eu.venthe.project.model.ImageCombinationMethod;
-import eu.venthe.project.model.ImageExtension;
 import eu.venthe.project.model.ImageManipulationMethod;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.renderable.ParameterBlock;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import javax.imageio.ImageIO;
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
+import java.util.Arrays;
 import javax.swing.ImageIcon;
 
 
@@ -31,11 +23,9 @@ public class ImageManipulation {
 
   private static int returnMinimumCachedImagesSize(ArrayList<ArrayList<BufferedImage>> images) {
     int result = 0;
-    for (int i = 0; i < images.size(); i++) {
-      if (images.get(i).size() > 0) {
-        if (result == 0 || result > images.get(i).size()) {
-          result = images.get(i).size();
-        }
+    for (ArrayList<BufferedImage> image : images) {
+      if (image.size() > 0 && (result == 0 || result > image.size())) {
+        result = image.size();
       }
     }
     return result;
@@ -54,12 +44,14 @@ public class ImageManipulation {
   }
 
   public static ArrayList<BufferedImage> mergeDirectories(
-      ArrayList<ArrayList<BufferedImage>> images, ImageCombinationMethod imageCombinationMethod, ImageManipulationMethod imageManipulationMethod) {
+      ArrayList<ArrayList<BufferedImage>> images, ImageCombinationMethod imageCombinationMethod,
+      ImageManipulationMethod imageManipulationMethod) {
     ArrayList<BufferedImage> result = new ArrayList<>(); // End result - array of merged images
     int numberOfFilesToMerge = returnMinimumCachedImagesSize(images);
 
     System.out.println(
-        "Merging directories using imageCombinationMethod " + imageCombinationMethod.toString() + " and imageManipulationMethod " + imageManipulationMethod
+        "Merging directories using imageCombinationMethod " + imageCombinationMethod.toString()
+            + " and imageManipulationMethod " + imageManipulationMethod
             .toString()
             + ". First " + numberOfFilesToMerge
             + " images from eglible directories will be merged");
@@ -67,23 +59,25 @@ public class ImageManipulation {
 
     System.out.println("Transposing Images matrix");
 
-    //TODO: If only 1 common image, then ceate an array out of it
+    //TODO: If only 1 common image, then create an array out of it
     for (int i = 0; i < numberOfFilesToMerge; i++) {
       imagesBuffer.add(new ArrayList<>());
-      for (int j = 0; j < images.size(); j++) {
-        if (images.get(j).size() > 1) {
-          imagesBuffer.get(i).add(images.get(j).get(i));
+      for (ArrayList<BufferedImage> image : images) {
+        if (image.size() > 1) {
+          imagesBuffer.get(i).add(image.get(i));
         }
       }
     }
 
-    for (int i = 0; i < imagesBuffer.size(); i++) {
-      result.add(mergeArrayOfImages(imagesBuffer.get(i), imageCombinationMethod, imageManipulationMethod));
+    for (ArrayList<BufferedImage> anImagesBuffer : imagesBuffer) {
+      result.add(
+          mergeArrayOfImages(anImagesBuffer, imageCombinationMethod, imageManipulationMethod));
     }
     return result;
   }
 
-  private static BufferedImage mergeArrayOfImages(ArrayList<BufferedImage> images, ImageCombinationMethod imageCombinationMethod,
+  private static BufferedImage mergeArrayOfImages(ArrayList<BufferedImage> images,
+      ImageCombinationMethod imageCombinationMethod,
       ImageManipulationMethod imageManipulationMethod) {
     // from images start to end merge i and i+1
     BufferedImage result = images.get(0);
@@ -96,18 +90,21 @@ public class ImageManipulation {
   }
 
 
-  private static BufferedImage mergeImage(BufferedImage a, BufferedImage b, ImageCombinationMethod imageCombinationMethod,
+  private static BufferedImage mergeImage(BufferedImage a, BufferedImage b,
+      ImageCombinationMethod imageCombinationMethod,
       ImageManipulationMethod imageManipulationMethod) {
     //TODO: Only 8bit?
     //TODO: No imageManipulationMethod center and cutout
     System.out.println(
-        "Merging " + a.hashCode() + " with " + b.hashCode() + " using " + imageCombinationMethod.toString() + ", "
+        "Merging " + a.hashCode() + " with " + b.hashCode() + " using " + imageCombinationMethod
+            .toString() + ", "
             + imageManipulationMethod.toString());
-    BufferedImage result = null;
+    BufferedImage result;
+
     if (imageManipulationMethod.equals(ImageManipulationMethod.CENTER)) {
       result = a;
-
-    } else if (imageManipulationMethod.equals(ImageManipulationMethod.ENLARGE) || imageManipulationMethod
+    } else if (imageManipulationMethod.equals(ImageManipulationMethod.ENLARGE)
+        || imageManipulationMethod
         .equals(ImageManipulationMethod.SHRINK)) {
       if (imageManipulationMethod.equals(ImageManipulationMethod.ENLARGE)) {
         if ((a.getHeight() * a.getWidth()) > (b.getWidth() * b.getHeight())) {
@@ -133,15 +130,16 @@ public class ImageManipulation {
       }
     } else if (imageManipulationMethod.equals(ImageManipulationMethod.CUTOUT)) {
       result = a;
-
-    } //TODO:
+    }
     else {
-      throw new IllegalArgumentException("ImageManipulationMethod must be " + ImageManipulationMethod.values());
+      throw new IllegalArgumentException(
+          "ImageManipulationMethod must be " + Arrays.toString(ImageManipulationMethod.values()));
     }
     return result;
   }
 
-  private static int mergePixel(int pixel1, int pixel2, ImageCombinationMethod imageCombinationMethod) {
+  private static int mergePixel(int pixel1, int pixel2,
+      ImageCombinationMethod imageCombinationMethod) {
     int result = -1;
     try {
       if (imageCombinationMethod.equals(ImageCombinationMethod.AND)) {
@@ -152,7 +150,8 @@ public class ImageManipulation {
         result = pixel1 - pixel2;
         result = (result < 0) ? result * -1 : result;
       } else {
-        throw new IllegalArgumentException("imageCombinationMethod must be " + ImageCombinationMethod.values());
+        throw new IllegalArgumentException(
+            "imageCombinationMethod must be " + Arrays.toString(ImageCombinationMethod.values()));
       }
     } catch (Throwable e) {
       e.printStackTrace();
@@ -169,48 +168,5 @@ public class ImageManipulation {
     g2d.dispose();
 
     return dimg;
-  }
-
-  public static Image loadImageAsImage(String path) {
-    // TODO: Various bit sized images are loaded as 8bit
-    Image img = null;
-    try {
-      if (path.endsWith(".tif") || path.endsWith(".tiff")) {
-        FileSeekableStream stream = new FileSeekableStream(path);
-        TIFFDecodeParam decodeParam = new TIFFDecodeParam();
-        decodeParam.setDecodePaletteAsShorts(true);
-        ParameterBlock params = new ParameterBlock();
-        params.add(stream);
-        RenderedOp image1 = JAI.create("tiff", params);
-        img = image1.getAsBufferedImage();
-      } else {
-        img = ImageIO.read(new File(path));
-      }
-    } catch (IOException e) {
-      System.out.println(path);
-      e.printStackTrace();
-    }
-    System.out.println("Image loaded: " + path);
-
-    return img;
-  }
-
-  public static void saveArrayOfImages(ArrayList<BufferedImage> img, String path, ImageExtension ext) {
-    for (int i = 0; i < img.size(); i++) {
-      saveImage(img.get(i), path + "_" + i, ext);
-    }
-  }
-
-  private static void saveImage(BufferedImage img, String filename, ImageExtension ext) {
-    System.out.println("Saving " + filename + "." + ext.toString().toLowerCase());
-    //TODO: other formats than PNG
-    if (ext.equals(ImageExtension.PNG)) {
-      File outputfile = new File(filename + "." + "png");
-      try {
-        ImageIO.write(img, "png", outputfile);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
   }
 }
