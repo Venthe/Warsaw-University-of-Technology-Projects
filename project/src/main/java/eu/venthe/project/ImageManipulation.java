@@ -55,7 +55,7 @@ public class ImageManipulation {
 
   public static ArrayList<BufferedImage> mergeDirectories(
       ArrayList<ArrayList<BufferedImage>> images, ImageCombinationMethod imageCombinationMethod, ImageManipulationMethod imageManipulationMethod) {
-    ArrayList<BufferedImage> result = new ArrayList<BufferedImage>(); // End result - array of merged images
+    ArrayList<BufferedImage> result = new ArrayList<>(); // End result - array of merged images
     int numberOfFilesToMerge = returnMinimumCachedImagesSize(images);
 
     System.out.println(
@@ -63,13 +63,13 @@ public class ImageManipulation {
             .toString()
             + ". First " + numberOfFilesToMerge
             + " images from eglible directories will be merged");
-    ArrayList<ArrayList<BufferedImage>> imagesBuffer = new ArrayList<ArrayList<BufferedImage>>();
+    ArrayList<ArrayList<BufferedImage>> imagesBuffer = new ArrayList<>();
 
     System.out.println("Transposing Images matrix");
 
     //TODO: If only 1 common image, then ceate an array out of it
     for (int i = 0; i < numberOfFilesToMerge; i++) {
-      imagesBuffer.add(new ArrayList<BufferedImage>());
+      imagesBuffer.add(new ArrayList<>());
       for (int j = 0; j < images.size(); j++) {
         if (images.get(j).size() > 1) {
           imagesBuffer.get(i).add(images.get(j).get(i));
@@ -100,8 +100,6 @@ public class ImageManipulation {
       ImageManipulationMethod imageManipulationMethod) {
     //TODO: Only 8bit?
     //TODO: No imageManipulationMethod center and cutout
-    //saveImage(a, System.getProperty("user.home") + "\\Desktop\\"+"merge_a"+a.hashCode(), ImageExtension.PNG);
-    //saveImage(b, System.getProperty("user.home") + "\\Desktop\\"+"merge_b"+b.hashCode(), ImageExtension.PNG);
     System.out.println(
         "Merging " + a.hashCode() + " with " + b.hashCode() + " using " + imageCombinationMethod.toString() + ", "
             + imageManipulationMethod.toString());
@@ -140,7 +138,6 @@ public class ImageManipulation {
     else {
       throw new IllegalArgumentException("ImageManipulationMethod must be " + ImageManipulationMethod.values());
     }
-    //saveImage(result, System.getProperty("user.home") + "\\Desktop\\"+"merge_result"+result.hashCode(), ImageExtension.PNG);
     return result;
   }
 
@@ -185,7 +182,7 @@ public class ImageManipulation {
         ParameterBlock params = new ParameterBlock();
         params.add(stream);
         RenderedOp image1 = JAI.create("tiff", params);
-        img = (BufferedImage) image1.getAsBufferedImage();
+        img = image1.getAsBufferedImage();
       } else {
         img = ImageIO.read(new File(path));
       }
@@ -216,23 +213,4 @@ public class ImageManipulation {
       }
     }
   }
-
-  // Internal test function
-  @SuppressWarnings("unused")
-  private static void printColorDataBW(BufferedImage dimg) {
-    for (int y = dimg.getHeight() - 1; y >= 0; y--) {
-      System.out.print("[ ");
-      for (int x = dimg.getWidth() - 1; x >= 0; x--) {
-        Color c = new Color(dimg.getRGB(x, y));
-        if (c.getRed() < 10) {
-          System.out.print("00");
-        } else if (c.getRed() < 100) {
-          System.out.print("0");
-        }
-        System.out.print(c.getRed() + " ");
-      }
-      System.out.println("]");
-    }
-  }
-
 }

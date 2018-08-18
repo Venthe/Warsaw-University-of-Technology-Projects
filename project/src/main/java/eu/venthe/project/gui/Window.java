@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -18,7 +16,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -99,25 +96,17 @@ public class Window {
   private final int THUMBNAIL_HEIGHT = 200;
   private int currentPreview = 1;
 
-  private ArrayList<ArrayList<BufferedImage>> cachedImagesFromDirectories = new ArrayList<ArrayList<BufferedImage>>();
-  private ArrayList<BufferedImage> cachedMergeResult = new ArrayList<BufferedImage>();
+  private ArrayList<ArrayList<BufferedImage>> cachedImagesFromDirectories = new ArrayList<>();
+  private ArrayList<BufferedImage> cachedMergeResult = new ArrayList<>();
   private BufferedImage cachedImagePreview = ImageManipulation
       .bufferedImageFromImageIcon(IMAGEICON_PREVIEW_DEFAULT);
 
-  //private ArrayList<ArrayList<BufferedImage>> cachedThumbnails = new ArrayList<ArrayList<BufferedImage>>();	//TODO: Cache thumbnails for faster runtime
+  //TODO: Cache thumbnails for faster runtime
 
   private String cachedSelectedThumbnailDirectory = "";
-  private ArrayList<JLabel> thumbnailImages = new ArrayList<JLabel>();
+  private ArrayList<JLabel> thumbnailImages = new ArrayList<>();
 
-  //private int multiplier = THUMBNAIL_HEIGHT; // Assign initial value to width multiplier
-  //private String bufferedComboBoxSelection="";
-  //private String[] cachedDirectories = new String[NUMBER_OF_DIRECTORIES];
-  //private Path[] cachedDirectories = new Path[NUMBER_OF_DIRECTORIES];
-  //private ArrayList<String> currentDirectoryListing = new ArrayList<String>();
-
-  //TODO: last location he opened,where was the last location he saved his last generated images.
-  //private String lastLocationOpened = null;
-  //private String lastLocationSaved = null;
+  //TODO: Kepp the last location we opened, where was the last location saved generated images.
 
   private JFrame Lab3ImageProcessor;
   private final JLabel directorySelectionJLabel = new JLabel(STRING_DIRECTORIES);
@@ -150,16 +139,16 @@ public class Window {
   private final JButton operationsMergeJButton = new JButton("Merge");
   private final JButton operationsSaveJButton = new JButton("Save");
   private final JButton operationsDisposeJButton = new JButton("Dispose");
-  private final JComboBox<String> directoryListingJComboBox = new JComboBox<String>();
+  private final JComboBox<String> directoryListingJComboBox = new JComboBox<>();
 
   private final JEditorPane directoryListingJEditorPane = new JEditorPane();
   private final JScrollPane thumbnailJScrollPane = new JScrollPane();
   private final JPanel thumbnailJPanel = new JPanel();
   private final JScrollPane directoryListingJScrollPane = new JScrollPane();
 
-  private final JComboBox<String> operationsMergeTypeJComboBox = new JComboBox<String>();
-  private final JComboBox<String> operationsMergeMethodJComboBox = new JComboBox<String>();
-  private final JComboBox<String> operationsSaveExtensionJComboBox = new JComboBox<String>();
+  private final JComboBox<String> operationsMergeTypeJComboBox = new JComboBox<>();
+  private final JComboBox<String> operationsMergeMethodJComboBox = new JComboBox<>();
+  private final JComboBox<String> operationsSaveExtensionJComboBox = new JComboBox<>();
   private final JButton operationsRotateJButton = new JButton("Rotate");
   private final JButton refreshDirectoryListingJButton = new JButton("");
   private final JPanel previewJTabbedPane = new JPanel();
@@ -171,39 +160,15 @@ public class Window {
   private final JLabel lblImagesLoaded = new JLabel(STRING_DEFAULT_DIR_NUMBERS);
 
 
-  /**
-   * Create the application.
-   */
-
-  public static void main(String[] args) {
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-    EventQueue.invokeLater(new Runnable() {
-                             @Override
-                             public void run() {
-                               try {
-                                 Window window = new Window();
-                                 window.Lab3ImageProcessor.setVisible(true);
-                               } catch (Exception e) {
-                                 e.printStackTrace();
-                               }
-                             }
-                           }
-    );
-
-  }
-
   public Window() {
     initialize();
+    Lab3ImageProcessor.setVisible(true);
   }
 
   private void initVariables() {
     System.out.println("Filling default data");
     for (int i = 0; i < NUMBER_OF_DIRECTORIES; i++) {
-      cachedImagesFromDirectories.add(new ArrayList<BufferedImage>());
+      cachedImagesFromDirectories.add(new ArrayList<>());
       cachedDirectories[i] = "";
     }
   }
@@ -232,29 +197,18 @@ public class Window {
       }
     });
     refreshDirectoryListingJButton.setIcon(IMAGEICON_REFRESH);
-    directoryListingJComboBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (directoryListingJComboBox.getSelectedItem() != null) {
-          if (directoryListingJComboBox.getItemCount() != 1) {
-            actionDirectoryListingChanged();
-          }
+    directoryListingJComboBox.addActionListener(e -> {
+      if (directoryListingJComboBox.getSelectedItem() != null) {
+        if (directoryListingJComboBox.getItemCount() != 1) {
+          actionDirectoryListingChanged();
         }
       }
     });
-    btnLeft.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        previewMove(0);
-      }
-    });
-    btnRight.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        previewMove(1);
-      }
-    });
+    btnLeft.addActionListener(arg0 -> previewMove(0));
+    btnRight.addActionListener(arg0 -> previewMove(1));
 
     directoryListingJComboBox.setModel(
-        new DefaultComboBoxModel<String>(new String[]{STRING_DEFAULT_DIRECTORY_LIST_ITEM}));
+        new DefaultComboBoxModel<>(new String[]{STRING_DEFAULT_DIRECTORY_LIST_ITEM}));
     previewJTabbedPane.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(ComponentEvent arg0) {
@@ -387,8 +341,8 @@ public class Window {
         promptDoYouWantToSave();
       }
     });
-    operationsMergeTypeJComboBox.setModel(new DefaultComboBoxModel<String>(STRING_ARRAY_TYPE));
-    operationsMergeMethodJComboBox.setModel(new DefaultComboBoxModel<String>(STRING_ARRAY_METHOD));
+    operationsMergeTypeJComboBox.setModel(new DefaultComboBoxModel<>(STRING_ARRAY_TYPE));
+    operationsMergeMethodJComboBox.setModel(new DefaultComboBoxModel<>(STRING_ARRAY_METHOD));
     operationsSaveJButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseReleased(MouseEvent e) {
@@ -396,7 +350,7 @@ public class Window {
       }
     });
     operationsSaveExtensionJComboBox
-        .setModel(new DefaultComboBoxModel<String>(STRING_ARRAY_FILE_FORMATS));
+        .setModel(new DefaultComboBoxModel<>(STRING_ARRAY_FILE_FORMATS));
     operationsDisposeJButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseReleased(MouseEvent e) {
@@ -595,12 +549,7 @@ public class Window {
     Lab3ImageProcessor.setJMenuBar(JMenuBar);
 
     JMenuBar.add(menuBarFile);
-    mntmExit.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent arg0) {
-        promptExit();
-      }
-    });
+    mntmExit.addActionListener(arg0 -> promptExit());
 
     menuBarFile.add(mntmExit);
   }
@@ -637,18 +586,12 @@ public class Window {
 
   private File[] getImagesListFromPath(String path) {
     File dir = new File(path);
-    File[] filesList = dir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.toLowerCase().endsWith(".jpg")
-            || name.toLowerCase().endsWith(".jpeg")
-            || name.toLowerCase().endsWith(".png")
-            || name.toLowerCase().endsWith(".tif")
-            || name.toLowerCase().endsWith(".tiff")
-            || name.toLowerCase().endsWith(".bmp");
-      }
-    });
-    return filesList;
+    return dir.listFiles((dir1, name) -> name.toLowerCase().endsWith(".jpg")
+        || name.toLowerCase().endsWith(".jpeg")
+        || name.toLowerCase().endsWith(".png")
+        || name.toLowerCase().endsWith(".tif")
+        || name.toLowerCase().endsWith(".tiff")
+        || name.toLowerCase().endsWith(".bmp"));
   }
 
   private void updateCachedImages() {
@@ -725,7 +668,7 @@ public class Window {
         float aspectRatio = (float) image.get(i).getWidth() / (float) image.get(i).getHeight();
         int newWidth = (int) (THUMBNAIL_HEIGHT * aspectRatio);
         ImageIcon newIcon = new ImageIcon(ImageManipulation
-            .resizeImage((BufferedImage) image.get(i), newWidth, THUMBNAIL_HEIGHT));
+            .resizeImage(image.get(i), newWidth, THUMBNAIL_HEIGHT));
         buffer.setPreferredSize(new Dimension(newWidth, THUMBNAIL_HEIGHT));
         buffer.setIcon(newIcon);
         thumbnailImages.add(buffer);
@@ -750,11 +693,11 @@ public class Window {
   }
 
   private Boolean isDirectoriesValidToMerge() {
-    Boolean result = false;
-    Boolean firstOne = false;
+    boolean result = false;
+    boolean firstOne = false;
     for (int i = 0; i < NUMBER_OF_DIRECTORIES; i++) {
       if (cachedImagesFromDirectories.get(i).size() > 0) {
-        if (firstOne == true) {
+        if (firstOne) {
           result = true;
           break;
         }
@@ -819,7 +762,7 @@ public class Window {
     }
 
     //return new ImageIcon(ImageManipulation.resizeImage((BufferedImage) img, imgWidth, imgHeight));
-    return new ImageIcon(ImageManipulation.resizeImage((BufferedImage) img, maxWidth, maxHeight));
+    return new ImageIcon(ImageManipulation.resizeImage(img, maxWidth, maxHeight));
 
   }
 
@@ -862,11 +805,11 @@ public class Window {
   }
 
   private void updateDirectoryListing(String path) {
-    ArrayList<String> currentDirectoryListing = new ArrayList<String>();
-    String buffer = new String();
+    ArrayList<String> currentDirectoryListing = new ArrayList<>();
+    String buffer = "";
 
     File[] filesList = getImagesListFromPath(path);
-    currentDirectoryListing = new ArrayList<String>();
+    currentDirectoryListing = new ArrayList<>();
     for (File file : filesList) {
       if (file.isFile()) {
         currentDirectoryListing.add(directoryListingJComboBox
@@ -883,8 +826,8 @@ public class Window {
     setImagePreview();
     // TODO: Add clearing of image preview pane
     cachedDirectories = new String[NUMBER_OF_DIRECTORIES];
-    cachedImagesFromDirectories = new ArrayList<ArrayList<BufferedImage>>();
-    thumbnailImages = new ArrayList<JLabel>();
+    cachedImagesFromDirectories = new ArrayList<>();
+    thumbnailImages = new ArrayList<>();
     cachedSelectedThumbnailDirectory = "";
 
     directorySelection1JTextField.setText("");
@@ -892,7 +835,7 @@ public class Window {
     directorySelection3JTextField.setText("");
     directorySelection4JTextField.setText("");
     directorySelection5JTextField.setText("");
-    cachedMergeResult = new ArrayList<BufferedImage>();
+    cachedMergeResult = new ArrayList<>();
     currentPreview = 1;
     //cachedImagePreview = ImageManipulation.bufferedImageFromImageIcon(IMAGEICON_PREVIEW_DEFAULT);
     updateImagesNumbers();
