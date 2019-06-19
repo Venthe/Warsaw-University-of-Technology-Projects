@@ -1,0 +1,27 @@
+﻿@model Bookstore.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Main-layout.cshtml";
+}
+
+<article class="col-md-8">
+    @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @class = "form-control" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Username)
+            @Html.TextBoxFor(Model => Model.Username, null, new { @class = "form-control", @placeholder = "Please enter username" })
+            @Html.ValidationMessageFor(Model => Model.Username)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Password)
+            @Html.PasswordFor(Model => Model.Password, new { @class = "form-control", @placeholder = "Please enter password" })
+            @Html.ValidationMessageFor(Model => Model.Password)
+        </div>
+
+        <button type="submit" class="btn btn-default">Login</button>
+    }
+</article>
+<aside class="col-md-4">
+    @Html.ValidationSummary()
+</aside>
