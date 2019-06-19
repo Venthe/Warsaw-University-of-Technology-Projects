@@ -1,0 +1,65 @@
+﻿namespace Bookstore.DataAccessLayer
+{
+   using System.Collections.Generic;
+   using System.Diagnostics;
+   using Bookstore.Models;
+
+   public class BookstoreDBInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<BookstoreDBContext>
+   {
+      protected override void Seed(BookstoreDBContext context)
+      {
+         this.InitializeDatabase(context);
+
+         Debug.WriteLine("Seeding...");
+         InitializeHobbies(context);
+         InitializeEducation(context);
+         InitializeUserRoles(context);
+
+         var admin = new User { Password = "aaaaaaaa", Username = "admin", Email = "admin@admin.ad", Name = "Test", Surname = "Test2" };
+         context.Users.Add(admin);
+         context.SaveChanges();
+      }
+
+      private static void InitializeUserRoles(BookstoreDBContext context)
+      {
+         IEnumerable<UserRole> roles = new List<UserRole>
+         {
+            new UserRole{ RoleName = "admin"}
+         };
+
+         context.Roles.AddRange(roles);
+
+         context.SaveChanges();
+      }
+
+      private static void InitializeEducation(BookstoreDBContext context)
+      {
+         IEnumerable<Education> education = new List<Education>
+         {
+            new Education { Code = "primary" },
+            new Education { Code = "highschool" },
+            new Education { Code = "university" }
+         };
+
+         context.Education.AddRange(education);
+
+         context.SaveChanges();
+      }
+
+      private static void InitializeHobbies(BookstoreDBContext context)
+      {
+         IEnumerable<Hobby> hobbies = new List<Hobby>
+         {
+            new Hobby { Code = "kayaking" },
+            new Hobby { Code = "swimming" },
+            new Hobby { Code = "dancing" },
+            new Hobby { Code = "diving" },
+            new Hobby { Code = "snorkeling" }
+         };
+
+         context.Hobby.AddRange(hobbies);
+
+         context.SaveChanges();
+      }
+   }
+}
