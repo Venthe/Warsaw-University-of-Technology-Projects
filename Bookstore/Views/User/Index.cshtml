@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Main-layout.cshtml";
+}
+
+<div>
+    <h2>Index</h2>
+</div>
+<div>
+    <ul>
+        <li>
+            <a href="@Url.Action("Create", "User")">Create</a>
+        </li>
+        <li>
+            <a href="@Url.Action("List", "User" )">List (Restricted to admin)</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Login", "User")">Login (Restricted to non-logged)</a>
+        </li>
+    </ul>
+</div>
+@Html.Action("UserDetails", "Header")

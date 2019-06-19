@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Bookstore.Models.NavigationModel>
+
+<ul class="navbar-nav">
+    @foreach (Bookstore.Models.NavigationModel Menu in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action(Menu.Action, Menu.Controller)">@Menu.Title</a>
+        </li>
+    }
+</ul>

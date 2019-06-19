@@ -1,0 +1,93 @@
+﻿@using Bookstore.Models
+@model UserViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Main-layout.cshtml";
+}
+<div class="row">
+    <article class="col-md-8">
+        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @class = "form-control" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Username)
+                @Html.TextBoxFor(Model => Model.User.Username, null, new { @class = "form-control", @placeholder = "Please enter username" })
+                @Html.ValidationMessageFor(Model => Model.User.Username)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Password)
+                @Html.PasswordFor(Model => Model.User.Password, new { @class = "form-control", @placeholder = "Please enter password" })
+                @Html.ValidationMessageFor(Model => Model.User.Password)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Name)
+                @Html.TextBoxFor(Model => Model.User.Name, null, new { @class = "form-control", @placeholder = "Please enter name" })
+                @Html.ValidationMessageFor(Model => Model.User.Name)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Surname)
+                @Html.TextBoxFor(Model => Model.User.Surname, null, new { @class = "form-control", @placeholder = "Please enter surname" })
+                @Html.ValidationMessageFor(Model => Model.User.Surname)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Email)
+                @Html.TextBoxFor(Model => Model.User.Email, null, new { @class = "form-control", @placeholder = "example@address.org", @type = "email" })
+                @Html.ValidationMessageFor(Model => Model.User.Email)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Hobbies)
+                @Html.ListBoxFor(Model => Model.User.Hobbies, new MultiSelectList(Model.Hobby, "Code", "Code"), new { @class = "form-control" })
+                @Html.ValidationMessageFor(Model => Model.User.Hobbies)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Education)
+                @Html.DropDownListFor(Model => Model.User.Education, new MultiSelectList(Model.Education, "Code", "Code"), new { @class = "form-control" })
+                @Html.ValidationMessageFor(Model => Model.User.Education)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Address.Country)
+                @Html.TextBoxFor(Model => Model.User.Address.Country, null, new { @class = "form-control", @placeholder = "Please enter country" })
+                @Html.ValidationMessageFor(Model => Model.User.Address.Country)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Address.County)
+                @Html.TextBoxFor(Model => Model.User.Address.County, null, new { @class = "form-control", @placeholder = "Please enter country" })
+                @Html.ValidationMessageFor(Model => Model.User.Address.County)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Address.City)
+                @Html.TextBoxFor(Model => Model.User.Address.City, null, new { @class = "form-control", @placeholder = "Please enter country" })
+                @Html.ValidationMessageFor(Model => Model.User.Address.City)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Address.Street)
+                @Html.TextBoxFor(Model => Model.User.Address.Street, null, new { @class = "form-control", @placeholder = "Please enter country" })
+                @Html.ValidationMessageFor(Model => Model.User.Address.Street)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Address.FlatNumber)
+                @Html.TextBoxFor(Model => Model.User.Address.FlatNumber, null, new { @class = "form-control", @placeholder = "Please enter country" })
+                @Html.ValidationMessageFor(Model => Model.User.Address.FlatNumber)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.User.Address.ApartamentNumber)
+                @Html.TextBoxFor(Model => Model.User.Address.ApartamentNumber, null, new { @class = "form-control", @placeholder = "Please enter country" })
+                @Html.ValidationMessageFor(Model => Model.User.Address.ApartamentNumber)
+            </div>
+
+            <button type="submit" class="btn btn-default">Register</button>
+        }
+    </article>
+    <aside class="col-md-4">
+        @Html.ValidationSummary()
+    </aside>
+</div>

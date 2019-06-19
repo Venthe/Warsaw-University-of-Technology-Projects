@@ -1,0 +1,10 @@
+﻿@model Bookstore.Models.HeaderUserModelView
+
+@if (Model.Username == null)
+{
+    <span>User not logged in</span>
+}
+else
+{
+    <span>User @Model.Username is logged in. Is he admin? @Model.IsAdmin</span>
+}

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Bookstore.Models.User>
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Main-layout.cshtml";
+}
+
+<h2>List</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Surname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Education)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Hobbies)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Surname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Education.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Role.RoleName)
+        </td>
+        <td>
+            @String.Join(",", item.Hobbies.Select(a => a.Code).ToList())
+        </td>
+        <td>
+            @String.Join(",", new List<String>{@item.Address.Country, @item.Address.County, @item.Address.City, @item.Address.Street, @item.Address.FlatNumber, @item.Address.ApartamentNumber })
+        </td>
+    </tr>
+    }
+
+</table>
+@Html.Action("UserDetails", "Header")
