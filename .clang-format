@@ -1,0 +1,6 @@
+---
+BasedOnStyle: Chromium
+NamespaceIndentation: All
+UseTab: Never
+
+...
